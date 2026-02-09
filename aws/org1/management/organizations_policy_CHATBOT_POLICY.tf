@@ -1,10 +1,10 @@
-variable "policy_id_chatbot" {
+variable "aws_CHATBOT_POLICY" {
   type        = string
   description = "Policy ID, eg. p-123"
 }
 import {
   to = aws_organizations_policy.CHATBOT_POLICY
-  id = var.policy_id_chatbot
+  id = var.aws_CHATBOT_POLICY
 }
 
 resource "aws_organizations_policy" "CHATBOT_POLICY" {
@@ -56,7 +56,7 @@ resource "aws_organizations_policy" "CHATBOT_POLICY" {
 import {
   to = aws_organizations_policy_attachment.CHATBOT_POLICY_root
   identity = {
-    policy_id = var.policy_id_chatbot
+    policy_id = var.aws_CHATBOT_POLICY
     target_id = aws_organizations_organization.org.roots[0].id
   }
 }

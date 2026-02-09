@@ -1,10 +1,10 @@
-variable "policy_id_aiservices_opt_out" {
+variable "aws_AISERVICES_OPT_OUT_POLICY" {
   type        = string
   description = "Policy ID, eg. p-123"
 }
 import {
   to = aws_organizations_policy.AISERVICES_OPT_OUT_POLICY
-  id = var.policy_id_aiservices_opt_out
+  id = var.aws_AISERVICES_OPT_OUT_POLICY
 }
 
 resource "aws_organizations_policy" "AISERVICES_OPT_OUT_POLICY" {
@@ -41,7 +41,7 @@ resource "aws_organizations_policy" "AISERVICES_OPT_OUT_POLICY" {
 import {
   to = aws_organizations_policy_attachment.AISERVICES_OPT_OUT_POLICY_root
   identity = {
-    policy_id = var.policy_id_aiservices_opt_out
+    policy_id = var.aws_AISERVICES_OPT_OUT_POLICY
     target_id = aws_organizations_organization.org.roots[0].id
   }
 }
