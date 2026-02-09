@@ -22,7 +22,7 @@ resource "aws_organizations_policy" "SCP_QuarantineDenyAll_POLICY" {
         "Action" : [
           "*"
         ],
-        "Resource" : ["*"]
+        "Resource" : "*"
       }
     ]
   })
