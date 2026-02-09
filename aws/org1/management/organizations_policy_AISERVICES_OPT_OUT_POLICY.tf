@@ -33,3 +33,16 @@ resource "aws_organizations_policy" "AISERVICES_OPT_OUT_POLICY" {
   })
 
 }
+
+import {
+  to = aws_organizations_policy_attachment.AISERVICES_OPT_OUT_POLICY_root
+  identity = {
+    policy_id = var.policy_id_aiservices_opt_out
+    target_id = aws_organizations_organization.org.roots[0].id
+  }
+}
+
+resource "aws_organizations_policy_attachment" "AISERVICES_OPT_OUT_POLICY_root" {
+  policy_id = aws_organizations_policy.AISERVICES_OPT_OUT_POLICY.id
+  target_id = aws_organizations_organization.org.roots[0].id
+}
