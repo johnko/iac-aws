@@ -23,7 +23,7 @@ resource "aws_organizations_policy" "EC2_NoSerial_POLICY" {
   })
 
   tags = {
-    "iacdeployer" = "awsconsole"
+    "iacdeployer" = "terraform"
   }
 
 }

@@ -23,7 +23,7 @@ resource "aws_organizations_policy" "EC2_NoPublicSharingAMI_POLICY" {
   })
 
   tags = {
-    "iacdeployer" = "awsconsole"
+    "iacdeployer" = "terraform"
   }
 
 }

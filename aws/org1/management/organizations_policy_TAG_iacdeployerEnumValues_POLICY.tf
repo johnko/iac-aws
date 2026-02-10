@@ -31,7 +31,7 @@ resource "aws_organizations_policy" "TAG_iacdeployerEnumValues_POLICY" {
   })
 
   tags = {
-    "iacdeployer" = "awsconsole"
+    "iacdeployer" = "terraform"
   }
 
 }

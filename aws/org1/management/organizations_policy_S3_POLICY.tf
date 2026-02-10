@@ -21,7 +21,7 @@ resource "aws_organizations_policy" "S3_POLICY" {
   })
 
   tags = {
-    "iacdeployer" = "awsconsole"
+    "iacdeployer" = "terraform"
   }
 
 }
