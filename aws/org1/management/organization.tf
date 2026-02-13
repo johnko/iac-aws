@@ -2,7 +2,6 @@ variable "aws_org_id" {
   type        = string
   description = "Organization ID, eg. o-abc123"
 }
-
 import {
   to = aws_organizations_organization.org
   identity = {
