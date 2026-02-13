@@ -10,6 +10,7 @@ resource "aws_ssoadmin_managed_policy_attachments_exclusive" "NetworkAdministrat
   permission_set_arn = aws_ssoadmin_permission_set.NetworkAdministrator.arn
 
   managed_policy_arns = [
+    "arn:aws:iam::aws:policy/AWSBillingReadOnlyAccess",
     "arn:aws:iam::aws:policy/AWSCloudShellFullAccess",
     "arn:aws:iam::aws:policy/job-function/NetworkAdministrator",
     "arn:aws:iam::aws:policy/job-function/ViewOnlyAccess",
