@@ -31,11 +31,6 @@ resource "aws_organizations_policy" "AISERVICES_OPT_OUT_POLICY" {
       }
     }
   })
-
-  tags = {
-    "iacdeployer" = "terraform"
-  }
-
 }
 
 import {

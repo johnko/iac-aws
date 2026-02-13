@@ -26,11 +26,6 @@ resource "aws_organizations_policy" "EC2_NoIngressVPC_POLICY" {
       }
     }
   })
-
-  tags = {
-    "iacdeployer" = "terraform"
-  }
-
 }
 
 import {

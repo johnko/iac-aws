@@ -46,11 +46,6 @@ resource "aws_organizations_policy" "CHATBOT_POLICY" {
       }
     }
   })
-
-  tags = {
-    "iacdeployer" = "terraform"
-  }
-
 }
 
 import {

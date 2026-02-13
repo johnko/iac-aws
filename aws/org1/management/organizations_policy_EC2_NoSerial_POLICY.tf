@@ -21,11 +21,6 @@ resource "aws_organizations_policy" "EC2_NoSerial_POLICY" {
       }
     }
   })
-
-  tags = {
-    "iacdeployer" = "terraform"
-  }
-
 }
 
 import {

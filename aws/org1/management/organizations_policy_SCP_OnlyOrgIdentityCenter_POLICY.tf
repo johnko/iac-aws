@@ -26,11 +26,6 @@ resource "aws_organizations_policy" "SCP_OnlyOrgIdentityCenter_POLICY" {
       }
     ]
   })
-
-  tags = {
-    "iacdeployer" = "terraform"
-  }
-
 }
 
 import {
