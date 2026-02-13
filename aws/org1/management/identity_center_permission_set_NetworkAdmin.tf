@@ -1,0 +1,42 @@
+data "aws_ssoadmin_instances" "sso" {}
+
+resource "aws_ssoadmin_permission_set" "NetworkAdministrator" {
+  name         = "NetworkAdministrator"
+  description  = "Custom role to manage networks, eg. delete default VPC"
+  instance_arn = tolist(data.aws_ssoadmin_instances.sso.arns)[0]
+}
+resource "aws_ssoadmin_managed_policy_attachments_exclusive" "NetworkAdministrator" {
+  instance_arn       = tolist(data.aws_ssoadmin_instances.sso.arns)[0]
+  permission_set_arn = aws_ssoadmin_permission_set.NetworkAdministrator.arn
+
+  managed_policy_arns = [
+    "arn:aws:iam::aws:policy/AWSCloudShellFullAccess",
+    "arn:aws:iam::aws:policy/job-function/NetworkAdministrator",
+    "arn:aws:iam::aws:policy/job-function/ViewOnlyAccess",
+    "arn:aws:iam::aws:policy/ResourceGroupsandTagEditorFullAccess",
+    "arn:aws:iam::aws:policy/ResourceGroupsTaggingAPITagUntagSupportedResources",
+  ]
+}
+
+data "aws_identitystore_group" "NetworkAdmins" {
+  identity_store_id = tolist(data.aws_ssoadmin_instances.sso.identity_store_ids)[0]
+
+  alternate_identifier {
+    unique_attribute {
+      attribute_path  = "DisplayName"
+      attribute_value = "NetworkAdmins"
+    }
+  }
+}
+resource "aws_ssoadmin_account_assignment" "NetworkAdministrator" {
+  for_each = aws_organizations_account.security_account
+
+  instance_arn       = tolist(data.aws_ssoadmin_instances.sso.arns)[0]
+  permission_set_arn = aws_ssoadmin_permission_set.NetworkAdministrator.arn
+
+  principal_id   = data.aws_identitystore_group.NetworkAdmins.group_id
+  principal_type = "GROUP"
+
+  target_id   = each.value.id
+  target_type = "AWS_ACCOUNT"
+}
