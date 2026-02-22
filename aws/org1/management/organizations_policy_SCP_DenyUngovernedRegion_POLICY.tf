@@ -114,7 +114,8 @@ resource "aws_organizations_policy" "SCP_DenyUngovernedRegion_POLICY" {
   })
 }
 
-resource "aws_organizations_policy_attachment" "SCP_DenyUngovernedRegion_POLICY_root" {
-  policy_id = aws_organizations_policy.SCP_DenyUngovernedRegion_POLICY.id
-  target_id = aws_organizations_organization.org.roots[0].id
-}
+# Commented out because Control Tower controls similar policy
+# resource "aws_organizations_policy_attachment" "SCP_DenyUngovernedRegion_POLICY_root" {
+#   policy_id = aws_organizations_policy.SCP_DenyUngovernedRegion_POLICY.id
+#   target_id = aws_organizations_organization.org.roots[0].id
+# }
