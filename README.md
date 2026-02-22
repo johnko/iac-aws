@@ -4,6 +4,7 @@
 
 - Enable AWS Billing
 - Set a budget threshold and notifications
+- Enable AWS Organizations
 - Enable AWS Control Tower (see `aws/org1/management/controltower_landing_zone.tf`)
   - Automatic account enrollment: true
   - Regions, Region deny control: true (see `aws/org1/management/locals.tf`)
