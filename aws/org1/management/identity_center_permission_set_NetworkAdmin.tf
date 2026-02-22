@@ -39,12 +39,18 @@ resource "aws_ssoadmin_permission_set_inline_policy" "AllowCreateAccount" {
           "controltower:List*",
           "controltower:PerformPreLaunchChecks",
           "controltower:TagResource",
-          "controltower:UntagResource"
+          "controltower:UntagResource",
+          "controlcatalog:Get*",
+          "controlcatalog:List*",
+          "servicecatalog:Describe*",
+          "servicecatalog:Get*",
+          "servicecatalog:List*",
+          "servicecatalog:Search*",
         ],
         "Resource" : [
           "*"
         ]
-      }
+      },
     ]
   })
 }
