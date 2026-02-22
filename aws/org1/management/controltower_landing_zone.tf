@@ -40,12 +40,7 @@ resource "aws_controltower_landing_zone" "org" {
         },
       }
     },
-    "governedRegions" : [ # List of regions to govern, order matters to prevent change
-      "ca-central-1",
-      "us-east-2",
-      "us-east-1",
-      "ca-west-1"
-    ],
+    "governedRegions" : local.governedRegions,
     "securityRoles" : {
       "enabled" : true,                                                                  # Required - Controls security roles creation
       "accountId" : aws_organizations_account.security_account["security_aggregator"].id # Security/Audit account
