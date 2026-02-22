@@ -1,8 +1,3 @@
-variable "aws_account_id_management" {
-  type        = string
-  description = "AWS Account ID, eg. 111111111111"
-}
-
 provider "aws" {
   allowed_account_ids = [
     var.aws_account_id_management

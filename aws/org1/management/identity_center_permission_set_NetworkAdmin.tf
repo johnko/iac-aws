@@ -1,5 +1,3 @@
-data "aws_ssoadmin_instances" "sso" {}
-
 resource "aws_ssoadmin_permission_set" "NetworkAdministrator" {
   name         = "NetworkAdministrator"
   description  = "Custom role to manage networks, eg. delete default VPC"
@@ -10,11 +8,11 @@ resource "aws_ssoadmin_managed_policy_attachments_exclusive" "NetworkAdministrat
   permission_set_arn = aws_ssoadmin_permission_set.NetworkAdministrator.arn
 
   managed_policy_arns = [
+    "arn:aws:iam::aws:policy/AWSCloudShellFullAccess",
     "arn:aws:iam::aws:policy/job-function/ViewOnlyAccess",
     # AWS Billing
     "arn:aws:iam::aws:policy/AWSBillingReadOnlyAccess",
     # delete default VPC
-    "arn:aws:iam::aws:policy/AWSCloudShellFullAccess",
     "arn:aws:iam::aws:policy/job-function/NetworkAdministrator",
     # AWS Resource Explorer
     "arn:aws:iam::aws:policy/ResourceGroupsandTagEditorFullAccess",
@@ -31,10 +29,6 @@ data "aws_identitystore_group" "NetworkAdmins" {
       attribute_value = "NetworkAdmins"
     }
   }
-}
-
-data "aws_organizations_account" "management" {
-  account_id = var.aws_account_id_management
 }
 
 resource "aws_ssoadmin_account_assignment" "NetworkAdministrator" {
