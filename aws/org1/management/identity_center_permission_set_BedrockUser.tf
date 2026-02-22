@@ -17,6 +17,26 @@ resource "aws_ssoadmin_managed_policy_attachments_exclusive" "BedrockUser" {
   ]
 }
 
+resource "aws_ssoadmin_permission_set_inline_policy" "AllowCostExplorer" {
+  instance_arn       = tolist(data.aws_ssoadmin_instances.sso.arns)[0]
+  permission_set_arn = aws_ssoadmin_permission_set.BedrockUser.arn
+  inline_policy = jsonencode({
+    "Version" : "2012-10-17",
+    "Statement" : [
+      {
+        "Sid" : "AllowCostExplorer",
+        "Effect" : "Allow",
+        "Action" : [
+          "ce:DescribeReport",
+        ],
+        "Resource" : [
+          "*"
+        ]
+      },
+    ]
+  })
+}
+
 data "aws_identitystore_group" "BedrockUsers" {
   identity_store_id = tolist(data.aws_ssoadmin_instances.sso.identity_store_ids)[0]
 
