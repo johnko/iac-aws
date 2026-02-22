@@ -9,6 +9,7 @@ import {
 
 resource "aws_controltower_landing_zone" "org" {
   version = "4.0"
+  # Reference: https://docs.aws.amazon.com/controltower/latest/userguide/lz-api-launch.html
   manifest_json = jsonencode({
     "accessManagement" : {
       "enabled" : true # Required - Controls IAM Identity Center integration
