@@ -18,8 +18,17 @@ resource "aws_ssoadmin_managed_policy_attachments_exclusive" "BedrockUser" {
 }
 
 resource "aws_ssoadmin_permission_set_inline_policy" "AllowCostExplorer" {
+  for_each = {
+    "BedrockUser" : {
+      permission_set_arn = aws_ssoadmin_permission_set.BedrockUser.arn
+    },
+    "NetworkAdministrator" : {
+      permission_set_arn = aws_ssoadmin_permission_set.NetworkAdministrator.arn
+    }
+  }
+
   instance_arn       = tolist(data.aws_ssoadmin_instances.sso.arns)[0]
-  permission_set_arn = aws_ssoadmin_permission_set.BedrockUser.arn
+  permission_set_arn = each.value.permission_set_arn
   inline_policy = jsonencode({
     "Version" : "2012-10-17",
     "Statement" : [
@@ -29,6 +38,9 @@ resource "aws_ssoadmin_permission_set_inline_policy" "AllowCostExplorer" {
         "Action" : [
           "bcm-recommended-actions:ListRecommendedActions",
           "ce:DescribeReport",
+          "ce:GetAnomalies",
+          "ce:GetAnomalyMonitors",
+          "ce:GetCostForecast",
         ],
         "Resource" : [
           "*"
