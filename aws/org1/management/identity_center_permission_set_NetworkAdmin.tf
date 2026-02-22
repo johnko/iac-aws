@@ -10,13 +10,43 @@ resource "aws_ssoadmin_managed_policy_attachments_exclusive" "NetworkAdministrat
   permission_set_arn = aws_ssoadmin_permission_set.NetworkAdministrator.arn
 
   managed_policy_arns = [
+    "arn:aws:iam::aws:policy/job-function/ViewOnlyAccess",
+    # AWS Billing
     "arn:aws:iam::aws:policy/AWSBillingReadOnlyAccess",
+    # delete default VPC
     "arn:aws:iam::aws:policy/AWSCloudShellFullAccess",
     "arn:aws:iam::aws:policy/job-function/NetworkAdministrator",
-    "arn:aws:iam::aws:policy/job-function/ViewOnlyAccess",
+    # AWS Resource Explorer
     "arn:aws:iam::aws:policy/ResourceGroupsandTagEditorFullAccess",
     "arn:aws:iam::aws:policy/ResourceGroupsTaggingAPITagUntagSupportedResources",
+    # AWS Control Tower
+    "arn:aws:iam::aws:policy/AWSServiceCatalogEndUserFullAccess",
   ]
+}
+resource "aws_ssoadmin_permission_set_inline_policy" "AllowCreateAccount" {
+  instance_arn       = tolist(data.aws_ssoadmin_instances.sso.arns)[0]
+  permission_set_arn = aws_ssoadmin_permission_set.NetworkAdministrator.arn
+  inline_policy = jsonencode({
+    "Version" : "2012-10-17",
+    "Statement" : [
+      {
+        "Sid" : "AllowCreateAccount",
+        "Effect" : "Allow",
+        "Action" : [
+          "controltower:CreateManagedAccount",
+          "controltower:Describe*",
+          "controltower:Get*",
+          "controltower:List*",
+          "controltower:PerformPreLaunchChecks",
+          "controltower:TagResource",
+          "controltower:UntagResource"
+        ],
+        "Resource" : [
+          "*"
+        ]
+      }
+    ]
+  })
 }
 
 data "aws_identitystore_group" "NetworkAdmins" {
