@@ -10,6 +10,7 @@
   - AWS CloudTrail: true
   - AWS IAM Identity Center: true
   - AWS Backup: false
+- Manually delete default VPC
 
 ```shell
 # load secrets
