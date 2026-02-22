@@ -27,6 +27,7 @@ resource "aws_ssoadmin_permission_set_inline_policy" "AllowCostExplorer" {
         "Sid" : "AllowCostExplorer",
         "Effect" : "Allow",
         "Action" : [
+          "bcm-recommended-actions:ListRecommendedActions",
           "ce:DescribeReport",
         ],
         "Resource" : [
