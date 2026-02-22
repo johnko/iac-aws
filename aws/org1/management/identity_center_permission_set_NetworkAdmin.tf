@@ -59,8 +59,13 @@ data "aws_identitystore_group" "NetworkAdmins" {
     }
   }
 }
+
+data "aws_organizations_account" "management" {
+  account_id = var.aws_account_id_management
+}
+
 resource "aws_ssoadmin_account_assignment" "NetworkAdministrator" {
-  for_each = aws_organizations_account.security_account
+  for_each = merge(aws_organizations_account.security_account, { "management" : data.aws_organizations_account.management })
 
   instance_arn       = tolist(data.aws_ssoadmin_instances.sso.arns)[0]
   permission_set_arn = aws_ssoadmin_permission_set.NetworkAdministrator.arn
