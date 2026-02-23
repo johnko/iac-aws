@@ -1,1 +1,1 @@
-../management/shared_versions.tf
+../shared_versions.tf

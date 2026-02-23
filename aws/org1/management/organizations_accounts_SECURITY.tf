@@ -1,7 +1,3 @@
-variable "aws_account_id_security_aggregator" {
-  type        = string
-  description = "AWS Account ID, eg. 111111111111"
-}
 variable "aws_email_security_aggregator" {
   type        = string
   description = "Email address for the aws account"
@@ -11,10 +7,6 @@ import {
   id = var.aws_account_id_security_aggregator
 }
 
-variable "aws_account_id_security_cloudtrail" {
-  type        = string
-  description = "AWS Account ID, eg. 111111111111"
-}
 variable "aws_email_security_cloudtrail" {
   type        = string
   description = "Email address for the aws account"
