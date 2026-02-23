@@ -62,7 +62,7 @@ data "aws_identitystore_group" "BedrockUsers" {
 }
 
 resource "aws_ssoadmin_account_assignment" "BedrockUser" {
-  for_each = merge({ "sandboxbedrock" : data.aws_organizations_account.sandboxbedrock })
+  for_each = merge({ "sandbox_bedrock" : data.aws_organizations_account.sandbox_bedrock })
 
   instance_arn       = tolist(data.aws_ssoadmin_instances.sso.arns)[0]
   permission_set_arn = aws_ssoadmin_permission_set.BedrockUser.arn

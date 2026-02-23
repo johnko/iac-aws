@@ -9,11 +9,11 @@ data "aws_organizations_account" "management" {
   account_id = var.aws_account_id_management
 }
 
-variable "aws_account_id_sandboxbedrock" {
+variable "aws_account_id_sandbox_bedrock" {
   type        = string
   description = "AWS Account ID, eg. 111111111111"
 }
 
-data "aws_organizations_account" "sandboxbedrock" {
-  account_id = var.aws_account_id_sandboxbedrock
+data "aws_organizations_account" "sandbox_bedrock" {
+  account_id = var.aws_account_id_sandbox_bedrock
 }

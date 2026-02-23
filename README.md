@@ -7,7 +7,7 @@
 - Enable AWS Organizations
 - Enable AWS Control Tower (see `aws/org1/management/controltower_landing_zone.tf`)
   - Automatic account enrollment: true
-  - Regions, Region deny control: true (see `aws/org1/management/locals.tf`)
+  - Regions, Region deny control: true (see `aws/org1/management/shared_locals.tf`)
   - AWS Config: true
   - AWS CloudTrail: true
   - AWS IAM Identity Center: true
