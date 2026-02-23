@@ -44,6 +44,14 @@ case $SAFE_ACTION in
 esac
 echo "SAFE_ACTION=$SAFE_ACTION"
 
+# Load workspace specific secrets
+if [[ -e .envrc ]]; then
+  set +x
+  # hide secret env values from output
+  # shellcheck disable=SC1091
+  source .envrc
+fi
+
 set -ux
 $IAC_BIN fmt
 
