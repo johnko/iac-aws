@@ -37,4 +37,5 @@ bash .github/tf.sh aws/org1/management apply
 
 1. Go to https://console.aws.amazon.com/controltower/home/accountfactory and click "Create Account".
 2. Allow NetworkAdministrator permissionset and NetworkAdmins group on new accounts via `resource "aws_ssoadmin_account_assignment" "NetworkAdministrator" {` (see `aws/org1/management/identity_center_permission_set_NetworkAdmin.tf`) to manually delete default VPCs. Avoid automation unless you have strict guardrails to prevent accidentally deleting other VPCs.
-3. Use https://resource-explorer.console.aws.amazon.com/resource-explorer/home to find all resources across all regions.
+3. Manually delete default VPCs
+4. Use https://resource-explorer.console.aws.amazon.com/resource-explorer/home to find all resources across all regions.
