@@ -24,7 +24,7 @@ resource "aws_resourceexplorer2_index" "unusedRegions" {
     for region in local.unusedRegions : region => {
       "region" : region,
       "type" : region == "ca-central-1" ? "AGGREGATOR" : "LOCAL"
-    } if contains(local.resourceExplorerAccountWithoutUnusedRegions, data.aws_caller_identity.current.account_id)
+    } if !contains(local.resourceExplorerAccountWithoutUnusedRegions, data.aws_caller_identity.current.account_id)
   }
 
   region = each.value.region
