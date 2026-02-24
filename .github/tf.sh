@@ -89,6 +89,11 @@ if [[ "APPLY" == "$SAFE_ACTION" || "AUTO" == "$SAFE_ACTION" || "PLAN" == "$SAFE_
   if [[ -e _import.sh ]]; then
     set -x
     bash -ex _import.sh
+    TF_IMPORT_EXIT_CODE=$?
+    set -e
+    if [[ $TF_IMPORT_EXIT_CODE != 0 ]]; then
+      exit $TF_IMPORT_EXIT_CODE
+    fi
   fi
 fi
 
