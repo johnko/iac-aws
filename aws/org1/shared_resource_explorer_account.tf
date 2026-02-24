@@ -10,7 +10,7 @@ resource "aws_resourceexplorer2_index" "account" {
   type   = each.value.type
 }
 
-resource "aws_resourceexplorer2_index" "org" {
+resource "aws_resourceexplorer2_index" "unusedRegions" {
   for_each = {
     for region in local.unusedRegions : region => {
       "region" : region,
