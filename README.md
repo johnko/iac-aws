@@ -32,4 +32,4 @@ bash .github/tf.sh aws/org1/management apply
 
 1. Go to https://console.aws.amazon.com/controltower/home/accountfactory and empty "Regions for VPC creation".
 2. Go to https://console.aws.amazon.com/controltower/home/organization and "Register organizational unit" for each OU.
-3. Go to https://resource-explorer.console.aws.amazon.com/resource-explorer/home?region=ca-central-1#/onboarding so we can find all resources across all regions
+3. Go to https://resource-explorer.console.aws.amazon.com/resource-explorer/home so we can find all resources across all regions
