@@ -1,9 +1,6 @@
 #!/usr/bin/env bash
 set -euxo pipefail
 
-# renovate: datasource=github-releases depName=hashicorp/terraform packageName=hashicorp/terraform
-TERRAFORM_VERSION="1.14.6"
-
 TERRAFORM_FILENAME="terraform_${TERRAFORM_VERSION}_linux_amd64.zip"
 
 if [[ ! -e "$TERRAFORM_FILENAME" ]]; then

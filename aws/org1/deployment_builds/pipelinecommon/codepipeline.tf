@@ -232,8 +232,13 @@ resource "aws_codepipeline" "terraform" {
           concat(
             [
               {
-                name  = "WORKSPACE_PATH",
-                value = "${local.workspace_path_prefix}${each.value.path}",
+                name  = "WORKSPACE_PATH"
+                value = "${local.workspace_path_prefix}${each.value.path}"
+                type  = "PLAINTEXT"
+              },
+              {
+                name  = "EXECUTOR_TYPE"
+                value = local.codebuild_types[each.value.codebuild_suffix].type
                 type  = "PLAINTEXT"
               }
             ],
