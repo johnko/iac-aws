@@ -50,24 +50,18 @@ resource "aws_ssoadmin_permission_set_inline_policy" "AllowCostExplorer" {
   })
 }
 
-data "aws_identitystore_group" "BedrockUsers" {
+resource "aws_identitystore_group" "BedrockUsers" {
+  display_name      = "BedrockUsers"
   identity_store_id = tolist(data.aws_ssoadmin_instances.sso.identity_store_ids)[0]
-
-  alternate_identifier {
-    unique_attribute {
-      attribute_path  = "DisplayName"
-      attribute_value = "BedrockUsers"
-    }
-  }
 }
 
 resource "aws_ssoadmin_account_assignment" "BedrockUser" {
-  for_each = merge({ "sandbox_bedrock" : data.aws_organizations_account.sandbox_bedrock })
+  for_each = merge({ "sandbox_bedrock" : aws_organizations_account.sandbox_account["sandbox_bedrock"] })
 
   instance_arn       = tolist(data.aws_ssoadmin_instances.sso.arns)[0]
   permission_set_arn = aws_ssoadmin_permission_set.BedrockUser.arn
 
-  principal_id   = data.aws_identitystore_group.BedrockUsers.group_id
+  principal_id   = aws_identitystore_group.BedrockUsers.group_id
   principal_type = "GROUP"
 
   target_id   = each.value.id
