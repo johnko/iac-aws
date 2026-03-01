@@ -33,6 +33,10 @@ bash .github/tf.sh aws/org1/management apply
 1. Go to https://console.aws.amazon.com/controltower/home/accountfactory and empty "Regions for VPC creation".
 2. Go to https://console.aws.amazon.com/controltower/home/organization and "Register organizational unit" for each OU.
 
+## After AWS Identity Center is ready
+
+1. Go to https://console.aws.amazon.com/singlesignon/home and "Settings" and use the mutli-region KMS Key
+
 ## Onboarding new accounts
 
 1. Go to https://console.aws.amazon.com/controltower/home/accountfactory and click "Create Account".
