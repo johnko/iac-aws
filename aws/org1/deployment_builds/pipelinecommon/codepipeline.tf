@@ -168,21 +168,25 @@ resource "aws_codepipeline" "terraform" {
     type     = "S3"
   }
 
-  trigger {
-    provider_type = "CodeStarSourceConnection"
-    git_configuration {
-      source_action_name = "CodeConnections"
-      push {
-        branches {
-          includes = ["main"]
-        }
-        file_paths {
-          includes = [
-            "${local.workspace_path_prefix}${each.value.path}/**",
-            "${local.workspace_path_prefix}buildspec_*",
-            "${local.workspace_path_prefix}foundation_*",
-            "${local.workspace_path_prefix}shared_*",
-          ]
+  dynamic "trigger" {
+    for_each = each.value.DetectChanges ? [1] : []
+
+    content {
+      provider_type = "CodeStarSourceConnection"
+      git_configuration {
+        source_action_name = "CodeConnections"
+        push {
+          branches {
+            includes = ["main"]
+          }
+          file_paths {
+            includes = [
+              "${local.workspace_path_prefix}${each.value.path}/**",
+              "${local.workspace_path_prefix}buildspec_*",
+              "${local.workspace_path_prefix}foundation_*",
+              "${local.workspace_path_prefix}shared_*",
+            ]
+          }
         }
       }
     }
