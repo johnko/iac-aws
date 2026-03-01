@@ -115,7 +115,7 @@ if [[ "PLAN" == "$SAFE_ACTION" ]]; then
   $IAC_BIN plan -detailed-exitcode -input=false
   TF_PLAN_EXIT_CODE=$?
   set +u
-  if [[ -n $CODEBUILD_PROJECT_ARN ]]; then
+  if [[ -n $CODEBUILD_BUILD_ID ]]; then
     # If running in CodeBuild
     case $TF_PLAN_EXIT_CODE in
       0)
