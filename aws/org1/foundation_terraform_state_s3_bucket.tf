@@ -36,6 +36,6 @@ resource "aws_s3_bucket_public_access_block" "terraform_state" {
 }
 
 resource "aws_s3_bucket_request_payment_configuration" "terraform_state" {
-  bucket = aws_s3_bucket.terraform_state.bucket
+  bucket = aws_s3_bucket.terraform_state.id
   payer  = "Requester"
 }

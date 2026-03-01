@@ -16,10 +16,9 @@ locals {
           "s3:GetBucketAcl",
           "s3:GetBucketLocation"
         ],
-        "Resource" : [
-          "${aws_s3_bucket.codepipeline.arn}",
-          "${aws_s3_bucket.codepipeline.arn}/*"
-        ],
+        "Resource" : flatten([
+          for k, v in aws_s3_bucket.codepipeline : [v.arn, "${v.arn}/*"]
+        ]),
         "Effect" : "Allow"
       },
       {

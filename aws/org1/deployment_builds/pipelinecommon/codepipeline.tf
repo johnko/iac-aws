@@ -39,6 +39,25 @@ locals {
       }
     }
   }
+
+  DetectChanges_by_region = {
+    "${local.primary_region}"   = false
+    "${local.secondary_region}" = true
+  }
+
+  regional_pipelines = merge(values({
+    for r in [local.primary_region, local.secondary_region] : r => {
+      for k, v in local.pipelines : "${r}/${k}" => merge(
+        v,
+        {
+          "path" : k,
+          "region" : r,
+          "codebuild_suffix" : local.codebuild_suffix_by_region[r],
+          "DetectChanges" : local.DetectChanges_by_region[r],
+        }
+      )
+    }
+  })...)
 }
 
 resource "aws_iam_role" "CodePipelineRole" {
@@ -83,10 +102,9 @@ resource "aws_iam_role_policy" "CodePipelineRoleDefaultPolicy" {
           "s3:GetBucketAcl",
           "s3:GetBucketLocation"
         ],
-        "Resource" : [
-          "${aws_s3_bucket.codepipeline.arn}",
-          "${aws_s3_bucket.codepipeline.arn}/*"
-        ],
+        "Resource" : flatten([
+          for k, v in aws_s3_bucket.codepipeline : [v.arn, "${v.arn}/*"]
+        ]),
         "Effect" : "Allow"
       },
       {
@@ -130,17 +148,23 @@ resource "aws_iam_role_policies_exclusive" "CodePipelineRole" {
   policy_names = [resource.aws_iam_role_policy.CodePipelineRoleDefaultPolicy.name]
 }
 
-resource "aws_codepipeline" "terraform_plan" {
-  for_each = local.pipelines
+output "regional_pipelines" {
+  value = local.regional_pipelines
+}
 
-  name     = "TF-${replace(each.key, "/", "-")}"
+resource "aws_codepipeline" "terraform" {
+  for_each = local.regional_pipelines
+
+  region = each.value.region
+
+  name     = "TF-${replace(each.value.path, "/", "-")}"
   role_arn = aws_iam_role.CodePipelineRole.arn
 
   execution_mode = "QUEUED"
   pipeline_type  = "V2"
 
   artifact_store {
-    location = aws_s3_bucket.codepipeline.bucket
+    location = aws_s3_bucket.codepipeline[each.value.region].id
     type     = "S3"
   }
 
@@ -154,7 +178,7 @@ resource "aws_codepipeline" "terraform_plan" {
         }
         file_paths {
           includes = [
-            "${local.workspace_path_prefix}${each.key}/.*",
+            "${local.workspace_path_prefix}${each.value.path}/.*",
             "${local.workspace_path_prefix}buildspec_.*",
             "${local.workspace_path_prefix}foundation_.*",
             "${local.workspace_path_prefix}shared_.*",
@@ -178,6 +202,7 @@ resource "aws_codepipeline" "terraform_plan" {
       configuration = {
         BranchName           = "main"
         ConnectionArn        = aws_codeconnections_connection.johnko.arn
+        DetectChanges        = each.value.DetectChanges
         FullRepositoryId     = local.FullRepositoryId
         OutputArtifactFormat = "CODEBUILD_CLONE_REF"
       }
@@ -202,13 +227,13 @@ resource "aws_codepipeline" "terraform_plan" {
       provider        = "CodeBuild" # Can't use Commands until terraform-aws-provider supports it
       version         = "1"
       configuration = {
-        ProjectName = "TerraformPlan-container-linux-small"
+        ProjectName = "TerraformPlan-${each.value.codebuild_suffix}"
         EnvironmentVariables = jsonencode(
           concat(
             [
               {
                 name  = "WORKSPACE_PATH",
-                value = "${local.workspace_path_prefix}${each.key}",
+                value = "${local.workspace_path_prefix}${each.value.path}",
                 type  = "PLAINTEXT"
               }
             ],

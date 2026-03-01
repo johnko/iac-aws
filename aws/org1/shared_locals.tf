@@ -48,6 +48,10 @@ locals {
     }
   }
 
+  codebuild_suffix_by_region = {
+    for k, v in local.codebuild_types : v.region => k
+  }
+
   slack_user_roles = {
     "viewer"   = {}
     "approver" = {}
