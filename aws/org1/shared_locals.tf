@@ -27,6 +27,23 @@ locals {
   primary_region   = "ca-central-1"
   secondary_region = "us-east-2"
 
+  codebuild_types = {
+    container-linux-small = {
+      compute_type    = "BUILD_GENERAL1_SMALL"
+      image           = "aws/codebuild/standard:7.0"
+      privileged_mode = true
+      region          = local.primary_region
+      type            = "LINUX_CONTAINER"
+    }
+    lambda-linux-1 = {
+      compute_type    = "BUILD_LAMBDA_1GB"
+      image           = "aws/codebuild/amazonlinux-x86_64-lambda-standard:python3.13"
+      privileged_mode = false
+      region          = local.secondary_region
+      type            = "LINUX_LAMBDA_CONTAINER"
+    }
+  }
+
   slack_user_roles = {
     "viewer"   = {}
     "approver" = {}
