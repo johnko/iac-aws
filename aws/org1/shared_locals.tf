@@ -1,11 +1,11 @@
 locals {
-  all_aws_account_ids = [
-    var.aws_account_id_management,
-    var.aws_account_id_security_aggregator,
-    var.aws_account_id_security_cloudtrail,
-    var.aws_account_id_deployment_builds,
-    var.aws_account_id_sandbox_bedrock,
-  ]
+  all_aws_account_ids = {
+    "${var.aws_account_id_management}" = {}
+    "${var.aws_account_id_security_aggregator}" = {}
+    "${var.aws_account_id_security_cloudtrail}" = {}
+    "${var.aws_account_id_deployment_builds}" = {}
+    "${var.aws_account_id_sandbox_bedrock}" = {}
+  }
 
   governedRegions = [ # List of regions to govern
     ##### ORDER MATTERS TO PREVENT CHANGE
