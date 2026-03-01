@@ -3,6 +3,10 @@ resource "aws_kms_key" "identitycenter_primary" {
   deletion_window_in_days = 30
   multi_region            = true
 }
+resource "aws_kms_key_policy" "identitycenter_primary" {
+  key_id = aws_kms_key.identitycenter_primary.id
+  policy = local.identitycenter_kms_key_policy
+}
 
 resource "aws_kms_replica_key" "identitycenter_replica" {
   region = "ca-west-1"
@@ -10,6 +14,12 @@ resource "aws_kms_replica_key" "identitycenter_replica" {
   description             = "Multi-Region replica key for Identity Center"
   deletion_window_in_days = 7
   primary_key_arn         = aws_kms_key.identitycenter_primary.arn
+}
+resource "aws_kms_key_policy" "identitycenter_replica" {
+  region = "ca-west-1"
+
+  key_id = aws_kms_key.identitycenter_replica.id
+  policy = local.identitycenter_kms_key_policy
 }
 
 locals {
@@ -156,9 +166,4 @@ locals {
       }
     ]
   })
-}
-
-resource "aws_kms_key_policy" "identitycenter_primary" {
-  key_id = aws_kms_key.identitycenter_primary.id
-  policy = local.identitycenter_kms_key_policy
 }
