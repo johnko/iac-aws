@@ -24,6 +24,9 @@ locals {
     "us-west-1",
   ]
 
+  primary_region   = "ca-central-1"
+  secondary_region = "us-east-2"
+
   slack_user_roles = {
     "viewer"   = {}
     "approver" = {}

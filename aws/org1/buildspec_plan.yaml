@@ -9,24 +9,20 @@ env:
 
 phases:
   install:
-    on-failure: RETRY-1
-    runtime-versions:
-      # See https://docs.aws.amazon.com/codebuild/latest/userguide/available-runtimes.html
-      python: 3.13
+    # runtime-versions:
+    #   # See https://docs.aws.amazon.com/codebuild/latest/userguide/available-runtimes.html
+    #   python: 3.13
     commands:
       - echo
 
   pre_build:
-    on-failure: RETRY-1
     commands:
       - bash .github/tf.sh $WORKSPACE_FOLDER validate
 
   build:
-    on-failure: ABORT
     commands:
       - bash .github/tf.sh $WORKSPACE_FOLDER plan
 
   post_build:
-    on-failure: RETRY-1
     commands:
       - bash ./aws/org1/post_build.sh $WORKSPACE_FOLDER
