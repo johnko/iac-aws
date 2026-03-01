@@ -8,14 +8,13 @@ import {
   id = "arn:aws:chatbot::${data.aws_caller_identity.current.account_id}:chat-configuration/slack-channel/test-awschatbot"
 }
 
-data "aws_chatbot_slack_workspace" "slack" {
-  slack_team_name = var.slack_team_name
+import {
+  to = aws_iam_role.channel["test-awschatbot"]
+  id = "AWSChatbotRole-test-awschatbot"
 }
 
-data "aws_iam_role" "channel" {
-  for_each = local.slack_channels_enabled
-
-  name = "AWSChatbotRole-${each.key}"
+data "aws_chatbot_slack_workspace" "slack" {
+  slack_team_name = var.slack_team_name
 }
 
 locals {
@@ -26,6 +25,42 @@ locals {
     }
   }
 }
+
+resource "aws_iam_role" "channel" {
+  for_each = local.slack_channels_enabled
+
+  name = "AWSChatbotRole-${each.key}"
+  path = "/service-role/"
+
+  assume_role_policy = jsonencode({
+    "Version" : "2012-10-17",
+    "Statement" : [
+      {
+        "Effect" : "Allow",
+        "Principal" : {
+          "Service" : "chatbot.amazonaws.com"
+        },
+        "Action" : "sts:AssumeRole"
+      }
+    ]
+  })
+
+}
+
+resource "aws_iam_role_policy_attachments_exclusive" "channel_attached" {
+  for_each = local.slack_channels_enabled
+
+  role_name   = aws_iam_role.channel[each.key].name
+  policy_arns = [] # empty to prevent default channel role
+}
+
+resource "aws_iam_role_policies_exclusive" "channel_inline" {
+  for_each = local.slack_channels_enabled
+
+  role_name    = aws_iam_role.channel[each.key].name
+  policy_names = [] # empty to prevent default channel role
+}
+
 
 resource "aws_chatbot_slack_channel_configuration" "channel" {
   for_each = local.slack_channels_enabled
@@ -38,7 +73,7 @@ resource "aws_chatbot_slack_channel_configuration" "channel" {
 
   user_authorization_required = true # true=user specific permissions, false=shared channel permissions
 
-  iam_role_arn = data.aws_iam_role.channel[each.key].arn
+  iam_role_arn = aws_iam_role.channel[each.key].arn
   guardrail_policy_arns = [
     "arn:aws:iam::aws:policy/job-function/ViewOnlyAccess"
   ]
