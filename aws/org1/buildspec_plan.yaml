@@ -13,7 +13,10 @@ phases:
     #   # See https://docs.aws.amazon.com/codebuild/latest/userguide/available-runtimes.html
     #   python: 3.13
     commands:
-      - echo
+      - export release=AmazonLinux
+      - dnf install -y dnf-plugins-core
+      - dnf config-manager --add-repo https://rpm.releases.hashicorp.com/$release/hashicorp.repo
+      - dnf install -y terraform
 
   pre_build:
     commands:
