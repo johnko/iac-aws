@@ -33,6 +33,7 @@ locals {
       compute_type    = "BUILD_GENERAL1_SMALL"
       image           = "aws/codebuild/standard:7.0"
       privileged_mode = true
+      queued_timeout  = 90
       region          = local.primary_region
       type            = "LINUX_CONTAINER"
     }
@@ -41,6 +42,7 @@ locals {
       compute_type    = "BUILD_LAMBDA_1GB"
       image           = "aws/codebuild/amazonlinux-x86_64-lambda-standard:python3.13"
       privileged_mode = false
+      queued_timeout  = null
       region          = local.secondary_region
       type            = "LINUX_LAMBDA_CONTAINER"
     }

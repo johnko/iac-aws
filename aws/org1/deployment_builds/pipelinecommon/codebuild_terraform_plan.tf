@@ -25,7 +25,7 @@ resource "aws_codebuild_project" "terraform_plan" {
   service_role = aws_iam_role.terraform_plan.arn
 
   build_timeout  = each.value.build_timeout
-  queued_timeout = each.value.type == "LINUX_LAMBDA_CONTAINER" ? null : 60
+  queued_timeout = each.value.queued_timeout
 
   artifacts {
     type = "CODEPIPELINE"
