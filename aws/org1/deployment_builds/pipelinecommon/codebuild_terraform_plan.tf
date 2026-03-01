@@ -16,6 +16,23 @@ resource "aws_iam_role" "terraform_plan" {
 
 }
 
+# See https://docs.aws.amazon.com/codepipeline/latest/userguide/troubleshooting.html#codebuild-role-connections
+# {
+#     "Version":"2012-10-17",
+#     "Statement": [
+#         {
+#             "Effect": "Allow",
+#             "Action": "codeconnections:UseConnection",
+#             "Resource": "arn:aws:codeconnections:eu-central-1:123456789123:connection/my-connection-id",
+#             "Condition": {
+#                 "StringEquals": {
+#                     "codeconnections:FullRepositoryId": "my-repository-id"
+#                 }
+#             }
+#         }
+#     ]
+# }
+
 resource "aws_codebuild_project" "terraform_plan" {
   for_each = local.codebuild_types
 
