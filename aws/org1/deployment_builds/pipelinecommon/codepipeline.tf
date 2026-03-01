@@ -154,10 +154,10 @@ resource "aws_codepipeline" "terraform_plan" {
         }
         file_paths {
           includes = [
-            "^${local.workspace_path_prefix}${each.key}/.*",
-            "^${local.workspace_path_prefix}buildspec_.*",
-            "^${local.workspace_path_prefix}foundation_.*",
-            "^${local.workspace_path_prefix}shared_.*",
+            "${local.workspace_path_prefix}${each.key}/.*",
+            "${local.workspace_path_prefix}buildspec_.*",
+            "${local.workspace_path_prefix}foundation_.*",
+            "${local.workspace_path_prefix}shared_.*",
           ]
         }
       }
