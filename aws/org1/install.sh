@@ -16,6 +16,7 @@ if echo "$EXECUTOR_TYPE" | grep LAMBDA; then
     maybe_filename=$(aws s3api list-objects-v2 --bucket "codepipeline-${TF_VAR_aws_account_id_deployment_builds}-$i" --prefix "$TERRAFORM_FILENAME" --output text --no-cli-pager --query 'Contents[].Key')
     if [[ $maybe_filename == "$TERRAFORM_FILENAME" ]]; then
       aws s3 cp "s3://codepipeline-${TF_VAR_aws_account_id_deployment_builds}-$i/$TERRAFORM_FILENAME" ./
+      unzip "$TERRAFORM_FILENAME"
       mkdir -p ~/bin
       mv terraform ~/bin/
       echo >> ~/.bashrc
