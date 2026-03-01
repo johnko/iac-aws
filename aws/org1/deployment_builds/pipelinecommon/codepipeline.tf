@@ -229,6 +229,7 @@ resource "aws_codepipeline" "terraform" {
       name            = "TerraformPlan"
       owner           = "AWS"
       provider        = "CodeBuild" # Can't use Commands until terraform-aws-provider supports it
+      run_order       = 1
       version         = "1"
       configuration = {
         ProjectName = "TerraformPlan-${each.value.codebuild_suffix}"
@@ -255,6 +256,54 @@ resource "aws_codepipeline" "terraform" {
           ])
         )
       }
+    }
+
+    action {
+      category  = "Approval"
+      name      = "ApproveOrReject"
+      owner     = "AWS"
+      provider  = "Manual"
+      run_order = 2
+      version   = "1"
+      configuration = {
+        # See https://docs.aws.amazon.com/codepipeline/latest/userguide/structure-configuration-examples.html
+        "CustomData" : "Last chance to cancel if the TerraformPlan looks wrong!",
+      }
+    }
+  }
+
+  action {
+    category        = "Build"
+    input_artifacts = ["SourceOutput"]
+    name            = "TerraformApply"
+    owner           = "AWS"
+    provider        = "CodeBuild" # Can't use Commands until terraform-aws-provider supports it
+    run_order       = 3
+    version         = "1"
+    configuration = {
+      ProjectName = "TerraformApply-${each.value.codebuild_suffix}"
+      EnvironmentVariables = jsonencode(
+        concat(
+          [
+            {
+              name  = "EXECUTOR_TYPE"
+              value = local.codebuild_types[each.value.codebuild_suffix].type
+              type  = "PLAINTEXT"
+            },
+            {
+              name  = "WORKSPACE_PATH"
+              value = "${local.workspace_path_prefix}${each.value.path}"
+              type  = "PLAINTEXT"
+            },
+          ],
+          [
+            for k, v in each.value.EnvironmentVariables : {
+              name  = k,
+              value = v
+              type  = "PLAINTEXT"
+            }
+        ])
+      )
     }
   }
 
