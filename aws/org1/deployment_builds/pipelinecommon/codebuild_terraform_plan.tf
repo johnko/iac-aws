@@ -70,8 +70,8 @@ resource "aws_iam_role_policy" "CodeBuildRolePlanPolicy" {
 resource "aws_iam_role_policies_exclusive" "terraform_plan" {
   role_name = aws_iam_role.terraform_plan.name
   policy_names = [
-    resource.aws_iam_role_policy.CodeBuildRolePlan-CommonPolicy.name,
-    resource.aws_iam_role_policy.CodeBuildRolePlanPolicy.name,
+    aws_iam_role_policy.CodeBuildRolePlan-CommonPolicy.name,
+    aws_iam_role_policy.CodeBuildRolePlanPolicy.name,
   ]
 }
 

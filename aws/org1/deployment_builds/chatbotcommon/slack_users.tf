@@ -58,5 +58,5 @@ resource "aws_iam_role_policies_exclusive" "chatbot_user_inline" {
   for_each = local.slack_user_roles
 
   role_name    = aws_iam_role.chatbot_user[each.key].name
-  policy_names = [resource.aws_iam_role_policy.inline_policy1[each.key].name]
+  policy_names = [aws_iam_role_policy.inline_policy1[each.key].name]
 }

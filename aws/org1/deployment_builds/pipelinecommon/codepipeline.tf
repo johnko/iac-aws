@@ -145,7 +145,7 @@ resource "aws_iam_role_policy" "CodePipelineRoleDefaultPolicy" {
 
 resource "aws_iam_role_policies_exclusive" "CodePipelineRole" {
   role_name    = aws_iam_role.CodePipelineRole.name
-  policy_names = [resource.aws_iam_role_policy.CodePipelineRoleDefaultPolicy.name]
+  policy_names = [aws_iam_role_policy.CodePipelineRoleDefaultPolicy.name]
 }
 
 output "regional_pipelines" {
