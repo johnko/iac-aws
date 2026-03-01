@@ -18,6 +18,9 @@
 # load secrets
 source .envrc
 
+# might have to comment out aws/org1/shared_tfstate_backend.template the first run because buckets don't exist yet
+echo > aws/org1/shared_tfstate_backend.template
+
 # format terraform workspace files
 bash .github/tf.sh aws/org1/prod_management/foundation fmt
 
@@ -26,6 +29,20 @@ bash .github/tf.sh aws/org1/prod_management/foundation validate
 bash .github/tf.sh aws/org1/prod_management/foundation plan
 
 bash .github/tf.sh aws/org1/prod_management/foundation apply
+bash .github/tf.sh aws/org1/deployment_builds/foundation apply
+bash .github/tf.sh aws/org1/sandbox_bedrock/foundation apply
+bash .github/tf.sh aws/org1/security_aggregator/foundation apply
+bash .github/tf.sh aws/org1/security_cloudtrail/foundation apply
+
+# restore aws/org1/shared_tfstate_backend.template after the tfstate buckets are created
+# Then re-run so it migrates terraform.tfstate to the s3 remote backend
+git checkout aws/org1/shared_tfstate_backend.template
+
+bash .github/tf.sh aws/org1/prod_management/foundation apply
+bash .github/tf.sh aws/org1/deployment_builds/foundation apply
+bash .github/tf.sh aws/org1/sandbox_bedrock/foundation apply
+bash .github/tf.sh aws/org1/security_aggregator/foundation apply
+bash .github/tf.sh aws/org1/security_cloudtrail/foundation apply
 ```
 
 ## After AWS Control Tower is ready
