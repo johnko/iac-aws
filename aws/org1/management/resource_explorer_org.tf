@@ -6,7 +6,7 @@ resource "aws_resourceexplorer2_view" "org_resources" {
     name = "tags"
   }
 
-  scope = aws_organizations_organization.org.roots[0].id
+  scope = aws_organizations_organization.org.roots[0].arn
 
   depends_on = [
     aws_resourceexplorer2_index.account,
