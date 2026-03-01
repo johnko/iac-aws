@@ -5,7 +5,7 @@
 - Enable AWS Billing
 - Set a budget threshold and notifications
 - Enable AWS Organizations
-- Enable AWS Control Tower (see `aws/org1/management/foundation/controltower_landing_zone.tf`)
+- Enable AWS Control Tower (see `aws/org1/prod_management/foundation/controltower_landing_zone.tf`)
   - Automatic account enrollment: true
   - Regions, Region deny control: true (see `aws/org1/shared_locals.tf`)
   - AWS Config: true
@@ -19,13 +19,13 @@
 source .envrc
 
 # format terraform workspace files
-bash .github/tf.sh aws/org1/management/foundation fmt
+bash .github/tf.sh aws/org1/prod_management/foundation fmt
 
-bash .github/tf.sh aws/org1/management/foundation validate
+bash .github/tf.sh aws/org1/prod_management/foundation validate
 
-bash .github/tf.sh aws/org1/management/foundation plan
+bash .github/tf.sh aws/org1/prod_management/foundation plan
 
-bash .github/tf.sh aws/org1/management/foundation apply
+bash .github/tf.sh aws/org1/prod_management/foundation apply
 ```
 
 ## After AWS Control Tower is ready
@@ -40,6 +40,6 @@ bash .github/tf.sh aws/org1/management/foundation apply
 ## Onboarding new accounts
 
 1. Go to https://console.aws.amazon.com/controltower/home/accountfactory and click "Create Account".
-2. Allow NetworkAdministrator permissionset and NetworkAdmins group on new accounts via `resource "aws_ssoadmin_account_assignment" "NetworkAdministrator" {` (see `aws/org1/management/foundation/identity_center_permission_set_NetworkAdmin.tf`) to manually delete default VPCs. Avoid automation unless you have strict guardrails to prevent accidentally deleting other VPCs.
+2. Allow NetworkAdministrator permissionset and NetworkAdmins group on new accounts via `resource "aws_ssoadmin_account_assignment" "NetworkAdministrator" {` (see `aws/org1/prod_management/foundation/identity_center_permission_set_NetworkAdmin.tf`) to manually delete default VPCs. Avoid automation unless you have strict guardrails to prevent accidentally deleting other VPCs.
 3. Manually delete default VPCs
 4. Use https://resource-explorer.console.aws.amazon.com/resource-explorer/home to find all resources across all regions.
