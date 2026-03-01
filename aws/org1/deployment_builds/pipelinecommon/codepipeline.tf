@@ -3,13 +3,41 @@ locals {
   workspace_path_prefix = "aws/org1/"
   pipelines = {
     # find aws -type f -name _import.sh | sort | xargs dirname | sed 's,aws/org1/,,' | awk '{print "\""$1"\" = {}"}'
-    "deployment_builds/chatbotcommon"  = {}
-    "deployment_builds/foundation"     = {}
-    "deployment_builds/pipelinecommon" = {}
-    "prod_management/foundation"       = {}
-    "sandbox_bedrock/foundation"       = {}
-    "security_aggregator/foundation"   = {}
-    "security_cloudtrail/foundation"   = {}
+    "deployment_builds/chatbotcommon" = {
+      EnvironmentVariables = {
+        TF_VAR_aws_account_id = var.aws_account_id_deployment_builds
+      }
+    }
+    "deployment_builds/foundation" = {
+      EnvironmentVariables = {
+        TF_VAR_aws_account_id = var.aws_account_id_deployment_builds
+      }
+    }
+    "deployment_builds/pipelinecommon" = {
+      EnvironmentVariables = {
+        TF_VAR_aws_account_id = var.aws_account_id_deployment_builds
+      }
+    }
+    "prod_management/foundation" = {
+      EnvironmentVariables = {
+        TF_VAR_aws_account_id = var.aws_account_id_management
+      }
+    }
+    "sandbox_bedrock/foundation" = {
+      EnvironmentVariables = {
+        TF_VAR_aws_account_id = var.aws_account_id_sandbox_bedrock
+      }
+    }
+    "security_aggregator/foundation" = {
+      EnvironmentVariables = {
+        TF_VAR_aws_account_id = var.aws_account_id_security_aggregator
+      }
+    }
+    "security_cloudtrail/foundation" = {
+      EnvironmentVariables = {
+        TF_VAR_aws_account_id = var.aws_account_id_security_cloudtrail
+      }
+    }
   }
 }
 
@@ -175,13 +203,23 @@ resource "aws_codepipeline" "terraform_plan" {
       version         = "1"
       configuration = {
         ProjectName = "TerraformPlan-container-linux-small"
-        EnvironmentVariables = jsonencode([
-          {
-            name  = "WORKSPACE_PATH",
-            value = "${local.workspace_path_prefix}${each.key}",
-            type  = "PLAINTEXT"
-          }
-        ])
+        EnvironmentVariables = jsonencode(
+          concat(
+            [
+              {
+                name  = "WORKSPACE_PATH",
+                value = "${local.workspace_path_prefix}${each.key}",
+                type  = "PLAINTEXT"
+              }
+            ],
+            [
+              for k, v in each.value.EnvironmentVariables : {
+                name  = k,
+                value = v
+                type  = "PLAINTEXT"
+              }
+          ])
+        )
       }
     }
   }
