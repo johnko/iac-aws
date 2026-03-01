@@ -1,0 +1,174 @@
+Parameters:
+  ConnectionArn:
+    Description: The CodeConnections ARN for your source repository.
+    Type: String
+  FullRepositoryId:
+    Description: The full repository ID to use with your CodeConnections connection.
+    Type: String
+  BranchName:
+    Description: The branch name to use with your CodeConnections connection.
+    Type: String
+  CodePipelineName:
+    Description: The CodePipeline pipeline name that will deploy to your CloudFormation stack.
+    Type: String
+    Default: TerraformDeployToAWS
+  RetentionPolicy:
+    Description: Define if you'd like the resource retained or deleted when the
+      CloudFormation stack is deleted.
+    Type: String
+    Default: Delete
+    AllowedValues:
+      - Delete
+      - Retain
+  PipelineRoleArn:
+    Description: The IAM role ARN for the pipeline. A new role will be created if not provided.
+    Type: String
+    AllowedPattern: '^$|arn:aws(-[\w]+)*:iam::[0-9]{12}:role/.*'
+    Default: ''
+
+Conditions:
+  CreatePipelineRole: !Equals [ !Ref PipelineRoleArn, '' ]
+
+Resources:
+  CodePipeline:
+    Type: AWS::CodePipeline::Pipeline
+    Properties:
+      ArtifactStore:
+        Location: !Ref CodePipelineArtifactsBucket
+        Type: S3
+      ExecutionMode: QUEUED
+      Name: !Ref CodePipelineName
+      PipelineType: V2
+      RoleArn: !If
+        - CreatePipelineRole
+        - !GetAtt CodePipelineRole.Arn
+        - !Ref PipelineRoleArn
+      Stages:
+        - Name: Source
+          Actions:
+            - Name: CodeConnections
+              ActionTypeId:
+                Category: Source
+                Owner: AWS
+                Provider: CodeStarSourceConnection
+                Version: '1'
+              Configuration:
+                ConnectionArn: !Ref ConnectionArn
+                FullRepositoryId: !Ref FullRepositoryId
+                BranchName: !Ref BranchName
+              OutputArtifacts:
+                - Name: SourceOutput
+              RunOrder: 1
+          OnFailure:
+            Result: RETRY
+        - Name: Deploy
+          Actions:
+            - Name: Terraform
+              ActionTypeId:
+                Category: Compute
+                Owner: AWS
+                Provider: Commands
+                Version: '1'
+              Commands:
+                - export release=AmazonLinux
+                - dnf install -y dnf-plugins-core
+                - dnf config-manager --add-repo https://rpm.releases.hashicorp.com/$release/hashicorp.repo
+                - dnf install -y terraform
+                - terraform init
+                - terraform fmt -check
+                - terraform plan -input=false
+                - terraform apply -auto-approve -input=false
+              InputArtifacts:
+                - Name: SourceOutput
+              RunOrder: 1
+  CodePipelineArtifactsBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: aws:kms
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+    UpdateReplacePolicy: !Ref RetentionPolicy
+    DeletionPolicy: !Ref RetentionPolicy
+  CodePipelineArtifactsBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref CodePipelineArtifactsBucket
+      PolicyDocument:
+        Statement:
+          - Action: s3:*
+            Condition:
+              Bool:
+                aws:SecureTransport: 'false'
+            Effect: Deny
+            Principal:
+              AWS: '*'
+            Resource:
+              - !GetAtt CodePipelineArtifactsBucket.Arn
+              - !Join
+                - '/'
+                - - !GetAtt CodePipelineArtifactsBucket.Arn
+                  - '*'
+        Version: '2012-10-17'
+  CodePipelineRole:
+    Condition: CreatePipelineRole
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Condition:
+              StringEquals:
+                aws:SourceAccount: !Ref AWS::AccountId
+            Effect: Allow
+            Principal:
+              Service: codepipeline.amazonaws.com
+        Version: '2012-10-17'
+  CodePipelineRoleDefaultPolicy:
+    Condition: CreatePipelineRole
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action:
+              - s3:PutObject
+              - s3:GetObject
+              - s3:GetObjectVersion
+              - s3:GetBucketVersioning
+              - s3:GetBucketAcl
+              - s3:GetBucketLocation
+            Condition:
+              StringEquals:
+                aws:ResourceAccount: !Ref AWS::AccountId
+            Effect: Allow
+            Resource:
+              - !GetAtt CodePipelineArtifactsBucket.Arn
+              - !Join
+                - '/'
+                - - !GetAtt CodePipelineArtifactsBucket.Arn
+                  - '*'
+          - Action:
+              - codestar-connections:UseConnection
+            Effect: Allow
+            Resource: !Ref ConnectionArn
+          - Action:
+              - logs:CreateLogGroup
+              - logs:CreateLogStream
+              - logs:PutLogEvents
+            Effect: Allow
+            Resource:
+              - !Sub
+                - arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/codepipeline/${pipelineName}
+                - pipelineName: !Ref CodePipelineName
+              - !Sub
+                - arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/codepipeline/${pipelineName}:log-stream:*
+                - pipelineName: !Ref CodePipelineName
+        Version: '2012-10-17'
+      PolicyName: CodePipelineRoleDefaultPolicy
+      Roles:
+        - !Ref CodePipelineRole
