@@ -38,6 +38,16 @@ resource "aws_ssoadmin_permission_set_inline_policy" "AllowSlackUserRole" {
           "*"
         ]
       },
+      {
+        "Sid" : "PassRoleChatbotUserRole",
+        "Effect" : "Allow",
+        "Action" : [
+          "iam:Passrole",
+        ],
+        "Resource" : [
+          "arn:aws:iam::${aws_organizations_account.deployment_account["deployment_builds"].id}:role/UserChatbotRole-${each.key}",
+        ]
+      },
     ]
   })
 }
