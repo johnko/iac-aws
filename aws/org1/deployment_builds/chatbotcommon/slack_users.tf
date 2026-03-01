@@ -25,6 +25,7 @@ resource "aws_iam_role" "chatbot_user" {
   for_each = local.slack_user_roles
 
   name = "UserChatbotRole-${each.key}"
+  path = "/service-role/"
 
   assume_role_policy = jsonencode({
     "Version" : "2012-10-17",
@@ -41,7 +42,7 @@ resource "aws_iam_role" "chatbot_user" {
 
 }
 
-resource "aws_iam_role_policy_attachments_exclusive" "example" {
+resource "aws_iam_role_policy_attachments_exclusive" "chatbot_user_attached" {
   for_each = local.slack_user_roles
 
   role_name = aws_iam_role.chatbot_user[each.key].name
