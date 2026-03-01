@@ -92,7 +92,8 @@ resource "aws_iam_role_policy" "CodeBuildRoleApplyPolicy" {
           "s3:GetObjectVersion",
           "s3:GetBucketVersioning",
           "s3:GetBucketAcl",
-          "s3:GetBucketLocation"
+          "s3:GetBucketLocation",
+          "s3:ListBucket",
         ],
         "Resource" : [
           "arn:aws:s3:::tfstate-${data.aws_caller_identity.current.account_id}",
