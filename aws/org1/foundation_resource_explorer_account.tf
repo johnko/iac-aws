@@ -12,6 +12,7 @@ resource "aws_resourceexplorer2_index" "account" {
 
 locals {
   resourceExplorerAccountWithoutUnusedRegions = [
+    var.aws_account_id_management,
     var.aws_account_id_security_aggregator,
     var.aws_account_id_security_cloudtrail,
     var.aws_account_id_deployment_builds,
