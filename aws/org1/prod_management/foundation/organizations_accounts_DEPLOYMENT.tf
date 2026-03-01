@@ -3,13 +3,13 @@ variable "aws_email_deployment_builds" {
   description = "Email address for the aws account"
 }
 import {
-  to = aws_organizations_account.deployment_account["prod_builds"]
+  to = aws_organizations_account.deployment_account["deployment_builds"]
   id = var.aws_account_id_deployment_builds
 }
 
 locals {
   deployment_accounts = {
-    prod_builds = {
+    deployment_builds = {
       name  = "DeploymentBuilds"
       email = var.aws_email_deployment_builds
     }
