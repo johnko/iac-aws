@@ -73,8 +73,8 @@ resource "aws_iam_role_policy" "CodePipelineRoleDefaultPolicy" {
           "logs:PutLogEvents"
         ],
         "Resource" : [
-          "arn:aws:logs:ca-central-1:${data.aws_caller_identity.current.account_id}:log-group:/aws/codepipeline/TF-*",
-          "arn:aws:logs:ca-central-1:${data.aws_caller_identity.current.account_id}:log-group:/aws/codepipeline/TF-*:log-stream:*"
+          "arn:aws:logs:*:${data.aws_caller_identity.current.account_id}:log-group:/aws/codepipeline/TF-*",
+          "arn:aws:logs:*:${data.aws_caller_identity.current.account_id}:log-group:/aws/codepipeline/TF-*:log-stream:*"
         ],
         "Effect" : "Allow"
       },
@@ -95,7 +95,7 @@ resource "aws_iam_role_policy" "CodePipelineRoleDefaultPolicy" {
   })
 }
 
-resource "aws_iam_role_policies_exclusive" "chatbot_user_inline" {
+resource "aws_iam_role_policies_exclusive" "CodePipelineRole" {
   role_name    = aws_iam_role.CodePipelineRole.name
   policy_names = [resource.aws_iam_role_policy.CodePipelineRoleDefaultPolicy.name]
 }
