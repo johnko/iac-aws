@@ -38,6 +38,7 @@ locals {
           }
         },
         "Action" : [
+          "s3:DeleteObject",
           "s3:PutObject",
           "s3:GetObject",
           "s3:GetObjectVersion",
@@ -65,6 +66,14 @@ locals {
         "Resource" : [
           "arn:aws:ssm:*:${data.aws_caller_identity.current.account_id}:parameter/TF_VAR_*"
         ],
+        "Effect" : "Allow"
+      },
+      {
+        # Read tag policy
+        "Action" : [
+          "tag:ListRequiredTags",
+        ],
+        "Resource" : "*",
         "Effect" : "Allow"
       },
     ]
