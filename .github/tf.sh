@@ -114,6 +114,25 @@ if [[ "PLAN" == "$SAFE_ACTION" ]]; then
   set +e
   $IAC_BIN plan -detailed-exitcode -input=false
   TF_PLAN_EXIT_CODE=$?
+  set +u
+  if [[ -n $CODEBUILD_PROJECT_ARN ]]; then
+    # If running in CodeBuild
+    case $TF_PLAN_EXIT_CODE in
+      0)
+        # 0 = Succeeded with empty diff (no changes), so exit 42 to stop pipeline from going to TerraformApply
+        exit 42
+        ;;
+      2)
+        # 2 = Succeeded with non-empty diff (changes present), so exit 0 so pipeline continues to ApproveOrReject and TerraformApply
+        exit 0
+        ;;
+      *)
+        # 1 = Error
+        exit $TF_PLAN_EXIT_CODE
+        ;;
+    esac
+  fi
+  set -u
   set -e
   exit $TF_PLAN_EXIT_CODE
 fi
