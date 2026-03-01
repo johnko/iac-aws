@@ -18,7 +18,7 @@ resource "aws_kms_replica_key" "identitycenter_replica" {
 resource "aws_kms_key_policy" "identitycenter_replica" {
   region = "ca-west-1"
 
-  key_id = aws_kms_key.identitycenter_replica.id
+  key_id = aws_kms_replica_key.identitycenter_replica.id
   policy = local.identitycenter_kms_key_policy
 }
 
