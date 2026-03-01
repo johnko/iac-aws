@@ -32,7 +32,7 @@ resource "aws_resourceexplorer2_index" "unusedRegions" {
 }
 
 # Sample query
-# region:ca-central-1,ca-west-1,us-east-1,us-east-2,us-west-2 -tag.key:aws:cloudformation:stack-name -tag.value:awsautomatic -tag.value:awsconsole -resourcetype:athena:datacatalog -resourcetype:ec2:security-group-rule -resourcetype:events:rule -resourcetype:memorydb:acl -resourcetype:memorydb:parametergroup -resourcetype:memorydb:user -resourcetype:ssm:resource-data-sync -resourcetype:resource-explorer-2:index
+# region:ca-central-1,ca-west-1,us-east-1,us-east-2,us-west-2 -tag.key:aws:cloudformation:stack-name -tag.value:awsautomatic -tag.value:awsconsole -tag.value:terraform -resourcetype:athena:datacatalog -resourcetype:ec2:security-group-rule -resourcetype:events:rule -resourcetype:memorydb:acl -resourcetype:memorydb:parametergroup -resourcetype:memorydb:user -resourcetype:ssm:resource-data-sync -resourcetype:resource-explorer-2:index
 
 resource "aws_resourceexplorer2_view" "all_resources" {
   name = "all-resources"
