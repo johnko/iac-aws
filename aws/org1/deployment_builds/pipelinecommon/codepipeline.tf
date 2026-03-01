@@ -135,7 +135,7 @@ resource "aws_iam_role_policy" "CodePipelineRoleDefaultPolicy" {
           "codebuild:StartBuildBatch"
         ],
         "Resource" : [
-          for k, v in merge(aws_codebuild_project.terraform_plan, aws_codebuild_project.terraform_apply) : v.arn
+          for v in concat(values(aws_codebuild_project.terraform_plan), values(aws_codebuild_project.terraform_apply)) : v.arn
         ],
         "Effect" : "Allow"
       }
