@@ -51,7 +51,22 @@ locals {
           "arn:aws:s3:::tfstate-${data.aws_caller_identity.current.account_id}/*"
         ],
         "Effect" : "Allow"
-      }
+      },
+      {
+        # Allow to get SSM Parameter
+        "Condition" : {
+          "StringEquals" : {
+            "aws:ResourceAccount" : "${data.aws_caller_identity.current.account_id}"
+          }
+        },
+        "Action" : [
+          "ssm:GetParameters",
+        ],
+        "Resource" : [
+          "arn:aws:ssm:*:${data.aws_caller_identity.current.account_id}:parameter/TF_VAR_*"
+        ],
+        "Effect" : "Allow"
+      },
     ]
   })
 }

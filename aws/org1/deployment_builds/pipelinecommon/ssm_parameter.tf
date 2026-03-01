@@ -28,3 +28,13 @@ resource "aws_ssm_parameter" "param" {
   value = each.value.value
   type  = "String"
 }
+
+resource "aws_ssm_parameter" "secondary" {
+  for_each = local.ssm_parameters
+
+  region = local.secondary_region
+
+  name  = "TF_VAR_${each.key}"
+  value = each.value.value
+  type  = "String"
+}

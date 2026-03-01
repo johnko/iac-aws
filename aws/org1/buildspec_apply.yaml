@@ -4,6 +4,13 @@ version: 0.2
 
 env:
   shell: bash
+  parameter-store:
+    TF_VAR_codeconnection_deployment_builds: TF_VAR_codeconnection_deployment_builds
+    TF_VAR_aws_account_id_management: TF_VAR_aws_account_id_management
+    TF_VAR_aws_account_id_security_aggregator: TF_VAR_aws_account_id_security_aggregator
+    TF_VAR_aws_account_id_security_cloudtrail: TF_VAR_aws_account_id_security_cloudtrail
+    TF_VAR_aws_account_id_sandbox_bedrock: TF_VAR_aws_account_id_sandbox_bedrock
+    TF_VAR_aws_account_id_deployment_builds: TF_VAR_aws_account_id_deployment_builds
   # secrets-manager:
   #   key: secret-id:json-key:version-stage:version-id
 
