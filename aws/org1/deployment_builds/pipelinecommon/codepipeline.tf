@@ -124,6 +124,11 @@ resource "aws_codepipeline" "terraform_plan" {
         branches {
           includes = ["main"]
         }
+        file_paths {
+          includes = [
+            "^${local.workspace_path_prefix}${each.key}/.*",
+          ]
+        }
       }
     }
   }
