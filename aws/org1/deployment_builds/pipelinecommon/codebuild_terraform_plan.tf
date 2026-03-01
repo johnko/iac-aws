@@ -22,7 +22,7 @@ resource "aws_iam_role" "terraform_plan" {
 resource "aws_iam_role_policy_attachments_exclusive" "terraform_plan" {
   role_name = aws_iam_role.terraform_plan.name
   policy_arns = [
-    "arn:aws:iam::aws:policy/job-function/ViewOnlyAccess"
+    "arn:aws:iam::aws:policy/ReadOnlyAccess"
   ]
 }
 
