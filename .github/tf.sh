@@ -44,6 +44,13 @@ case $SAFE_ACTION in
 esac
 echo "SAFE_ACTION=$SAFE_ACTION"
 
+# Load above workspace specific secrets
+if [[ -e ../.envrc ]]; then
+  set +x
+  # hide secret env values from output
+  # shellcheck disable=SC1091
+  source ../.envrc
+fi
 # Load workspace specific secrets
 if [[ -e .envrc ]]; then
   set +x
