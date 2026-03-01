@@ -19,6 +19,12 @@ resource "aws_iam_role" "terraform_apply" {
   })
 }
 
+resource "aws_iam_role_policy" "CodeBuildRoleApply-CommonPolicy" {
+  name   = "CodeBuildRoleTerraformCommonPolicy"
+  role   = aws_iam_role.terraform_apply.id
+  policy = local.terraform_common_policy
+}
+
 resource "aws_iam_role_policy" "CodeBuildRoleApplyPolicy" {
   name = "CodeBuildRoleApplyPolicy"
   role = aws_iam_role.terraform_apply.id
@@ -26,34 +32,6 @@ resource "aws_iam_role_policy" "CodeBuildRoleApplyPolicy" {
   policy = jsonencode({
     "Version" : "2012-10-17",
     "Statement" : [
-      {
-        "Condition" : {
-          "StringEquals" : {
-            "aws:ResourceAccount" : "${data.aws_caller_identity.current.account_id}"
-          }
-        },
-        "Action" : [
-          "s3:PutObject",
-          "s3:GetObject",
-          "s3:GetObjectVersion",
-          "s3:GetBucketVersioning",
-          "s3:GetBucketAcl",
-          "s3:GetBucketLocation"
-        ],
-        "Resource" : [
-          "${aws_s3_bucket.codepipeline.arn}",
-          "${aws_s3_bucket.codepipeline.arn}/*"
-        ],
-        "Effect" : "Allow"
-      },
-      {
-        # See https://docs.aws.amazon.com/codepipeline/latest/userguide/troubleshooting.html#codebuild-role-connections
-        "Action" : [
-          "codestar-connections:UseConnection"
-        ],
-        "Resource" : aws_codeconnections_connection.johnko.arn,
-        "Effect" : "Allow"
-      },
       {
         "Action" : [
           "logs:CreateLogGroup",
@@ -79,35 +57,16 @@ resource "aws_iam_role_policy" "CodeBuildRoleApplyPolicy" {
         ],
         "Effect" : "Allow"
       },
-      {
-        # Allow write to tfstate bucket
-        "Condition" : {
-          "StringEquals" : {
-            "aws:ResourceAccount" : "${data.aws_caller_identity.current.account_id}"
-          }
-        },
-        "Action" : [
-          "s3:PutObject",
-          "s3:GetObject",
-          "s3:GetObjectVersion",
-          "s3:GetBucketVersioning",
-          "s3:GetBucketAcl",
-          "s3:GetBucketLocation",
-          "s3:ListBucket",
-        ],
-        "Resource" : [
-          "arn:aws:s3:::tfstate-${data.aws_caller_identity.current.account_id}",
-          "arn:aws:s3:::tfstate-${data.aws_caller_identity.current.account_id}/*"
-        ],
-        "Effect" : "Allow"
-      }
     ]
   })
 }
 
 resource "aws_iam_role_policies_exclusive" "terraform_apply" {
-  role_name    = aws_iam_role.terraform_apply.name
-  policy_names = [resource.aws_iam_role_policy.CodeBuildRoleApplyPolicy.name]
+  role_name = aws_iam_role.terraform_apply.name
+  policy_names = [
+    resource.aws_iam_role_policy.CodeBuildRoleApply-CommonPolicy.name,
+    resource.aws_iam_role_policy.CodeBuildRoleApplyPolicy.name,
+  ]
 }
 
 resource "aws_codebuild_project" "terraform_apply" {

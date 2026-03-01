@@ -19,41 +19,18 @@ resource "aws_iam_role" "terraform_plan" {
   })
 }
 
+resource "aws_iam_role_policy" "CodeBuildRolePlan-CommonPolicy" {
+  name   = "CodeBuildRoleTerraformCommonPolicy"
+  role   = aws_iam_role.terraform_plan.id
+  policy = local.terraform_common_policy
+}
+
 resource "aws_iam_role_policy" "CodeBuildRolePlanPolicy" {
   name = "CodeBuildRolePlanPolicy"
   role = aws_iam_role.terraform_plan.id
-
   policy = jsonencode({
     "Version" : "2012-10-17",
     "Statement" : [
-      {
-        "Condition" : {
-          "StringEquals" : {
-            "aws:ResourceAccount" : "${data.aws_caller_identity.current.account_id}"
-          }
-        },
-        "Action" : [
-          "s3:PutObject",
-          "s3:GetObject",
-          "s3:GetObjectVersion",
-          "s3:GetBucketVersioning",
-          "s3:GetBucketAcl",
-          "s3:GetBucketLocation"
-        ],
-        "Resource" : [
-          "${aws_s3_bucket.codepipeline.arn}",
-          "${aws_s3_bucket.codepipeline.arn}/*"
-        ],
-        "Effect" : "Allow"
-      },
-      {
-        # See https://docs.aws.amazon.com/codepipeline/latest/userguide/troubleshooting.html#codebuild-role-connections
-        "Action" : [
-          "codestar-connections:UseConnection"
-        ],
-        "Resource" : aws_codeconnections_connection.johnko.arn,
-        "Effect" : "Allow"
-      },
       {
         "Action" : [
           "logs:CreateLogGroup",
@@ -78,14 +55,17 @@ resource "aws_iam_role_policy" "CodeBuildRolePlanPolicy" {
           for k, v in aws_codebuild_project.terraform_plan : v.arn
         ],
         "Effect" : "Allow"
-      }
+      },
     ]
   })
 }
 
 resource "aws_iam_role_policies_exclusive" "terraform_plan" {
-  role_name    = aws_iam_role.terraform_plan.name
-  policy_names = [resource.aws_iam_role_policy.CodeBuildRolePlanPolicy.name]
+  role_name = aws_iam_role.terraform_plan.name
+  policy_names = [
+    resource.aws_iam_role_policy.CodeBuildRolePlan-CommonPolicy.name,
+    resource.aws_iam_role_policy.CodeBuildRolePlanPolicy.name,
+  ]
 }
 
 resource "aws_codebuild_project" "terraform_plan" {
