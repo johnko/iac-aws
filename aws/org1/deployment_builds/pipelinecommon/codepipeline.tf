@@ -232,11 +232,6 @@ resource "aws_codepipeline" "terraform" {
           concat(
             [
               {
-                name  = "CI"
-                value = "true"
-                type  = "PLAINTEXT"
-              },
-              {
                 name  = "EXECUTOR_TYPE"
                 value = local.codebuild_types[each.value.codebuild_suffix].type
                 type  = "PLAINTEXT"
