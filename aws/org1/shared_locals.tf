@@ -29,6 +29,7 @@ locals {
 
   codebuild_types = {
     container-linux-small = {
+      build_timeout   = 60
       compute_type    = "BUILD_GENERAL1_SMALL"
       image           = "aws/codebuild/standard:7.0"
       privileged_mode = true
@@ -36,6 +37,7 @@ locals {
       type            = "LINUX_CONTAINER"
     }
     lambda-linux-1 = {
+      build_timeout   = 15
       compute_type    = "BUILD_LAMBDA_1GB"
       image           = "aws/codebuild/amazonlinux-x86_64-lambda-standard:python3.13"
       privileged_mode = false
