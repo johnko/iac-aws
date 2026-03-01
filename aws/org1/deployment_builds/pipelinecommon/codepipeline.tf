@@ -1,4 +1,6 @@
 locals {
+  FullRepositoryId      = "johnko/iac-aws"
+  workspace_path_prefix = "aws/org1/"
   pipelines = {
     # find aws -type f -name _import.sh | sort | xargs dirname | sed 's,aws/org1/,,' | awk '{print "\""$1"\" = {}"}'
     "deployment_builds/chatbotcommon"  = {}
@@ -101,9 +103,9 @@ resource "aws_iam_role_policies_exclusive" "CodePipelineRole" {
 }
 
 resource "aws_codepipeline" "terraform_plan" {
-  # for_each = local.pipelines
+  for_each = local.pipelines
 
-  name     = "TF-deployment_builds-pipelinecommon"
+  name     = "TF-${replace(each.key, "/", "-")}"
   role_arn = aws_iam_role.CodePipelineRole.arn
 
   execution_mode = "QUEUED"
@@ -140,7 +142,7 @@ resource "aws_codepipeline" "terraform_plan" {
       configuration = {
         BranchName           = "main"
         ConnectionArn        = aws_codeconnections_connection.johnko.arn
-        FullRepositoryId     = "johnko/iac-aws"
+        FullRepositoryId     = local.FullRepositoryId
         OutputArtifactFormat = "CODEBUILD_CLONE_REF"
       }
     }
@@ -168,7 +170,7 @@ resource "aws_codepipeline" "terraform_plan" {
         EnvironmentVariables = jsonencode([
           {
             name  = "WORKSPACE_PATH",
-            value = "test",
+            value = "${local.workspace_path_prefix}${each.key}",
             type  = "PLAINTEXT"
           }
         ])

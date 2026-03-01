@@ -17,12 +17,12 @@ phases:
 
   pre_build:
     commands:
-      - bash .github/tf.sh $WORKSPACE_FOLDER validate
+      - bash .github/tf.sh $WORKSPACE_PATH validate
 
   build:
     commands:
-      - bash .github/tf.sh $WORKSPACE_FOLDER plan
+      - bash .github/tf.sh $WORKSPACE_PATH plan
 
   post_build:
     commands:
-      - bash ./aws/org1/post_build.sh $WORKSPACE_FOLDER
+      - bash ./aws/org1/post_build.sh $WORKSPACE_PATH
