@@ -18,7 +18,7 @@ variable "aws_account_id_sandbox_bedrock" {
   description = "AWS Account ID, eg. 111111111111"
 }
 
-variable "aws_account_id_deployment_prod_buildsprod_buildsprod_buildsprod_buildsprod_buildsprod_builds" {
+variable "aws_account_id_deployment_prod_builds" {
   type        = string
   description = "AWS Account ID, eg. 111111111111"
 }
