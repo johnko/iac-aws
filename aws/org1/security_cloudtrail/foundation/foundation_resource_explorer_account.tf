@@ -1,0 +1,1 @@
+../../foundation_resource_explorer_account.tf
