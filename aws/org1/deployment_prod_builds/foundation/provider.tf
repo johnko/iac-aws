@@ -1,6 +1,6 @@
 provider "aws" {
   allowed_account_ids = [
-    var.aws_account_id_sandbox_bedrock
+    var.aws_account_id_deployment_prod_builds
   ]
 
   default_tags {
