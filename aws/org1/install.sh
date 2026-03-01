@@ -1,6 +1,13 @@
 #!/usr/bin/env bash
 set -euxo pipefail
 
+if [[ -e .envrc ]]; then
+  set +x
+  # hide secret env values from output
+  # shellcheck disable=SC1091
+  source .envrc
+fi
+
 if echo $EXECUTOR_TYPE | grep LAMBDA; then
 
   TERRAFORM_FILENAME="terraform_${TERRAFORM_VERSION}_linux_amd64.zip"
