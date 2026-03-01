@@ -259,12 +259,13 @@ resource "aws_codepipeline" "terraform" {
     }
 
     action {
-      category  = "Approval"
-      name      = "ApproveOrReject"
-      owner     = "AWS"
-      provider  = "Manual"
-      run_order = 2
-      version   = "1"
+      category           = "Approval"
+      name               = "ApproveOrReject"
+      owner              = "AWS"
+      provider           = "Manual"
+      run_order          = 2
+      timeout_in_minutes = 30
+      version            = "1"
       configuration = {
         # See https://docs.aws.amazon.com/codepipeline/latest/userguide/structure-configuration-examples.html
         "CustomData" : "Last chance to cancel if the TerraformPlan looks wrong!",
