@@ -1,0 +1,9 @@
+terraform {
+  backend "s3" {
+    bucket       = "tfstate-${TF_VAR_aws_account_id}"
+    key          = "${TF_VAR_workspace}/terraform.tfstate"
+    region       = "ca-central-1"
+    encrypt      = true
+    use_lockfile = true
+  }
+}

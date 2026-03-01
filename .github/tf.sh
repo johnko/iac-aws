@@ -59,6 +59,10 @@ if [[ -e .envrc ]]; then
   source .envrc
 fi
 
+if [[ -e shared_tfstate_backend.template ]]; then
+  envsubst <shared_tfstate_backend.template >shared_tfstate_backend.tf
+fi
+
 set -ux
 $IAC_BIN fmt
 
