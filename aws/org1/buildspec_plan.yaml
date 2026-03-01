@@ -22,6 +22,7 @@ phases:
     #   python: 3.13
     commands:
       - bash ./aws/org1/install.sh
+      - terraform version
 
   pre_build:
     commands:

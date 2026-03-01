@@ -19,9 +19,7 @@ if echo "$EXECUTOR_TYPE" | grep LAMBDA; then
       unzip "$TERRAFORM_FILENAME"
       mkdir -p ~/bin
       mv terraform ~/bin/
-      echo >> ~/.bashrc
-      echo 'export PATH=$PATH:~/bin' >> ~/.bashrc
-      source ~/.bashrc
+      export PATH=$PATH:~/bin
     fi
   fi
 
