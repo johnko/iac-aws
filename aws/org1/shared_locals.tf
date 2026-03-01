@@ -23,6 +23,12 @@ locals {
     "sa-east-1",
     "us-west-1",
   ]
+
+  slack_user_roles = {
+    "viewer"   = {}
+    "approver" = {}
+    "invoker"  = {}
+  }
 }
 
 data "aws_caller_identity" "current" {}
