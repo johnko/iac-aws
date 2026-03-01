@@ -78,6 +78,27 @@ resource "aws_iam_role_policy" "CodeBuildRoleApplyPolicy" {
           for k, v in aws_codebuild_project.terraform_apply : v.arn
         ],
         "Effect" : "Allow"
+      },
+      {
+        # Allow write to tfstate bucket
+        "Condition" : {
+          "StringEquals" : {
+            "aws:ResourceAccount" : "${data.aws_caller_identity.current.account_id}"
+          }
+        },
+        "Action" : [
+          "s3:PutObject",
+          "s3:GetObject",
+          "s3:GetObjectVersion",
+          "s3:GetBucketVersioning",
+          "s3:GetBucketAcl",
+          "s3:GetBucketLocation"
+        ],
+        "Resource" : [
+          "arn:aws:s3:::tfstate-${data.aws_caller_identity.current.account_id}",
+          "arn:aws:s3:::tfstate-${data.aws_caller_identity.current.account_id}/*"
+        ],
+        "Effect" : "Allow"
       }
     ]
   })
