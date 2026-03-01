@@ -19,11 +19,11 @@ import {
 locals {
   security_accounts = {
     security_aggregator = {
-      name  = "Aggregator account"
+      name  = "SecurityAggregator"
       email = var.aws_email_security_aggregator
     }
     security_cloudtrail = {
-      name  = "CloudTrail administrator"
+      name  = "SecurityCloudTrail"
       email = var.aws_email_security_cloudtrail
     }
   }

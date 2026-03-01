@@ -10,7 +10,7 @@ import {
 locals {
   sandbox_accounts = {
     sandbox_bedrock = {
-      name  = "Sandbox Bedrock"
+      name  = "SandboxBedrock"
       email = var.aws_email_sandbox_bedrock
     }
   }

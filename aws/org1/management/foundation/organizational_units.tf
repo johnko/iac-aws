@@ -31,19 +31,34 @@ import {
   }
 }
 
+variable "aws_ou_id_deployment" {
+  type        = string
+  description = "Organizational Unit ID, eg. ou-xyz789"
+}
+import {
+  to = aws_organizations_organizational_unit.ou["deployment"]
+  identity = {
+    id = var.aws_ou_id_deployment
+  }
+}
+
 locals {
   # Reference: https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_ous_best_practices.html
   ou = {
-    security = {
-      name      = "Security"
+    deployment = {
+      name      = "Deployment"
+      parent_id = aws_organizations_organization.org.roots[0].id
+    }
+    quarantine = {
+      name      = "Quarantine"
       parent_id = aws_organizations_organization.org.roots[0].id
     }
     sandbox = {
       name      = "Sandbox"
       parent_id = aws_organizations_organization.org.roots[0].id
     }
-    quarantine = {
-      name      = "Quarantine"
+    security = {
+      name      = "Security"
       parent_id = aws_organizations_organization.org.roots[0].id
     }
   }
