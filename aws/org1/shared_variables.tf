@@ -1,3 +1,8 @@
+variable "aws_account_id" {
+  type        = string
+  description = "THIS AWS Account ID, eg. 111111111111"
+}
+
 variable "aws_account_id_management" {
   type        = string
   description = "AWS Account ID, eg. 111111111111"

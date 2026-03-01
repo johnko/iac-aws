@@ -1,6 +1,6 @@
 provider "aws" {
   allowed_account_ids = [
-    var.aws_account_id_management
+    var.aws_account_id
   ]
 
   default_tags {

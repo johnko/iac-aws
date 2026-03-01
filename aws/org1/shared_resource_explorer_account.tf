@@ -10,8 +10,6 @@ resource "aws_resourceexplorer2_index" "account" {
   type   = each.value.type
 }
 
-data "aws_caller_identity" "current" {}
-
 locals {
   resourceExplorerAccountWithoutUnusedRegions = [
     var.aws_account_id_security_aggregator,
