@@ -1,17 +1,17 @@
-variable "aws_email_prod_builds" {
+variable "aws_email_deployment_prod_builds" {
   type        = string
   description = "Email address for the aws account"
 }
 import {
   to = aws_organizations_account.deployment_account["prod_builds"]
-  id = var.aws_account_id_prod_builds
+  id = var.aws_account_id_deployment_prod_builds
 }
 
 locals {
   deployment_accounts = {
     prod_builds = {
       name  = "ProdBuilds"
-      email = var.aws_email_prod_builds
+      email = var.aws_email_deployment_prod_builds
     }
   }
 }
