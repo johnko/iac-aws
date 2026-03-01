@@ -1,8 +1,3 @@
-variable "slack_team_name" {
-  type        = string
-  description = "ARN of the CodeConnection, eg. arn:aws:codeconnections:us-west-1:0123456789:connection/79d4d357-a2ee-41e4-b350-2fe39ae59448"
-}
-
 import {
   to = aws_chatbot_slack_channel_configuration.channel["test-awschatbot"]
   id = "arn:aws:chatbot::${data.aws_caller_identity.current.account_id}:chat-configuration/slack-channel/test-awschatbot"

@@ -11,6 +11,7 @@ env:
     TF_VAR_aws_account_id_security_cloudtrail: TF_VAR_aws_account_id_security_cloudtrail
     TF_VAR_aws_account_id_sandbox_bedrock: TF_VAR_aws_account_id_sandbox_bedrock
     TF_VAR_aws_account_id_deployment_builds: TF_VAR_aws_account_id_deployment_builds
+    TF_VAR_slack_team_name: TF_VAR_slack_team_name
   # secrets-manager:
   #   key: secret-id:json-key:version-stage:version-id
 

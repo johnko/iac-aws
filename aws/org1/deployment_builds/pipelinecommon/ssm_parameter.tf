@@ -18,6 +18,9 @@ locals {
     aws_account_id_deployment_builds = {
       value = var.aws_account_id_deployment_builds
     }
+    slack_team_name = {
+      value = var.slack_team_name
+    }
   }
 }
 
