@@ -19,6 +19,13 @@ resource "aws_iam_role" "terraform_apply" {
   })
 }
 
+resource "aws_iam_role_policy_attachments_exclusive" "terraform_apply" {
+  role_name = aws_iam_role.terraform_apply.name
+  policy_arns = [
+    "arn:aws:iam::aws:policy/job-function/ViewOnlyAccess"
+  ]
+}
+
 resource "aws_iam_role_policy" "CodeBuildRoleApply-CommonPolicy" {
   name   = "CodeBuildRoleTerraformCommonPolicy"
   role   = aws_iam_role.terraform_apply.id
