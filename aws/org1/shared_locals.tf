@@ -31,7 +31,7 @@ locals {
     container-linux-small = {
       build_timeout   = 60
       compute_type    = "BUILD_GENERAL1_SMALL"
-      image           = "aws/codebuild/standard:7.0"
+      image           = "aws/codebuild/amazonlinux-x86_64-standard:5.0"
       privileged_mode = true
       queued_timeout  = 90
       region          = local.primary_region
