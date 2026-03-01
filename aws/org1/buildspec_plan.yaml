@@ -21,8 +21,10 @@ phases:
     #   # See https://docs.aws.amazon.com/codebuild/latest/userguide/available-runtimes.html
     #   python: 3.13
     commands:
-      - bash ./aws/org1/install.sh
-      - terraform version
+      - |
+        bash ./aws/org1/install.sh
+        export PATH=$PATH:~/bin
+        terraform version
 
   pre_build:
     commands:
