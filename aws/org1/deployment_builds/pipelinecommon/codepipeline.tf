@@ -41,8 +41,8 @@ locals {
   }
 
   DetectChanges_by_region = {
-    "${local.primary_region}"   = true
-    "${local.secondary_region}" = false
+    "${local.primary_region}"   = false
+    "${local.secondary_region}" = true
   }
 
   regional_pipelines = merge(values({
