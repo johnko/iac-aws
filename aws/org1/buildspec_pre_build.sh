@@ -8,4 +8,4 @@ aws codepipeline disable-stage-transition \
   --pipeline-name "$CODEPIPELINE_NAME" \
   --stage-name Plan \
   --transition-type Inbound \
-  --reason "Automatic - Plan is running"
+  --reason "Automatically disabled stage transition - TerraformPlan was running and needs review for ApproveOrReject before TerraformApply"
