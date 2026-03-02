@@ -52,4 +52,4 @@ phases:
       # now enable stage transition to unlock current pipeline
       - |
         bash ./aws/org1/buildspec_post_build.sh
-      # TODO: If the Approval step was rejected, then need an event driven way to enable stage transition
+      # If the Approval step was rejected, then handle with aws/org1/deployment_builds/pipelinecommon/codepipeline_handle_rejected_approval_event.tf

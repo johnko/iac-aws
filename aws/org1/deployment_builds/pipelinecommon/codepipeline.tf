@@ -62,7 +62,7 @@ locals {
 }
 
 resource "aws_iam_role" "CodePipelineRole" {
-  name = "CodePipelineStarterTemplate-Terraf-CodePipelineRole-cEfdjyiSFHAA"
+  name = "CodePipelineRole-TerraformPipelines"
   assume_role_policy = jsonencode({
     "Version" : "2012-10-17",
     "Statement" : [
