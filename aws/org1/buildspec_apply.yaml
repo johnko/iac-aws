@@ -31,9 +31,9 @@ phases:
         export PATH=$PATH:~/bin
         terraform version
 
-  # pre_build:
-  #   commands:
-  #     - bash .github/tf.sh $WORKSPACE_PATH validate
+  pre_build:
+    commands:
+      - bash ./aws/org1/buildspec_pre_build.sh
 
   build:
     commands:
@@ -51,5 +51,5 @@ phases:
     finally:
       # now enable stage transition to unlock current pipeline
       - |
-        bash ./aws/org1/buildspec_post_build.sh $WORKSPACE_PATH
+        bash ./aws/org1/buildspec_post_build.sh
       # TODO: If the Approval step was rejected, then need an event driven way to enable stage transition

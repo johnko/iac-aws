@@ -31,9 +31,9 @@ phases:
         export PATH=$PATH:~/bin
         terraform version
 
-  # pre_build:
-  #   commands:
-  #     - bash .github/tf.sh $WORKSPACE_PATH validate
+  pre_build:
+    commands:
+      - bash ./aws/org1/buildspec_pre_build.sh
 
   build:
     commands:
@@ -55,5 +55,5 @@ phases:
       # don't buildspec_post_build.sh on 2 because it will enable stage transtiion for current pipeline, which will cause plan to be overwritten by next queued execution
       - |
         if [[ $TF_PLAN_EXIT_CODE != 2 ]]; then
-          bash ./aws/org1/buildspec_post_build.sh $WORKSPACE_PATH
+          bash ./aws/org1/buildspec_post_build.sh
         fi
