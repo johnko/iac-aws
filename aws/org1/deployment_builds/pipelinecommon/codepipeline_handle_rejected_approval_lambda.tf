@@ -67,7 +67,7 @@ resource "aws_lambda_function" "terraform_codepipeline_rejected" {
   code_sha256   = data.archive_file.terraform_codepipeline_rejected.output_base64sha256
   filename      = data.archive_file.terraform_codepipeline_rejected.output_path
   function_name = "TerraformCodePipelineRejectedEnableStageTransition"
-  handler       = "terraform_codepipeline_rejected.handler"
+  handler       = "terraform_codepipeline_rejected.lambda_handler"
   role          = aws_iam_role.terraform_codepipeline_rejected.arn
   runtime       = "python3.13"
   timeout       = 60
