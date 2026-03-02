@@ -114,6 +114,9 @@ if [[ "PLAN" == "$SAFE_ACTION" ]]; then
   set +e
   $IAC_BIN plan -detailed-exitcode -input=false
   TF_PLAN_EXIT_CODE=$?
+  # 0 = Succeeded with empty diff (no changes), need to stop pipeline from going to TerraformApply
+  # 2 = Succeeded with non-empty diff (changes present), need to continues pipeline to ApproveOrReject and TerraformApply
+  # 1 = Error
   set -e
   exit $TF_PLAN_EXIT_CODE
 fi

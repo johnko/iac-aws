@@ -221,12 +221,13 @@ resource "aws_codepipeline" "terraform" {
   }
 
   stage {
-    name = "Deploy"
+    name = "Plan"
 
     action {
       category        = "Build"
       input_artifacts = ["SourceOutput"]
       name            = "TerraformPlan"
+      namespace       = "TerraformPlan"
       owner           = "AWS"
       provider        = "CodeBuild" # Can't use Commands until terraform-aws-provider supports it
       run_order       = 1
@@ -257,6 +258,32 @@ resource "aws_codepipeline" "terraform" {
         )
       }
     }
+  }
+
+  stage {
+    name = "Apply"
+
+    before_entry {
+      condition {
+        result = "SKIP"
+        rule {
+          configuration = {
+            "Operator" = "EQ"
+            "Value"    = "2"
+            "Variable" = "#{TerraformPlan.TF_PLAN_EXIT_CODE}"
+          }
+          name   = "ChangesPresent"
+          region = "us-east-2"
+          rule_type_id {
+            category = "Rule"
+            owner    = "AWS"
+            provider = "VariableCheck"
+            version  = "1"
+          }
+        }
+      }
+    }
+
 
     action {
       category           = "Approval"
@@ -277,6 +304,7 @@ resource "aws_codepipeline" "terraform" {
       category        = "Build"
       input_artifacts = ["SourceOutput"]
       name            = "TerraformApply"
+      namespace       = "TerraformApply"
       owner           = "AWS"
       provider        = "CodeBuild" # Can't use Commands until terraform-aws-provider supports it
       run_order       = 3
