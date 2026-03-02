@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 set -euxo pipefail
 
+set +u
+: ${CI:=false}
+
+set -u
 TERRAFORM_FILENAME="terraform_${TERRAFORM_VERSION}_linux_amd64.zip"
 TERRAFORM_SHAFILE="terraform_${TERRAFORM_VERSION}_SHA256SUMS"
 

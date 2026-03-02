@@ -39,3 +39,4 @@ terraform.rc
 shared_tfstate_backend.tf
 
 terraform_*.zip
+terraform_*_SHA256SUMS
