@@ -38,11 +38,11 @@ phases:
   build:
     commands:
       - |
-        set +e
         bash .github/tf.sh $WORKSPACE_PATH auto
         export TF_APPLY_EXIT_CODE=$?
-        exit $TF_APPLY_EXIT_CODE
 
   post_build:
     commands:
-      - bash ./aws/org1/buildspec_post_build.sh $WORKSPACE_PATH
+      - |
+        bash ./aws/org1/buildspec_post_build.sh $WORKSPACE_PATH
+        exit $TF_APPLY_EXIT_CODE
