@@ -44,5 +44,11 @@ phases:
   post_build:
     commands:
       - bash ./aws/org1/buildspec_post_build.sh $WORKSPACE_PATH
-      # don't exit because it will stop pipeline
-      # - exit $TF_PLAN_EXIT_CODE
+      # 0 = Succeeded with empty diff (no changes), need to stop pipeline from going to TerraformApply
+      # 2 = Succeeded with non-empty diff (changes present), need to continues pipeline to ApproveOrReject and TerraformApply
+      # 1 = Error
+      # don't exit on 2 because it will stop pipeline, so exit on 0 or 1
+      - |
+        if [[ $$TF_PLAN_EXIT_CODE != 2 ]]; then
+          exit $TF_PLAN_EXIT_CODE
+        fi
