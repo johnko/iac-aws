@@ -43,6 +43,6 @@ phases:
 
   post_build:
     commands:
-      - |
-        bash ./aws/org1/buildspec_post_build.sh $WORKSPACE_PATH
-        exit $TF_APPLY_EXIT_CODE
+      - bash ./aws/org1/buildspec_post_build.sh $WORKSPACE_PATH
+      # exit because we need to mark pipeline as failed
+      - exit $TF_APPLY_EXIT_CODE
