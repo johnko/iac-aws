@@ -41,8 +41,8 @@ locals {
   }
 
   DetectChanges_by_region = {
-    "${local.primary_region}"   = false
-    "${local.secondary_region}" = true
+    "${local.primary_region}"   = true
+    "${local.secondary_region}" = false
   }
 
   regional_pipelines = merge(values({
@@ -271,9 +271,12 @@ resource "aws_codepipeline" "terraform" {
             "Operator" = "EQ"
             "Value"    = "2"
             "Variable" = "#{TerraformPlan.TF_PLAN_EXIT_CODE}"
+            # 0 = Succeeded with empty diff (no changes), need to stop pipeline from going to TerraformApply
+            # 2 = Succeeded with non-empty diff (changes present), need to continues pipeline to ApproveOrReject and TerraformApply
+            # 1 = Error
           }
           name   = "ChangesPresent"
-          region = "us-east-2"
+          region = each.value.region
           rule_type_id {
             category = "Rule"
             owner    = "AWS"
