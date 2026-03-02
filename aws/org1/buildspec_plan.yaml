@@ -15,6 +15,8 @@ env:
     TF_VAR_aws_account_id_sandbox_bedrock: TF_VAR_aws_account_id_sandbox_bedrock
     TF_VAR_aws_account_id_deployment_builds: TF_VAR_aws_account_id_deployment_builds
     TF_VAR_slack_team_name: TF_VAR_slack_team_name
+  exported-variables:
+    - TF_PLAN_EXIT_CODE # pass this variable up to CodePipeline so we can skip the Apply stage
   # secrets-manager:
   #   key: secret-id:json-key:version-stage:version-id
 
@@ -35,7 +37,9 @@ phases:
 
   build:
     commands:
-      - bash .github/tf.sh $WORKSPACE_PATH plan
+      - |
+        bash .github/tf.sh $WORKSPACE_PATH plan
+        export TF_PLAN_EXIT_CODE=$?
 
   post_build:
     commands:
