@@ -21,14 +21,43 @@ resource "aws_sns_topic_policy" "terraform_codepipeline_rejected" {
 
   arn = aws_sns_topic.terraform_codepipeline_rejected[each.key].arn
   policy = jsonencode({
-    "Sid" : "TrustCWEToPublishEventsToMyTopic",
-    "Effect" : "Allow",
-    "Principal" : {
-      "Service" : "events.amazonaws.com"
-    },
-    "Action" : "sns:Publish",
-    "Resource" : [
-      aws_sns_topic.terraform_codepipeline_rejected[each.key].arn
+    "Version" : "2008-10-17",
+    "Statement" : [
+      {
+        "Sid" : "__default_statement_ID",
+        "Effect" : "Allow",
+        "Principal" : {
+          "AWS" : "*"
+        },
+        "Action" : [
+          "SNS:GetTopicAttributes",
+          "SNS:SetTopicAttributes",
+          "SNS:AddPermission",
+          "SNS:RemovePermission",
+          "SNS:DeleteTopic",
+          "SNS:Subscribe",
+          "SNS:ListSubscriptionsByTopic",
+          "SNS:Publish",
+          "SNS:Receive"
+        ],
+        "Resource" : aws_sns_topic.terraform_codepipeline_rejected[each.key].arn,
+        "Condition" : {
+          "StringEquals" : {
+            "AWS:SourceOwner" : "${data.aws_caller_identity.current.account_id}"
+          }
+        }
+      },
+      {
+        "Sid" : "TrustCWEToPublishEventsToMyTopic",
+        "Effect" : "Allow",
+        "Principal" : {
+          "Service" : "events.amazonaws.com"
+        },
+        "Action" : "sns:Publish",
+        "Resource" : [
+          aws_sns_topic.terraform_codepipeline_rejected[each.key].arn
+        ]
+      }
     ]
   })
 }
