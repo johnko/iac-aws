@@ -10,6 +10,29 @@ resource "aws_sns_topic" "terraform_codepipeline_rejected" {
   name = "terraform-codepipeline-rejected"
 }
 
+resource "aws_sns_topic_policy" "terraform_codepipeline_rejected" {
+  for_each = {
+    for k in [local.primary_region, local.secondary_region] : k => {
+      "region" : k
+    }
+  }
+
+  region = each.value.region
+
+  arn = aws_sns_topic.terraform_codepipeline_rejected[each.key].arn
+  policy = jsonencode({
+    "Sid" : "TrustCWEToPublishEventsToMyTopic",
+    "Effect" : "Allow",
+    "Principal" : {
+      "Service" : "events.amazonaws.com"
+    },
+    "Action" : "sns:Publish",
+    "Resource" : [
+      aws_sns_topic.terraform_codepipeline_rejected[each.key].arn
+    ]
+  })
+}
+
 resource "aws_cloudwatch_event_rule" "terraform_codepipeline_rejected" {
   for_each = {
     for k in [local.primary_region, local.secondary_region] : k => {
