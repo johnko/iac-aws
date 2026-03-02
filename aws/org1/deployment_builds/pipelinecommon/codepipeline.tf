@@ -50,6 +50,7 @@ locals {
       for k, v in local.pipelines : "${r}/${k}" => merge(
         v,
         {
+          "codepipeline_name" : "TF-${replace(k, "/", "-")}"
           "path" : k,
           "region" : r,
           "codebuild_suffix" : local.codebuild_suffix_by_region[r],
@@ -157,7 +158,7 @@ resource "aws_codepipeline" "terraform" {
 
   region = each.value.region
 
-  name     = "TF-${replace(each.value.path, "/", "-")}"
+  name     = each.value.codepipeline_name
   role_arn = aws_iam_role.CodePipelineRole.arn
 
   execution_mode = "QUEUED"
@@ -238,6 +239,11 @@ resource "aws_codepipeline" "terraform" {
           concat(
             [
               {
+                name  = "CODEPIPELINE_NAME"
+                value = each.value.codepipeline_name
+                type  = "PLAINTEXT"
+              },
+              {
                 name  = "EXECUTOR_TYPE"
                 value = local.codebuild_types[each.value.codebuild_suffix].type
                 type  = "PLAINTEXT"
@@ -317,6 +323,11 @@ resource "aws_codepipeline" "terraform" {
         EnvironmentVariables = jsonencode(
           concat(
             [
+              {
+                name  = "CODEPIPELINE_NAME"
+                value = each.value.codepipeline_name
+                type  = "PLAINTEXT"
+              },
               {
                 name  = "EXECUTOR_TYPE"
                 value = local.codebuild_types[each.value.codebuild_suffix].type

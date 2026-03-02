@@ -43,6 +43,13 @@ phases:
 
   post_build:
     commands:
-      - bash ./aws/org1/buildspec_post_build.sh $WORKSPACE_PATH
-      # exit because we need to mark pipeline as failed
-      - exit $TF_APPLY_EXIT_CODE
+      # exit because we need to mark pipeline as failed when TF_APPLY_EXIT_CODE != 0
+      - |
+        if [[ $TF_APPLY_EXIT_CODE != 0 ]]; then
+          exit $TF_APPLY_EXIT_CODE
+        fi
+    finally:
+      # now enable stage transition to unlock current pipeline
+      - |
+        bash ./aws/org1/buildspec_post_build.sh $WORKSPACE_PATH
+      # TODO: If the Approval step was rejected, then need an event driven way to enable stage transition

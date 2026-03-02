@@ -75,6 +75,17 @@ locals {
         "Resource" : "*",
         "Effect" : "Allow"
       },
+      {
+        # Allow to enable/disable the Plan stage transition so Plan doesn't get wiped by next queued execution
+        "Action" : [
+          "codepipeline:DisableStageTransition",
+          "codepipeline:EnableStageTransition",
+        ],
+        "Resource" : [
+          "arn:aws:codepipeline:*:${data.aws_caller_identity.current.account_id}:TF-*/Plan",
+        ],
+        "Effect" : "Allow"
+      },
     ]
   })
 }
