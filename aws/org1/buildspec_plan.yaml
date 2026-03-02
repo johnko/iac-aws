@@ -49,6 +49,6 @@ phases:
       # 1 = Error
       # don't exit on 2 because it will stop pipeline, so exit on 0 or 1
       - |
-        if [[ $$TF_PLAN_EXIT_CODE != 2 ]]; then
+        if [[ $TF_PLAN_EXIT_CODE != 2 ]]; then
           exit $TF_PLAN_EXIT_CODE
         fi
