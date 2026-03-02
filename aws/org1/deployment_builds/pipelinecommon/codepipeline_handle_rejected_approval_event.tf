@@ -82,6 +82,7 @@ resource "aws_cloudwatch_event_rule" "terraform_codepipeline_rejected" {
       "CodePipeline Action Execution State Change"
     ],
     "detail" : {
+      "region": [each.value.region],
       "state" : [
         "FAILED"
       ],
