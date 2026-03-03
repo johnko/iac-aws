@@ -92,6 +92,7 @@ locals {
         "Statement" : [
           {
             "Condition" : {
+              # https://docs.aws.amazon.com/IAM/latest/UserGuide/access_tags.html#access_tags_control-resources
               "StringEquals" : { "aws:ResourceTag/iacdeployer" : "terraform" }
             },
             "Action" : [
