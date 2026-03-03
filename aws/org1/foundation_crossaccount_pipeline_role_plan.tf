@@ -101,6 +101,8 @@ locals {
               "codebuild:Get*",
               "codeconnections:Get*",
               "codeconnections:List*",
+              "codepipeline:Get*",
+              "codepipeline:List*",
               "events:Describe*",
               "events:List*",
               "iam:Get*",
