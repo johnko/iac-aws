@@ -1,5 +1,7 @@
 resource "aws_iam_role" "terraform_apply" {
-  name = "CodeBuildRole-TerraformApply"
+  for_each = local.all_aws_account_ids
+
+  name = "CodeBuildRole-TerraformApply-${each.key}"
   assume_role_policy = jsonencode({
     "Version" : "2012-10-17",
     "Statement" : [
@@ -20,21 +22,27 @@ resource "aws_iam_role" "terraform_apply" {
 }
 
 resource "aws_iam_role_policy_attachments_exclusive" "terraform_apply" {
-  role_name = aws_iam_role.terraform_apply.name
+  for_each = local.all_aws_account_ids
+
+  role_name = aws_iam_role.terraform_apply[each.key].name
   policy_arns = [
     "arn:aws:iam::aws:policy/ReadOnlyAccess"
   ]
 }
 
 resource "aws_iam_role_policy" "CodeBuildRoleApply-CommonPolicy" {
+  for_each = local.all_aws_account_ids
+
   name   = "CodeBuildRoleTerraformCommonPolicy"
-  role   = aws_iam_role.terraform_apply.id
+  role   = aws_iam_role.terraform_apply[each.key].id
   policy = local.terraform_common_policy
 }
 
 resource "aws_iam_role_policy" "CodeBuildRoleApplyPolicy" {
+  for_each = local.all_aws_account_ids
+
   name = "CodeBuildRoleApplyPolicy"
-  role = aws_iam_role.terraform_apply.id
+  role = aws_iam_role.terraform_apply[each.key].id
 
   policy = jsonencode({
     "Version" : "2012-10-17",
@@ -51,25 +59,44 @@ resource "aws_iam_role_policy" "CodeBuildRoleApplyPolicy" {
         ],
         "Effect" : "Allow"
       },
+      {
+        # Allow Assume Cross Account Pipeline Role
+        "Action" : [
+          "sts:AssumeRole"
+        ],
+        "Resource" : [
+          "arn:aws:iam::${each.key}:role/CrossAccountPipelineRole-TerraformApply"
+        ],
+        "Effect" : "Allow"
+      },
     ]
   })
 }
 
 resource "aws_iam_role_policies_exclusive" "terraform_apply" {
-  role_name = aws_iam_role.terraform_apply.name
+  for_each = local.all_aws_account_ids
+
+  role_name = aws_iam_role.terraform_apply[each.key].name
   policy_names = [
-    aws_iam_role_policy.CodeBuildRoleApply-CommonPolicy.name,
-    aws_iam_role_policy.CodeBuildRoleApplyPolicy.name,
+    aws_iam_role_policy.CodeBuildRoleApply-CommonPolicy[each.key].name,
+    aws_iam_role_policy.CodeBuildRoleApplyPolicy[each.key].name,
   ]
 }
 
 resource "aws_codebuild_project" "terraform_apply" {
-  for_each = local.codebuild_types
+  for_each = merge(values({
+    for a, z in local.all_aws_account_ids : a => {
+      for k, v in local.codebuild_types : "${a}/${k}" => merge(v, {
+        "aws_account_id" : a
+      })
+    }
+  })...)
 
   region = each.value.region
 
-  name         = "TerraformApply-${each.key}"
-  service_role = aws_iam_role.terraform_apply.arn
+  # Per account CodeBuild Project + CodeBuild IAM Role to prevent 1 account buildspec from being able to go into another AWS account
+  name         = "TerraformApply-${each.value.aws_account_id}"
+  service_role = aws_iam_role.terraform_apply[each.value.aws_account_id].arn
 
   build_timeout  = each.value.build_timeout
   queued_timeout = each.value.queued_timeout

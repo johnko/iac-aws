@@ -58,6 +58,16 @@ resource "aws_iam_role_policy" "CodeBuildRolePlanPolicy" {
         ],
         "Effect" : "Allow"
       },
+      {
+        # Allow Assume Cross Account Pipeline Role
+        "Action" : [
+          "sts:AssumeRole"
+        ],
+        "Resource" : [
+          "arn:aws:iam::${each.key}:role/CrossAccountPipelineRole-TerraformPlan"
+        ],
+        "Effect" : "Allow"
+      },
     ]
   })
 }
