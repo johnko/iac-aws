@@ -29,6 +29,7 @@ env:
     TF_VAR_aws_email_security_aggregator: TF_VAR_aws_email_security_aggregator
     TF_VAR_aws_email_security_cloudtrail: TF_VAR_aws_email_security_cloudtrail
     TF_VAR_aws_org_id: TF_VAR_aws_org_id
+    TF_VAR_aws_org_root_id: TF_VAR_aws_org_root_id
     TF_VAR_aws_ou_id_deployment: TF_VAR_aws_ou_id_deployment
     TF_VAR_aws_ou_id_quarantine: TF_VAR_aws_ou_id_quarantine
     TF_VAR_aws_ou_id_sandbox: TF_VAR_aws_ou_id_sandbox

@@ -79,6 +79,10 @@ variable "aws_org_id" {
   type        = string
   description = "Organization ID, eg. o-abc123"
 }
+variable "aws_org_root_id" {
+  type        = string
+  description = "Organization Root ID, eg. r-123"
+}
 variable "aws_ou_id_deployment" {
   type        = string
   description = "Organizational Unit ID, eg. ou-xyz789"

@@ -19,6 +19,7 @@ locals {
     aws_email_security_aggregator          = { value = var.aws_email_security_aggregator }
     aws_email_security_cloudtrail          = { value = var.aws_email_security_cloudtrail }
     aws_org_id                             = { value = var.aws_org_id }
+    aws_org_root_id                        = { value = var.aws_org_root_id }
     aws_ou_id_deployment                   = { value = var.aws_ou_id_deployment }
     aws_ou_id_quarantine                   = { value = var.aws_ou_id_quarantine }
     aws_ou_id_sandbox                      = { value = var.aws_ou_id_sandbox }
