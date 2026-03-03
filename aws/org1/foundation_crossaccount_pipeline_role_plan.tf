@@ -132,7 +132,6 @@ locals {
               "s3:GetBucketAcl",
               "s3:GetBucketCORS",
               "s3:GetBucketLocation",
-              "s3:GetBucketPolicy",
               "s3:GetBucketVersioning",
               "s3:GetBucketWebsite",
               "s3:ListBucket",
@@ -152,6 +151,7 @@ locals {
           {
             "Action" : [
               "chatbot:DescribeSlackWorkspaces",
+              "s3:GetBucketPolicy",
             ],
             "Resource" : "*",
             "Effect" : "Allow"
