@@ -109,6 +109,8 @@ locals {
               "iam:List*",
               "lambda:Describe*",
               "lambda:Get*",
+              "organizations:Describe*",
+              "organizations:List*",
               "resource-explorer-2:Get*",
               "resource-explorer-2:List*",
               "s3:ListBucket",
