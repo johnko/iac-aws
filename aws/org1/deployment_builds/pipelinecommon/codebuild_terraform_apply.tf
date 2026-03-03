@@ -24,7 +24,7 @@ resource "aws_iam_role" "terraform_apply" {
 resource "aws_iam_role_policy_attachments_exclusive" "terraform_apply" {
   for_each = local.all_aws_account_ids
 
-  role_name = aws_iam_role.terraform_apply[each.key].name
+  role_name   = aws_iam_role.terraform_apply[each.key].name
   policy_arns = []
 }
 
