@@ -17,3 +17,5 @@ post_plan_to_slack() {
       $TF_VAR_PLAN_SLACK_WEBHOOK_URL
   fi
 }
+
+post_plan_to_slack
