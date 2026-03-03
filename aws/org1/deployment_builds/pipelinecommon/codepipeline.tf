@@ -139,12 +139,16 @@ resource "aws_iam_role_policy" "CodePipelineRoleDefaultPolicy" {
           for v in concat(values(aws_codebuild_project.terraform_plan), values(aws_codebuild_project.terraform_apply)) :
           replace(
             replace(
-              v.arn,
-              local.codebuild_suffix_by_region[local.primary_region],
+              replace(
+                v.arn,
+                local.codebuild_suffix_by_region[local.primary_region],
+                "*"
+              ),
+              local.codebuild_suffix_by_region[local.secondary_region],
               "*"
             ),
-            local.codebuild_suffix_by_region[local.secondary_region],
-            "*"
+            "/arn:aws:codebuild:(.*):${data.aws_caller_identity.current.account_id}:project/",
+            "arn:aws:codebuild:*:${data.aws_caller_identity.current.account_id}:project"
           )
         ]),
         "Effect" : "Allow"
