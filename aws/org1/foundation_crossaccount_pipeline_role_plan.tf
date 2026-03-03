@@ -126,6 +126,7 @@ locals {
               "kms:List*",
               "lambda:Describe*",
               "lambda:Get*",
+              "lambda:List*",
               "resource-explorer-2:Get*",
               "resource-explorer-2:List*",
               "s3:ListBucket",
