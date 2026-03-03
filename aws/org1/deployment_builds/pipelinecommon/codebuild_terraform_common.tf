@@ -9,15 +9,25 @@ locals {
           }
         },
         "Action" : [
-          "s3:PutObject",
+          "s3:GetBucketAcl",
+          "s3:GetBucketLocation",
+          "s3:GetBucketVersioning",
           "s3:GetObject",
           "s3:GetObjectVersion",
-          "s3:GetBucketVersioning",
-          "s3:GetBucketAcl",
-          "s3:GetBucketLocation"
+          "s3:ListBucket", # To fetch terraform zip
+          "s3:PutObject",
         ],
         "Resource" : flatten([
           for k, v in aws_s3_bucket.codepipeline : [v.arn, "${v.arn}/*"]
+        ]),
+        "Effect" : "Allow"
+      },
+      {
+        "Action" : [
+          "s3:PutObject",
+        ],
+        "Resource" : flatten([
+          for k, v in aws_s3_bucket.codepipeline : ["${v.arn}/terraform_*"]
         ]),
         "Effect" : "Allow"
       },
