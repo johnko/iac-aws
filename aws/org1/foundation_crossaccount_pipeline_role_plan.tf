@@ -109,8 +109,6 @@ locals {
               "iam:List*",
               "lambda:Describe*",
               "lambda:Get*",
-              "organizations:Describe*",
-              "organizations:List*",
               "resource-explorer-2:Get*",
               "resource-explorer-2:List*",
               "s3:ListBucket",
@@ -135,6 +133,8 @@ locals {
           {
             "Action" : [
               "chatbot:Describe*",
+              "organizations:Describe*",
+              "organizations:List*",
               "s3:GetAccelerateConfiguration",
               "s3:GetBucket*",
               "s3:GetEncryptionConfiguration",
