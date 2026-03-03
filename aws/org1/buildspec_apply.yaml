@@ -38,6 +38,7 @@ env:
     TF_VAR_aws_SCP_QuarantineDenyAll_POLICY: TF_VAR_aws_SCP_QuarantineDenyAll_POLICY
     TF_VAR_aws_TAG_iacdeployerEnumValues_POLICY: TF_VAR_aws_TAG_iacdeployerEnumValues_POLICY
     TF_VAR_codeconnection_deployment_builds: TF_VAR_codeconnection_deployment_builds
+    TF_VAR_PLAN_SLACK_WEBHOOK_URL: TF_VAR_PLAN_SLACK_WEBHOOK_URL
     TF_VAR_slack_team_name: TF_VAR_slack_team_name
   exported-variables:
     - TF_APPLY_EXIT_CODE # pass this variable up to CodePipeline if needed
