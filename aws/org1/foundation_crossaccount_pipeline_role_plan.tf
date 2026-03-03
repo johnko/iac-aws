@@ -106,6 +106,7 @@ locals {
               "iam:Get*",
               "lambda:Describe*",
               "lambda:Get*",
+              "s3:GetLifecycleConfiguration",
               "s3:ListBucket",
               "sns:Get*",
               "sns:List*",
