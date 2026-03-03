@@ -55,7 +55,35 @@ locals {
         ]
       })
     }
-    ReadPermissions1 = {
+    ReadSensitive = {
+      enabled_aws_account_ids = ["${var.aws_account_id_deployment_builds}"]
+      policy_template = jsonencode({
+        "Version" : "2012-10-17",
+        "Statement" : [
+          {
+            # Allow to get S3 Files from specific buckets
+            "Action" : [
+              "s3:Get*",
+            ],
+            "Resource" : [
+              "arn:aws:s3:::codepipeline-111122223333",
+            ],
+            "Effect" : "Allow"
+          },
+          {
+            # Allow to get SSM Parameter
+            "Action" : [
+              "ssm:GetParameter*",
+            ],
+            "Resource" : [
+              "arn:aws:ssm:*:111122223333:parameter/TF_VAR_*"
+            ],
+            "Effect" : "Allow"
+          },
+        ]
+      })
+    }
+    TaggedReadPermissions1 = {
       enabled_aws_account_ids = keys(local.all_aws_account_ids)
       policy_template = jsonencode({
         "Version" : "2012-10-17",
@@ -65,7 +93,6 @@ locals {
               "StringEquals" : { "aws:ResourceTag/iacdeployer" : "terraform" }
             },
             "Action" : [
-              "chatbot:Describe*",
               "chatbot:List*",
               "codebuild:BatchGet*",
               "codebuild:Describe*",
@@ -121,29 +148,16 @@ locals {
         ]
       })
     }
-    ReadSensitive = {
-      enabled_aws_account_ids = ["${var.aws_account_id_deployment_builds}"]
+    UntaggedReadPermissions1 = {
+      enabled_aws_account_ids = keys(local.all_aws_account_ids)
       policy_template = jsonencode({
         "Version" : "2012-10-17",
         "Statement" : [
           {
-            # Allow to get S3 Files from specific buckets
             "Action" : [
-              "s3:Get*",
+              "chatbot:DescribeSlackWorkspaces",
             ],
-            "Resource" : [
-              "arn:aws:s3:::codepipeline-111122223333",
-            ],
-            "Effect" : "Allow"
-          },
-          {
-            # Allow to get SSM Parameter
-            "Action" : [
-              "ssm:GetParameter*",
-            ],
-            "Resource" : [
-              "arn:aws:ssm:*:111122223333:parameter/TF_VAR_*"
-            ],
+            "Resource" : "*",
             "Effect" : "Allow"
           },
         ]
