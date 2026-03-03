@@ -117,7 +117,6 @@ locals {
               "ssm:List*",
               "sso:Describe*",
               "sso:Get*",
-              "sso:List*",
             ],
             "Resource" : "*",
             "Effect" : "Allow"
@@ -141,6 +140,7 @@ locals {
               "s3:GetLifecycleConfiguration",
               "s3:GetReplicationConfiguration",
               "ssm:Describe*",
+              "sso:List*",
             ],
             "Resource" : "*",
             "Effect" : "Allow"
