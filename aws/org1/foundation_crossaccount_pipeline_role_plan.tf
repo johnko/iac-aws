@@ -34,14 +34,8 @@ locals {
             # Allow write to tfstate bucket
             "Action" : [
               "s3:DeleteObject",
-              "s3:GetBucketAcl",
-              "s3:GetBucketCORS",
-              "s3:GetBucketLocation",
-              "s3:GetBucketPolicy",
-              "s3:GetBucketVersioning",
               "s3:GetObject",
               "s3:GetObjectVersion",
-              "s3:ListBucket",
               "s3:PutObject",
             ],
             "Resource" : [
@@ -71,9 +65,13 @@ locals {
               "StringEquals" : { "aws:ResourceTag/iacdeployer" : "terraform" }
             },
             "Action" : [
+              "chatbot:Describe*",
+              "chatbot:List*",
+              "codebuild:BatchGet*",
               "codebuild:Describe*",
               "codebuild:Get*",
               "codebuild:List*",
+              "codeconnections:Get*",
               "iam:GetAccessKeyLastUsed",
               "iam:GetAccountAuthorizationDetails",
               "iam:GetAccountName",
@@ -104,9 +102,18 @@ locals {
               "iam:GetSSHPublicKey",
               "iam:GetUser",
               "iam:GetUserPolicy",
-              "lambda:Get*",
               "lambda:Describe*",
+              "lambda:Get*",
               "lambda:List*",
+              "s3:GetBucketAcl",
+              "s3:GetBucketCORS",
+              "s3:GetBucketLocation",
+              "s3:GetBucketPolicy",
+              "s3:GetBucketVersioning",
+              "s3:GetBucketWebsite",
+              "s3:ListBucket",
+              "ssm:Describe*",
+              "ssm:List*",
             ],
             "Resource" : "*",
             "Effect" : "Allow"
@@ -125,7 +132,7 @@ locals {
               "s3:Get*",
             ],
             "Resource" : [
-              "arn:aws:s3:::codepipeline-*"
+              "arn:aws:s3:::codepipeline-111122223333",
             ],
             "Effect" : "Allow"
           },
