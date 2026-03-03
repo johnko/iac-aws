@@ -23,6 +23,11 @@ locals {
       },
       {
         # See https://docs.aws.amazon.com/codepipeline/latest/userguide/troubleshooting.html#codebuild-role-connections
+        "Condition" : {
+          "StringEquals" : {
+            "aws:ResourceAccount" : "${data.aws_caller_identity.current.account_id}"
+          }
+        },
         "Action" : [
           "codestar-connections:UseConnection"
         ],
@@ -69,6 +74,11 @@ locals {
       },
       {
         # Read tag policy
+        "Condition" : {
+          "StringEquals" : {
+            "aws:ResourceAccount" : "${data.aws_caller_identity.current.account_id}"
+          }
+        },
         "Action" : [
           "tag:ListRequiredTags",
         ],
@@ -77,6 +87,11 @@ locals {
       },
       {
         # Allow to enable/disable the Plan stage transition so Plan doesn't get wiped by next queued execution
+        "Condition" : {
+          "StringEquals" : {
+            "aws:ResourceAccount" : "${data.aws_caller_identity.current.account_id}"
+          }
+        },
         "Action" : [
           "codepipeline:DisableStageTransition",
           "codepipeline:EnableStageTransition",
