@@ -8,12 +8,34 @@ env:
     # See https://docs.aws.amazon.com/codebuild/latest/userguide/build-env-ref-env-vars.html
     CI: "true"
   parameter-store:
-    TF_VAR_codeconnection_deployment_builds: TF_VAR_codeconnection_deployment_builds
+    TF_VAR_aws_account_id_deployment_builds: TF_VAR_aws_account_id_deployment_builds
     TF_VAR_aws_account_id_management: TF_VAR_aws_account_id_management
+    TF_VAR_aws_account_id_sandbox_bedrock: TF_VAR_aws_account_id_sandbox_bedrock
     TF_VAR_aws_account_id_security_aggregator: TF_VAR_aws_account_id_security_aggregator
     TF_VAR_aws_account_id_security_cloudtrail: TF_VAR_aws_account_id_security_cloudtrail
-    TF_VAR_aws_account_id_sandbox_bedrock: TF_VAR_aws_account_id_sandbox_bedrock
-    TF_VAR_aws_account_id_deployment_builds: TF_VAR_aws_account_id_deployment_builds
+    TF_VAR_aws_AISERVICES_OPT_OUT_POLICY: TF_VAR_aws_AISERVICES_OPT_OUT_POLICY
+    TF_VAR_aws_CHATBOT_POLICY: TF_VAR_aws_CHATBOT_POLICY
+    TF_VAR_aws_controltower_landingzone_id: TF_VAR_aws_controltower_landingzone_id
+    TF_VAR_aws_EC2_IMDSv2_POLICY: TF_VAR_aws_EC2_IMDSv2_POLICY
+    TF_VAR_aws_EC2_NoIngressVPC_POLICY: TF_VAR_aws_EC2_NoIngressVPC_POLICY
+    TF_VAR_aws_EC2_NoMarketplaceAMI_POLICY: TF_VAR_aws_EC2_NoMarketplaceAMI_POLICY
+    TF_VAR_aws_EC2_NoPublicSharingAMI_POLICY: TF_VAR_aws_EC2_NoPublicSharingAMI_POLICY
+    TF_VAR_aws_EC2_NoPublicSharingSnapshot_POLICY: TF_VAR_aws_EC2_NoPublicSharingSnapshot_POLICY
+    TF_VAR_aws_EC2_NoSerial_POLICY: TF_VAR_aws_EC2_NoSerial_POLICY
+    TF_VAR_aws_email_deployment_builds: TF_VAR_aws_email_deployment_builds
+    TF_VAR_aws_email_sandbox_bedrock: TF_VAR_aws_email_sandbox_bedrock
+    TF_VAR_aws_email_security_aggregator: TF_VAR_aws_email_security_aggregator
+    TF_VAR_aws_email_security_cloudtrail: TF_VAR_aws_email_security_cloudtrail
+    TF_VAR_aws_org_id: TF_VAR_aws_org_id
+    TF_VAR_aws_ou_id_deployment: TF_VAR_aws_ou_id_deployment
+    TF_VAR_aws_ou_id_quarantine: TF_VAR_aws_ou_id_quarantine
+    TF_VAR_aws_ou_id_sandbox: TF_VAR_aws_ou_id_sandbox
+    TF_VAR_aws_ou_id_security: TF_VAR_aws_ou_id_security
+    TF_VAR_aws_S3_POLICY: TF_VAR_aws_S3_POLICY
+    TF_VAR_aws_SCP_OnlyOrgIdentityCenter_POLICY: TF_VAR_aws_SCP_OnlyOrgIdentityCenter_POLICY
+    TF_VAR_aws_SCP_QuarantineDenyAll_POLICY: TF_VAR_aws_SCP_QuarantineDenyAll_POLICY
+    TF_VAR_aws_TAG_iacdeployerEnumValues_POLICY: TF_VAR_aws_TAG_iacdeployerEnumValues_POLICY
+    TF_VAR_codeconnection_deployment_builds: TF_VAR_codeconnection_deployment_builds
     TF_VAR_slack_team_name: TF_VAR_slack_team_name
   exported-variables:
     - TF_PLAN_EXIT_CODE # pass this variable up to CodePipeline so we can skip the Apply stage
