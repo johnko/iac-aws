@@ -93,11 +93,9 @@ locals {
               "StringEquals" : { "aws:ResourceTag/iacdeployer" : "terraform" }
             },
             "Action" : [
-              "chatbot:List*",
               "codebuild:BatchGet*",
               "codebuild:Describe*",
               "codebuild:Get*",
-              "codebuild:List*",
               "codeconnections:Get*",
               "iam:GetAccessKeyLastUsed",
               "iam:GetAccountAuthorizationDetails",
@@ -131,7 +129,6 @@ locals {
               "iam:GetUserPolicy",
               "lambda:Describe*",
               "lambda:Get*",
-              "lambda:List*",
               "s3:GetBucketAcl",
               "s3:GetBucketCORS",
               "s3:GetBucketLocation",
@@ -140,7 +137,6 @@ locals {
               "s3:GetBucketWebsite",
               "s3:ListBucket",
               "ssm:Describe*",
-              "ssm:List*",
             ],
             "Resource" : "*",
             "Effect" : "Allow"
