@@ -62,7 +62,6 @@ phases:
     commands:
       - |
         set +e
-        echo plugin_cache_dir="`pwd`/.terraform-plugin-cache" >> "$HOME/.terraformrc"
         bash .github/tf.sh $WORKSPACE_PATH auto
         export TF_APPLY_EXIT_CODE=$?
 
