@@ -44,29 +44,6 @@ locals {
         "Resource" : aws_codeconnections_connection.johnko.arn,
         "Effect" : "Allow"
       },
-      # {
-      #   # Allow write to tfstate bucket
-      #   "Condition" : {
-      #     "StringEquals" : {
-      #       "aws:ResourceAccount" : "${data.aws_caller_identity.current.account_id}"
-      #     }
-      #   },
-      #   "Action" : [
-      #     "s3:DeleteObject",
-      #     "s3:PutObject",
-      #     "s3:GetObject",
-      #     "s3:GetObjectVersion",
-      #     "s3:GetBucketVersioning",
-      #     "s3:GetBucketAcl",
-      #     "s3:GetBucketLocation",
-      #     "s3:ListBucket",
-      #   ],
-      #   "Resource" : [
-      #     "arn:aws:s3:::tfstate-${data.aws_caller_identity.current.account_id}",
-      #     "arn:aws:s3:::tfstate-${data.aws_caller_identity.current.account_id}/*"
-      #   ],
-      #   "Effect" : "Allow"
-      # },
       {
         # Allow to get SSM Parameter
         "Condition" : {
