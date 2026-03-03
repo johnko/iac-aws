@@ -8,6 +8,7 @@ env:
     # See https://docs.aws.amazon.com/codebuild/latest/userguide/build-env-ref-env-vars.html
     CI: "true"
     TF_PLUGIN_CACHE_DIR: "/tmp/.terraform.d-plugin-cache"
+    TF_TMP_LOG: "/tmp/.terraform-plan.log"
   parameter-store:
     TF_VAR_aws_account_id_deployment_builds: TF_VAR_aws_account_id_deployment_builds
     TF_VAR_aws_account_id_management: TF_VAR_aws_account_id_management
@@ -62,8 +63,10 @@ phases:
   build:
     commands:
       - |
+        set -uo pipefail
         set +e
-        bash .github/tf.sh $WORKSPACE_PATH plan
+        bash .github/tf.sh $WORKSPACE_PATH plan \
+          | tee "$TF_TMP_LOG"
         export TF_PLAN_EXIT_CODE=$?
 
   post_build:

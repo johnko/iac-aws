@@ -63,13 +63,13 @@ if [[ -e shared_tfstate_backend.template ]]; then
   envsubst <shared_tfstate_backend.template >shared_tfstate_backend.tf
 fi
 
-if [[ -n "$CROSS_ACCOUNT_PIPELINE_IAM_ROLE" ]] && [[ -n "$TF_VAR_aws_account_id" ]]; then
+if [[ -n $CROSS_ACCOUNT_PIPELINE_IAM_ROLE ]] && [[ -n $TF_VAR_aws_account_id ]]; then
   ROLE_ARN="arn:aws:iam::$TF_VAR_aws_account_id:role/$CROSS_ACCOUNT_PIPELINE_IAM_ROLE"
   unset AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_SESSION_TOKEN
   # Hide command
   set +x
   # Assume the Cross Account Role
-  read -r AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_SESSION_TOKEN <<< $(
+  read -r AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_SESSION_TOKEN <<<$(
     aws sts assume-role \
       --role-arn "$ROLE_ARN" \
       --role-session-name "terraform-pipeline" \
