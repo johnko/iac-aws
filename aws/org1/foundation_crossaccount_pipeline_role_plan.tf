@@ -131,6 +131,9 @@ locals {
           {
             "Action" : [
               "chatbot:Describe*",
+              "controltower:Describe*",
+              "controltower:Get*",
+              "controltower:List*",
               "organizations:Describe*",
               "organizations:List*",
               "s3:GetAccelerateConfiguration",
