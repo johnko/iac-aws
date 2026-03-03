@@ -25,9 +25,7 @@ resource "aws_iam_role_policy_attachments_exclusive" "terraform_apply" {
   for_each = local.all_aws_account_ids
 
   role_name = aws_iam_role.terraform_apply[each.key].name
-  policy_arns = [
-    "arn:aws:iam::aws:policy/ReadOnlyAccess"
-  ]
+  policy_arns = []
 }
 
 resource "aws_iam_role_policy" "CodeBuildRoleApply-CommonPolicy" {
@@ -54,8 +52,8 @@ resource "aws_iam_role_policy" "CodeBuildRoleApplyPolicy" {
           "logs:PutLogEvents"
         ],
         "Resource" : [
-          "arn:aws:logs:*:${data.aws_caller_identity.current.account_id}:log-group:/aws/codebuild/TerraformApply-*",
-          "arn:aws:logs:*:${data.aws_caller_identity.current.account_id}:log-group:/aws/codebuild/TerraformApply-*:log-stream:*"
+          "arn:aws:logs:*:${data.aws_caller_identity.current.account_id}:log-group:/aws/codebuild/TerraformApply-${each.key}-*",
+          "arn:aws:logs:*:${data.aws_caller_identity.current.account_id}:log-group:/aws/codebuild/TerraformApply-${each.key}-*:log-stream:*"
         ],
         "Effect" : "Allow"
       },
@@ -87,7 +85,8 @@ resource "aws_codebuild_project" "terraform_apply" {
   for_each = merge(values({
     for a, z in local.all_aws_account_ids : a => {
       for k, v in local.codebuild_types : "${a}/${k}" => merge(v, {
-        "aws_account_id" : a
+        "aws_account_id" : a,
+        "codebuild_type" : k,
       })
     }
   })...)
@@ -95,7 +94,7 @@ resource "aws_codebuild_project" "terraform_apply" {
   region = each.value.region
 
   # Per account CodeBuild Project + CodeBuild IAM Role to prevent 1 account buildspec from being able to go into another AWS account
-  name         = "TerraformApply-${each.value.aws_account_id}"
+  name         = "TerraformApply-${each.value.aws_account_id}-${each.value.codebuild_type}"
   service_role = aws_iam_role.terraform_apply[each.value.aws_account_id].arn
 
   build_timeout  = each.value.build_timeout
