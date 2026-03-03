@@ -99,6 +99,7 @@ locals {
               "codebuild:Describe*",
               "codebuild:Get*",
               "codeconnections:Get*",
+              "events:Describe*",
               "iam:GetAccessKeyLastUsed",
               "iam:GetAccountAuthorizationDetails",
               "iam:GetAccountName",
@@ -134,6 +135,9 @@ locals {
               "s3:GetBucketLocation",
               "s3:GetBucketVersioning",
               "s3:ListBucket",
+              "sns:Get*",
+              "sns:List*",
+              "ssm:List*",
             ],
             "Resource" : "*",
             "Effect" : "Allow"
