@@ -32,11 +32,6 @@ locals {
         "Statement" : [
           {
             # Allow write to tfstate bucket
-            "Condition" : {
-              "StringEquals" : {
-                "aws:ResourceAccount" : "111122223333"
-              }
-            },
             "Action" : [
               "s3:DeleteObject",
               "s3:GetBucketAcl",
@@ -56,11 +51,6 @@ locals {
           },
           {
             # Allow to get SSM Parameter
-            "Condition" : {
-              "StringEquals" : {
-                "aws:ResourceAccount" : "111122223333"
-              }
-            },
             "Action" : [
               "ssm:GetParameters",
             ],
