@@ -7,6 +7,7 @@ env:
   variables:
     # See https://docs.aws.amazon.com/codebuild/latest/userguide/build-env-ref-env-vars.html
     CI: "true"
+    TF_PLUGIN_CACHE_DIR: "/tmp/.terraform.d-plugin-cache"
   parameter-store:
     TF_VAR_aws_account_id_deployment_builds: TF_VAR_aws_account_id_deployment_builds
     TF_VAR_aws_account_id_management: TF_VAR_aws_account_id_management
@@ -86,4 +87,4 @@ cache:
   # No effect for lambda: Cannot specify cache for lambda compute
   paths:
     # List of directories to cache, absolute or relative to the source directory
-    - '.terraform-plugin-cache/**/*'
+    - "/tmp/.terraform.d-plugin-cache/**/*"
