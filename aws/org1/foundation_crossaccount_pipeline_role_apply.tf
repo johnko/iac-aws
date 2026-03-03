@@ -136,7 +136,7 @@ resource "aws_iam_role_policy" "crossaccount_terraform_apply" {
 
   name   = each.key
   role   = aws_iam_role.crossaccount_terraform_apply.id
-  policy = each.value.policy
+  policy = replace(each.value.policy_template, "111122223333", data.aws_caller_identity.current.account_id)
 }
 
 resource "aws_iam_role_policies_exclusive" "crossaccount_terraform_apply" {
