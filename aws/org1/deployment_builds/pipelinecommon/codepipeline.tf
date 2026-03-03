@@ -304,7 +304,7 @@ resource "aws_codepipeline" "terraform" {
       version            = "1"
       configuration = {
         # See https://docs.aws.amazon.com/codepipeline/latest/userguide/structure-configuration-examples.html
-        "CustomData" : "Last chance to cancel if the TerraformPlan looks wrong!",
+        "CustomData" : "Last chance to cancel if the TerraformPlan looks wrong! Please REJECT if you're unsure. Only APPROVE if you are 100% sure.",
         "ExternalEntityLink" : "https://github.com/${local.FullRepositoryId}"
       }
     }
