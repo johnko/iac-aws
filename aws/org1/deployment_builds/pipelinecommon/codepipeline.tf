@@ -174,7 +174,7 @@ resource "aws_codepipeline" "terraform" {
   name     = each.value.codepipeline_name
   role_arn = aws_iam_role.CodePipelineRole.arn
 
-  execution_mode = "QUEUED"
+  execution_mode = "SUPERSEDED" # OR "QUEUED"
   pipeline_type  = "V2"
 
   artifact_store {
