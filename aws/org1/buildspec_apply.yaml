@@ -79,7 +79,6 @@ phases:
           exit $TF_APPLY_EXIT_CODE
         fi
     finally:
-      # now enable stage transition to unlock current pipeline
       - |
         bash ./aws/org1/buildspec_post_build.sh
       # If the Approval step was rejected, then handle with aws/org1/deployment_builds/pipelinecommon/codepipeline_handle_rejected_approval_event.tf

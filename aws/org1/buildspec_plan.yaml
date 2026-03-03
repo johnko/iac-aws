@@ -82,11 +82,8 @@ phases:
           exit $TF_PLAN_EXIT_CODE
         fi
     finally:
-      # don't buildspec_post_build.sh on 2 because it will enable stage transtiion for current pipeline, which will cause plan to be overwritten by next queued execution
       - |
-        if [[ $TF_PLAN_EXIT_CODE != 2 ]]; then
-          bash ./aws/org1/buildspec_post_build.sh
-        fi
+        bash ./aws/org1/buildspec_post_build.sh
 
 cache:
   # No effect for lambda: Cannot specify cache for lambda compute
