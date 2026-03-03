@@ -50,16 +50,6 @@ locals {
             "Effect" : "Allow"
           },
           {
-            # Allow to get SSM Parameter
-            "Action" : [
-              "ssm:GetParameters",
-            ],
-            "Resource" : [
-              "arn:aws:ssm:*:111122223333:parameter/TF_VAR_*"
-            ],
-            "Effect" : "Allow"
-          },
-          {
             # Read tag policy
             "Action" : [
               "tag:ListRequiredTags",
@@ -78,7 +68,7 @@ locals {
           {
             "Condition" : {
               "StringEquals" : { "aws:ResourceTag/iacdeployer" : "terraform" }
-            }
+            },
             "Action" : [
               "codebuild:Describe*",
               "codebuild:Get*",
@@ -113,8 +103,39 @@ locals {
               "iam:GetSSHPublicKey",
               "iam:GetUser",
               "iam:GetUserPolicy",
+              "lambda:Get*",
+              "lambda:Describe*",
+              "lambda:List*",
             ],
             "Resource" : "*",
+            "Effect" : "Allow"
+          },
+        ]
+      })
+    }
+    ReadSensitive = {
+      enabled_aws_account_ids = ["${var.aws_account_id_deployment_builds}"]
+      policy_template = jsonencode({
+        "Version" : "2012-10-17",
+        "Statement" : [
+          {
+            # Allow to get S3 Files from specific buckets
+            "Action" : [
+              "s3:Get*",
+            ],
+            "Resource" : [
+              "arn:aws:s3:::codepipeline-*"
+            ],
+            "Effect" : "Allow"
+          },
+          {
+            # Allow to get SSM Parameter
+            "Action" : [
+              "ssm:GetParameter*",
+            ],
+            "Resource" : [
+              "arn:aws:ssm:*:111122223333:parameter/TF_VAR_*"
+            ],
             "Effect" : "Allow"
           },
         ]

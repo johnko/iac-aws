@@ -29,7 +29,7 @@ locals {
         "Resource" : flatten([
           for k, v in aws_s3_bucket.codepipeline : ["${v.arn}/terraform_*"]
         ]),
-        "Effect" : "Allow"
+        "Effect" : "Deny"
       },
       {
         # See https://docs.aws.amazon.com/codepipeline/latest/userguide/troubleshooting.html#codebuild-role-connections
@@ -52,7 +52,7 @@ locals {
           }
         },
         "Action" : [
-          "ssm:GetParameters",
+          "ssm:GetParameter*",
         ],
         "Resource" : [
           "arn:aws:ssm:*:${data.aws_caller_identity.current.account_id}:parameter/TF_VAR_*"
