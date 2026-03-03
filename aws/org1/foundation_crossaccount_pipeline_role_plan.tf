@@ -133,6 +133,7 @@ locals {
               "iam:GetUserPolicy",
               "lambda:Describe*",
               "lambda:Get*",
+              "s3:GetAccelerateConfiguration",
               "s3:GetBucketLocation",
               "s3:ListBucket",
               "sns:Get*",
