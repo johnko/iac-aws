@@ -64,13 +64,13 @@ resource "aws_lambda_function" "terraform_codepipeline_rejected" {
 
   region = each.value.region
 
-  code_sha256   = filesha256("${path.module}/lambda/terraform_codepipeline_rejected.py")
-  filename      = data.archive_file.terraform_codepipeline_rejected.output_path
-  function_name = "TerraformCodePipelineRejectedEnableStageTransition"
-  handler       = "terraform_codepipeline_rejected.lambda_handler"
-  role          = aws_iam_role.terraform_codepipeline_rejected.arn
-  runtime       = "python3.13"
-  timeout       = 60
+  filename         = data.archive_file.terraform_codepipeline_rejected.output_path
+  function_name    = "TerraformCodePipelineRejectedEnableStageTransition"
+  handler          = "terraform_codepipeline_rejected.lambda_handler"
+  role             = aws_iam_role.terraform_codepipeline_rejected.arn
+  runtime          = "python3.13"
+  source_code_hash = filesha256("${path.module}/lambda/terraform_codepipeline_rejected.py")
+  timeout          = 60
 }
 
 resource "aws_lambda_function_event_invoke_config" "terraform_codepipeline_rejected" {
