@@ -115,6 +115,9 @@ locals {
               "sns:Get*",
               "sns:List*",
               "ssm:List*",
+              "sso:Describe*",
+              "sso:Get*",
+              "sso:List*",
             ],
             "Resource" : "*",
             "Effect" : "Allow"
