@@ -123,7 +123,7 @@ resource "aws_iam_role_policy" "CodePipelineRoleDefaultPolicy" {
         ],
         "Resource" : [
           "arn:aws:logs:*:${data.aws_caller_identity.current.account_id}:log-group:/aws/codepipeline/TF-*",
-          "arn:aws:logs:*:${data.aws_caller_identity.current.account_id}:log-group:/aws/codepipeline/TF-*:log-stream:*"
+          "arn:aws:logs:*:${data.aws_caller_identity.current.account_id}:log-group:/aws/codepipeline/TF-*:*"
         ],
         "Effect" : "Allow"
       },

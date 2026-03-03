@@ -51,15 +51,33 @@ resource "aws_iam_role_policy" "CodeBuildRolePlanPolicy" {
           }
         },
         "Action" : [
-          "logs:CreateLogGroup",
-          "logs:CreateLogStream",
-          "logs:PutLogEvents"
+          "logs:CreateLogGroup",  # default
+          "logs:CreateLogStream", # default
+          "logs:PutLogEvents",    # default
         ],
         "Resource" : [
           "arn:aws:logs:*:${data.aws_caller_identity.current.account_id}:log-group:/aws/codebuild/TerraformPlan-${each.key}-*",
-          "arn:aws:logs:*:${data.aws_caller_identity.current.account_id}:log-group:/aws/codebuild/TerraformPlan-${each.key}-*:log-stream:*"
+          "arn:aws:logs:*:${data.aws_caller_identity.current.account_id}:log-group:/aws/codebuild/TerraformPlan-${each.key}-*:*"
         ],
         "Effect" : "Allow"
+      },
+      {
+        "Condition" : {
+          "StringEquals" : {
+            "aws:ResourceAccount" : "${data.aws_caller_identity.current.account_id}"
+          }
+        },
+        "Effect" : "Allow",
+        "Action" : [
+          "codebuild:BatchPutCodeCoverages", # default
+          "codebuild:BatchPutTestCases",     # default
+          "codebuild:CreateReport",          # default
+          "codebuild:CreateReportGroup",     # default
+          "codebuild:UpdateReport",          # default
+        ],
+        "Resource" : [
+          "arn:aws:codebuild:*:${data.aws_caller_identity.current.account_id}:report-group/TerraformApply-${each.key}-*"
+        ]
       },
       {
         # Allow Assume Cross Account Pipeline Role
@@ -111,6 +129,17 @@ resource "aws_codebuild_project" "terraform_plan" {
 
   artifacts {
     type = "CODEPIPELINE"
+  }
+
+  dynamic "cache" {
+    for_each = each.value.type != "LINUX_LAMBDA_CONTAINER" ? [1] : []
+
+    content {
+      modes = [
+        "LOCAL_CUSTOM_CACHE"
+      ]
+      type = "LOCAL"
+    }
   }
 
   environment {

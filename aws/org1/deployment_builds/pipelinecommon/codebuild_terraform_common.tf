@@ -9,9 +9,12 @@ locals {
           }
         },
         "Action" : [
-          "s3:GetBucketLocation", # To fetch terraform zip
-          "s3:GetObject",
-          "s3:ListBucket", # To fetch terraform zip
+          "s3:GetBucketAcl",      # default
+          "s3:GetBucketLocation", # default + To fetch terraform zip
+          "s3:GetObject",         # default
+          "s3:GetObjectVersion",  # default
+          "s3:ListBucket",        # To fetch terraform zip
+          "s3:PutObject",         # default
         ],
         "Resource" : flatten([
           for k, v in aws_s3_bucket.codepipeline : [v.arn, "${v.arn}/*"]
@@ -55,19 +58,19 @@ locals {
         ],
         "Effect" : "Allow"
       },
-      {
-        # Read tag policy
-        "Condition" : {
-          "StringEquals" : {
-            "aws:ResourceAccount" : "${data.aws_caller_identity.current.account_id}"
-          }
-        },
-        "Action" : [
-          "tag:ListRequiredTags",
-        ],
-        "Resource" : "*",
-        "Effect" : "Allow"
-      },
+      # {
+      #   # Read tag policy
+      #   "Condition" : {
+      #     "StringEquals" : {
+      #       "aws:ResourceAccount" : "${data.aws_caller_identity.current.account_id}"
+      #     }
+      #   },
+      #   "Action" : [
+      #     "tag:ListRequiredTags",
+      #   ],
+      #   "Resource" : "*",
+      #   "Effect" : "Allow"
+      # },
       {
         # Allow to enable/disable the Plan stage transition so Plan doesn't get wiped by next queued execution
         "Condition" : {
