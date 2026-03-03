@@ -135,6 +135,7 @@ locals {
               "lambda:Describe*",
               "lambda:Get*",
               "s3:GetBucketLocation",
+              "s3:GetBucketRequestPayment",
               "s3:ListBucket",
               "sns:Get*",
               "sns:List*",

@@ -28,7 +28,7 @@ phases:
     commands:
       - |
         echo >> "$HOME/.terraformrc"
-        echo 'plugin_cache_dir="$(pwd)/.terraform-plugin-cache"' >> "$HOME/.terraformrc"
+        echo plugin_cache_dir="$(pwd)/.terraform-plugin-cache" >> "$HOME/.terraformrc"
       - |
         bash ./aws/org1/buildspec_install.sh
         export PATH=$PATH:~/bin
