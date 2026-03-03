@@ -135,9 +135,18 @@ resource "aws_iam_role_policy" "CodePipelineRoleDefaultPolicy" {
           "codebuild:BatchGetBuildBatches",
           "codebuild:StartBuildBatch"
         ],
-        "Resource" : [
-          for v in concat(values(aws_codebuild_project.terraform_plan), values(aws_codebuild_project.terraform_apply)) : v.arn
-        ],
+        "Resource" : distinct([
+          for v in concat(values(aws_codebuild_project.terraform_plan), values(aws_codebuild_project.terraform_apply)) :
+          replace(
+            replace(
+              v.arn,
+              local.codebuild_suffix_by_region[local.primary_region],
+              "*"
+            ),
+            local.codebuild_suffix_by_region[local.secondary_region],
+            "*"
+          )
+        ]),
         "Effect" : "Allow"
       }
     ]
