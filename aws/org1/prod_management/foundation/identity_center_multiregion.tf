@@ -7,7 +7,10 @@ resource "aws_kms_key_policy" "identitycenter_primary" {
   key_id = aws_kms_key.identitycenter_primary.id
   policy = local.identitycenter_kms_key_policy
 }
-
+resource "aws_kms_alias" "identitycenter_primary" {
+  name          = "alias/identitycenter-primary"
+  target_key_id = aws_kms_key.identitycenter_primary.key_id
+}
 resource "aws_kms_replica_key" "identitycenter_replica" {
   region = "us-east-2"
 
@@ -20,6 +23,12 @@ resource "aws_kms_key_policy" "identitycenter_replica" {
 
   key_id = aws_kms_replica_key.identitycenter_replica.id
   policy = local.identitycenter_kms_key_policy
+}
+resource "aws_kms_alias" "identitycenter_replica" {
+  region = "us-east-2"
+
+  name          = "alias/identitycenter-replica"
+  target_key_id = aws_kms_replica_key.identitycenter_replica.key_id
 }
 
 locals {
