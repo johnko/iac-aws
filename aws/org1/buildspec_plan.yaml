@@ -50,6 +50,7 @@ phases:
     #   python: 3.13
     commands:
       - |
+        mkdir -p "$TF_PLUGIN_CACHE_DIR"
         bash ./aws/org1/buildspec_install.sh
         export PATH=$PATH:~/bin
         terraform version
