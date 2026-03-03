@@ -35,6 +35,7 @@ locals {
             "Action" : [
               "s3:DeleteObject",
               "s3:GetBucketAcl",
+              "s3:GetBucketCORS",
               "s3:GetBucketLocation",
               "s3:GetBucketPolicy",
               "s3:GetBucketVersioning",
