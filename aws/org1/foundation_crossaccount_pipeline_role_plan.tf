@@ -104,6 +104,7 @@ locals {
               "events:Describe*",
               "events:List*",
               "iam:Get*",
+              "iam:List*",
               "lambda:Describe*",
               "lambda:Get*",
               "resource-explorer-2:Get*",
