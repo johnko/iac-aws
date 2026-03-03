@@ -9,6 +9,7 @@ locals {
           }
         },
         "Action" : [
+          "s3:GetBucketLocation", # To fetch terraform zip
           "s3:GetObject",
           "s3:ListBucket", # To fetch terraform zip
         ],
