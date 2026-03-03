@@ -50,19 +50,19 @@ resource "aws_iam_role_policy" "CodeBuildRolePlanPolicy" {
         ],
         "Effect" : "Allow"
       },
-      {
-        # See https://docs.aws.amazon.com/codepipeline/latest/userguide/action-reference-CodeBuild.html#edit-role-codebuild
-        "Action" : [
-          "codebuild:BatchGetBuilds",
-          "codebuild:StartBuild",
-          "codebuild:BatchGetBuildBatches",
-          "codebuild:StartBuildBatch"
-        ],
-        "Resource" : [
-          for k, v in aws_codebuild_project.terraform_plan : v.arn
-        ],
-        "Effect" : "Allow"
-      },
+      # {
+      #   # See https://docs.aws.amazon.com/codepipeline/latest/userguide/action-reference-CodeBuild.html#edit-role-codebuild
+      #   "Action" : [
+      #     "codebuild:BatchGetBuilds",
+      #     "codebuild:StartBuild",
+      #     "codebuild:BatchGetBuildBatches",
+      #     "codebuild:StartBuildBatch"
+      #   ],
+      #   "Resource" : [
+      #     for k, v in aws_codebuild_project.terraform_plan : v.arn
+      #   ],
+      #   "Effect" : "Allow"
+      # },
     ]
   })
 }
