@@ -19,8 +19,8 @@ post_plan_to_slack() {
   if [[ -e $TF_TMP_LOG ]] && [[ $TF_TMP_LOG == *plan* ]]; then
     set +ux
     if [[ $TF_PLAN_EXIT_CODE != 0 ]]; then
-      TF_PLAN_TEXT=$(cat "$TF_TMP_LOG" | awk '/^Terraform used the selected providers/,/NON MATCHING PATTERN TO GET ALL OUTPUT TO THE END/' | tr "\n" '`' | sed 's,`,\\n,g' | head -c 500)
-      echo "{\"text\":\"Plan for pipeline $CODEPIPELINE_NAME in region $AWS_REGION\n\`\`\`\n$TF_PLAN_TEXT ...\n\`\`\`\"}"
+      TF_PLAN_TEXT=$(cat "$TF_TMP_LOG" | awk '/^Terraform used the selected providers/,/NON MATCHING PATTERN TO GET ALL OUTPUT TO THE END/' | tr '`' "'" | tr '"' "'" | tr "\n" '`' | sed 's,`,\\n,g' | head -c 500)
+      echo "{\"text\":\"\`\`\`Plan for pipeline $CODEPIPELINE_NAME in region $AWS_REGION\n\n$TF_PLAN_TEXT ...\`\`\`\"}"
       curl \
         -X POST \
         -H 'Content-type: application/json; charset=utf-8' \
