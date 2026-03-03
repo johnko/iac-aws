@@ -46,6 +46,11 @@ resource "aws_iam_role_policy" "CodeBuildRoleApplyPolicy" {
     "Version" : "2012-10-17",
     "Statement" : [
       {
+        "Condition" : {
+          "StringEquals" : {
+            "aws:ResourceAccount" : "${data.aws_caller_identity.current.account_id}"
+          }
+        },
         "Action" : [
           "logs:CreateLogGroup",
           "logs:CreateLogStream",
@@ -59,6 +64,11 @@ resource "aws_iam_role_policy" "CodeBuildRoleApplyPolicy" {
       },
       {
         # Allow Assume Cross Account Pipeline Role
+        "Condition" : {
+          "StringEquals" : {
+            "aws:ResourceAccount" : "${each.key}"
+          }
+        },
         "Action" : [
           "sts:AssumeRole"
         ],
