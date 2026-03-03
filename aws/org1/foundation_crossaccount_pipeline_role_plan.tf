@@ -99,6 +99,7 @@ locals {
               "codebuild:Describe*",
               "codebuild:Get*",
               "codeconnections:Get*",
+              "codeconnections:List*",
               "events:Describe*",
               "events:List*",
               "iam:GetAccessKeyLastUsed",
@@ -153,7 +154,7 @@ locals {
         "Statement" : [
           {
             "Action" : [
-              "chatbot:DescribeSlackWorkspaces",
+              "chatbot:Describe*",
               "s3:GetBucketAcl",
               "s3:GetBucketCORS",
               "s3:GetBucketPolicy",
