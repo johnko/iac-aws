@@ -50,7 +50,7 @@ resource "aws_iam_role_policies_exclusive" "terraform_codepipeline_rejected" {
 
 # Package the Lambda function code
 data "archive_file" "terraform_codepipeline_rejected" {
-  output_path = "${path.module}/lambda/function.zip"
+  output_path = "${path.module}/lambda/terraform_codepipeline_rejected.zip"
   source_file = "${path.module}/lambda/terraform_codepipeline_rejected.py"
   type        = "zip"
 }
