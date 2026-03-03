@@ -27,6 +27,81 @@ locals {
     {
       # This role starts with ViewOnly to avoid reading sensitive data like Secrets or S3
       # Here, be very selective what permissions are granted
+      TaggedWritePermissions1 = {
+        enabled_aws_account_ids = keys(local.all_aws_account_ids)
+        policy_template = jsonencode({
+          "Version" : "2012-10-17",
+          "Statement" : [
+            {
+              "Condition" : {
+                # https://docs.aws.amazon.com/IAM/latest/UserGuide/access_tags.html#access_tags_control-resources
+                "StringEquals" : { "aws:ResourceTag/iacdeployer" : "terraform" }
+              },
+              "Action" : [
+                # "codebuild:BatchGet*",
+                # "codebuild:Describe*",
+                # "codebuild:Get*",
+                # "codeconnections:Get*",
+                # "codeconnections:List*",
+                # "codepipeline:Get*",
+                # "codepipeline:List*",
+                # "events:Describe*",
+                # "events:List*",
+                "iam:Attach*",
+                "iam:CreatePolicy*",
+                "iam:CreateRole",
+                "iam:CreateServiceLinkedRole",
+                "iam:DeletePolicy*",
+                "iam:DeleteRole*",
+                "iam:Detach*",
+                "iam:Put*",
+                "iam:Tag*",
+                "iam:Untag*",
+                "iam:UpdateAssumeRolePolicy",
+                "iam:UpdateRole*",
+                # "kms:Describe*",
+                # "kms:Get*",
+                # "kms:List*",
+                # "lambda:Describe*",
+                # "lambda:Get*",
+                # "resource-explorer-2:Get*",
+                # "resource-explorer-2:List*",
+                # "s3:ListBucket",
+                # "sns:Get*",
+                # "sns:List*",
+                # "ssm:List*",
+                # "sso:Get*",
+              ],
+              "Resource" : "*",
+              "Effect" : "Allow"
+            },
+          ]
+        })
+      }
+      UntaggedWritePermissions1 = {
+        enabled_aws_account_ids = keys(local.all_aws_account_ids)
+        policy_template = jsonencode({
+          "Version" : "2012-10-17",
+          "Statement" : [
+            {
+              "Action" : [
+                # "chatbot:Describe*",
+                # "organizations:List*",
+                # "s3:GetAccelerateConfiguration",
+                "s3:CreateBucket",
+                # "s3:GetEncryptionConfiguration",
+                # "s3:GetLifecycleConfiguration",
+                # "s3:GetReplicationConfiguration",
+                # "ssm:Describe*",
+                # "sso:Describe*",
+                # "sso:List*",
+              ],
+              "Resource" : "*",
+              "Effect" : "Allow"
+            },
+          ]
+        })
+      }
     }
   )
 }
