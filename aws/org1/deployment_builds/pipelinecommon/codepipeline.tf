@@ -195,6 +195,8 @@ resource "aws_codepipeline" "terraform" {
           }
           file_paths {
             includes = [
+              ".github/tf.sh",
+              ".envrc",
               "${local.workspace_path_prefix}${each.value.path}/**",
               "${local.workspace_path_prefix}buildspec_*",
               "${local.workspace_path_prefix}foundation_*",
