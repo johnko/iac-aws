@@ -129,7 +129,10 @@ locals {
 }
 
 resource "aws_iam_role_policy" "crossaccount_terraform_apply" {
-  for_each = local.crossaccount_inline_policies_apply
+  for_each = {
+    for k, v in local.crossaccount_inline_policies_apply :
+    k => v if contains(v.enabled_aws_account_ids, data.aws_caller_identity.current.account_id)
+  }
 
   name   = each.key
   role   = aws_iam_role.crossaccount_terraform_apply.id
