@@ -25,7 +25,7 @@ locals {
   crossaccount_inline_policies_plan = {
     # This role starts with ViewOnly to avoid reading sensitive data like Secrets or S3
     # Here, be very selective what permissions are granted
-    ReadSSMParamWriteTerraformState = {
+    WriteTerraformStateReadSSMParam = {
       enabled_aws_account_ids = keys(local.all_aws_account_ids)
       policy_template = jsonencode({
         "Version" : "2012-10-17",
@@ -76,7 +76,13 @@ locals {
         "Version" : "2012-10-17",
         "Statement" : [
           {
+            "Condition" : {
+              "StringEquals" : { "aws:ResourceTag/iacdeployer" : "terraform" }
+            }
             "Action" : [
+              "codebuild:Describe*",
+              "codebuild:Get*",
+              "codebuild:List*",
               "iam:GetAccessKeyLastUsed",
               "iam:GetAccountAuthorizationDetails",
               "iam:GetAccountName",
@@ -101,10 +107,10 @@ locals {
               "iam:GetRole",
               "iam:GetRolePolicy",
               "iam:GetSAMLProvider",
-              "iam:GetSSHPublicKey",
               "iam:GetServiceLastAccessedDetails",
               "iam:GetServiceLastAccessedDetailsWithEntities",
               "iam:GetServiceLinkedRoleDeletionStatus",
+              "iam:GetSSHPublicKey",
               "iam:GetUser",
               "iam:GetUserPolicy",
             ],
