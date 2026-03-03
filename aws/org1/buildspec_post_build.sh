@@ -24,7 +24,7 @@ post_plan_to_slack() {
       curl \
         -X POST \
         -H 'Content-type: application/json; charset=utf-8' \
-        --data "{\"text\":\"Plan for pipeline $CODEPIPELINE_NAME in region $AWS_REGION\n\`\`\`\n$TF_PLAN_TEXT ...\n\`\`\`\"}" \
+        --data "{\"text\":\"\`\`\`Plan for pipeline $CODEPIPELINE_NAME in region $AWS_REGION\n\n$TF_PLAN_TEXT ...\`\`\`\"}" \
         $TF_VAR_PLAN_SLACK_WEBHOOK_URL
     fi
   fi
