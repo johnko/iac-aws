@@ -47,6 +47,8 @@ locals {
           {
             # Read tag policy
             "Action" : [
+              "tag:Describe*",
+              "tag:Get*",
               "tag:ListRequiredTags",
             ],
             "Resource" : "*",
@@ -129,12 +131,10 @@ locals {
               "iam:GetUserPolicy",
               "lambda:Describe*",
               "lambda:Get*",
-              "s3:GetBucketCORS",
               "s3:GetBucketLocation",
               "s3:GetBucketVersioning",
               "s3:GetBucketWebsite",
               "s3:ListBucket",
-              "ssm:Describe*",
             ],
             "Resource" : "*",
             "Effect" : "Allow"
@@ -151,7 +151,9 @@ locals {
             "Action" : [
               "chatbot:DescribeSlackWorkspaces",
               "s3:GetBucketAcl",
+              "s3:GetBucketCORS",
               "s3:GetBucketPolicy",
+              "ssm:Describe*",
             ],
             "Resource" : "*",
             "Effect" : "Allow"
