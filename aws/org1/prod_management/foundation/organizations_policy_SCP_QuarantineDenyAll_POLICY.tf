@@ -1,7 +1,3 @@
-variable "aws_SCP_QuarantineDenyAll_POLICY" {
-  type        = string
-  description = "Policy ID, eg. p-123"
-}
 import {
   to = aws_organizations_policy.SCP_QuarantineDenyAll_POLICY
   id = var.aws_SCP_QuarantineDenyAll_POLICY

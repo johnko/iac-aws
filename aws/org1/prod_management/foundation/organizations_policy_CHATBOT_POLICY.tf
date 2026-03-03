@@ -1,7 +1,3 @@
-variable "aws_CHATBOT_POLICY" {
-  type        = string
-  description = "Policy ID, eg. p-123"
-}
 import {
   to = aws_organizations_policy.CHATBOT_POLICY
   id = var.aws_CHATBOT_POLICY

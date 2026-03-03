@@ -1,7 +1,3 @@
-variable "aws_S3_POLICY" {
-  type        = string
-  description = "Policy ID, eg. p-123"
-}
 import {
   to = aws_organizations_policy.S3_POLICY
   id = var.aws_S3_POLICY

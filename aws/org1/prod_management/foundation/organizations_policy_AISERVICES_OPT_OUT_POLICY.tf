@@ -1,7 +1,3 @@
-variable "aws_AISERVICES_OPT_OUT_POLICY" {
-  type        = string
-  description = "Policy ID, eg. p-123"
-}
 import {
   to = aws_organizations_policy.AISERVICES_OPT_OUT_POLICY
   id = var.aws_AISERVICES_OPT_OUT_POLICY

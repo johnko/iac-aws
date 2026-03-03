@@ -1,7 +1,3 @@
-variable "aws_EC2_IMDSv2_POLICY" {
-  type        = string
-  description = "Policy ID, eg. p-123"
-}
 import {
   to = aws_organizations_policy.EC2_IMDSv2_POLICY
   id = var.aws_EC2_IMDSv2_POLICY

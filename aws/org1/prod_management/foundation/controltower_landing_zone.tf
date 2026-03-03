@@ -1,7 +1,3 @@
-variable "aws_controltower_landingzone_id" {
-  type        = string
-  description = "AWS ControlTower LandingZone ID, eg. ABCD1234"
-}
 import {
   to = aws_controltower_landing_zone.org
   id = var.aws_controltower_landingzone_id

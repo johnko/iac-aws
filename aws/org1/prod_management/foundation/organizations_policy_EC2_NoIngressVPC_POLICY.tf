@@ -1,7 +1,3 @@
-variable "aws_EC2_NoIngressVPC_POLICY" {
-  type        = string
-  description = "Policy ID, eg. p-123"
-}
 import {
   to = aws_organizations_policy.EC2_NoIngressVPC_POLICY
   id = var.aws_EC2_NoIngressVPC_POLICY

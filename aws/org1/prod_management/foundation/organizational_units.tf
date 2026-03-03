@@ -1,7 +1,3 @@
-variable "aws_ou_id_security" {
-  type        = string
-  description = "Organizational Unit ID, eg. ou-xyz789"
-}
 import {
   to = aws_organizations_organizational_unit.ou["security"]
   identity = {
@@ -9,10 +5,6 @@ import {
   }
 }
 
-variable "aws_ou_id_sandbox" {
-  type        = string
-  description = "Organizational Unit ID, eg. ou-xyz789"
-}
 import {
   to = aws_organizations_organizational_unit.ou["sandbox"]
   identity = {
@@ -20,10 +12,6 @@ import {
   }
 }
 
-variable "aws_ou_id_quarantine" {
-  type        = string
-  description = "Organizational Unit ID, eg. ou-xyz789"
-}
 import {
   to = aws_organizations_organizational_unit.ou["quarantine"]
   identity = {
@@ -31,10 +19,6 @@ import {
   }
 }
 
-variable "aws_ou_id_deployment" {
-  type        = string
-  description = "Organizational Unit ID, eg. ou-xyz789"
-}
 import {
   to = aws_organizations_organizational_unit.ou["deployment"]
   identity = {

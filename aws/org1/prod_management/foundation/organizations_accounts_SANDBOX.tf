@@ -1,7 +1,3 @@
-variable "aws_email_sandbox_bedrock" {
-  type        = string
-  description = "Email address for the aws account"
-}
 import {
   to = aws_organizations_account.sandbox_account["sandbox_bedrock"]
   id = var.aws_account_id_sandbox_bedrock
