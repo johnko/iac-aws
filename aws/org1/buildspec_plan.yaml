@@ -27,9 +27,6 @@ phases:
     #   python: 3.13
     commands:
       - |
-        echo >> "$HOME/.terraformrc"
-        echo plugin_cache_dir = "$(pwd)/.terraform-plugin-cache" >> "$HOME/.terraformrc"
-      - |
         bash ./aws/org1/buildspec_install.sh
         export PATH=$PATH:~/bin
         terraform version
@@ -42,6 +39,7 @@ phases:
     commands:
       - |
         set +e
+        echo plugin_cache_dir="`pwd`/.terraform-plugin-cache" >> "$HOME/.terraformrc"
         bash .github/tf.sh $WORKSPACE_PATH plan
         export TF_PLAN_EXIT_CODE=$?
 
@@ -65,5 +63,5 @@ phases:
 cache:
   # No effect for lambda: Cannot specify cache for lambda compute
   paths:
-    # List of directories to cache, relative to the source directory
+    # List of directories to cache, absolute or relative to the source directory
     - '.terraform-plugin-cache/**/*'
