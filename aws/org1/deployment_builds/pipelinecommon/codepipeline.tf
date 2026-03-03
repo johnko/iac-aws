@@ -339,7 +339,7 @@ resource "aws_codepipeline" "terraform" {
       run_order       = 3
       version         = "1"
       configuration = {
-        ProjectName = "TerraformApply-${each.value.codebuild_suffix}"
+        ProjectName = "TerraformApply-${each.value.EnvironmentVariables["TF_VAR_aws_account_id"]}-${each.value.codebuild_suffix}"
         EnvironmentVariables = jsonencode(
           concat(
             [
