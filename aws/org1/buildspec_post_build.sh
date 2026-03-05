@@ -26,9 +26,11 @@ post_plan_to_slack() {
     if [[ $TF_PLAN_EXIT_CODE != 0 ]]; then
       TF_PLAN_TEXT=$(cat "$TF_TMP_LOG" | awk '/^Terraform used the selected providers/,/NON MATCHING PATTERN TO GET ALL OUTPUT TO THE END/' | head -c 500)
       SLACK_PAYLOAD=$(jq -n \
+        --arg pipeline "$CODEPIPELINE_NAME" \
+        --arg region "$AWS_REGION" \
         --arg msg "$TF_PLAN_TEXT" \
         --arg url "https://console.aws.amazon.com/codesuite/codepipeline/pipelines/$CODEPIPELINE_NAME/view?region=$AWS_REGION" \
-        '{"text":"Plan for pipeline `$CODEPIPELINE_NAME` in region `$AWS_REGION`\n\n```"+$msg+"...```\n"+$url+""}')
+        '{"text":"Plan for pipeline `"+$pipeline+"` in region `"+$region+"`\n\n```"+$msg+"...```\n"+$url+""}')
       echo "$SLACK_PAYLOAD"
       curl \
         -X POST \
