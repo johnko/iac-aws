@@ -16,16 +16,13 @@ if [[ -n $TF_PLAN_EXIT_CODE ]] && [[ $TF_PLAN_EXIT_CODE != 2 ]]; then
 fi
 
 echo "CODEBUILD_RESOLVED_SOURCE_VERSION=$CODEBUILD_RESOLVED_SOURCE_VERSION"
-echo "CODEBUILD_SOURCE_REPO_URL=$CODEBUILD_SOURCE_REPO_URL"
-echo "CODEBUILD_SOURCE_VERSION=$CODEBUILD_SOURCE_VERSION"
-echo "CODEBUILD_WEBHOOK_TRIGGER=$CODEBUILD_WEBHOOK_TRIGGER"
 
 post_plan_to_slack() {
   if [[ -e $TF_TMP_LOG ]] && [[ $TF_TMP_LOG == *plan* ]]; then
     set +ux
     if [[ $TF_PLAN_EXIT_CODE != 0 ]]; then
       # use col to strip escape sequences like color
-      TF_PLAN_TEXT=$(cat "$TF_TMP_LOG" | col -b | awk '/^Terraform used the selected providers/,/NON MATCHING PATTERN TO GET ALL OUTPUT TO THE END/' | head -c 500)
+      TF_PLAN_TEXT=$(cat "$TF_TMP_LOG" | col -b | awk '/^Terraform used the selected providers|^Plan:/,/^Terraform will perform the following actions|^────────────────────────────────────────────/' | head -c 500)
       SLACK_PAYLOAD=$(jq -n \
         --arg pipeline "$CODEPIPELINE_NAME" \
         --arg region "$AWS_REGION" \
