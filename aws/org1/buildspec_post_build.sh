@@ -19,8 +19,11 @@ post_plan_to_slack() {
   if [[ -e $TF_TMP_LOG ]] && [[ $TF_TMP_LOG == *plan* ]]; then
     set +ux
     if [[ $TF_PLAN_EXIT_CODE != 0 ]]; then
-      # use col to strip escape sequences like color
-      TF_PLAN_TEXT=$(cat "$TF_TMP_LOG" | col -b | awk '/^Terraform used the selected providers|^Plan:/,/^Terraform will perform the following actions|^────────────────────────────────────────────/' | head -c 500)
+      # use sed to strip escape sequences like color
+      TF_PLAN_TEXT=$(cat "$TF_TMP_LOG" \
+        | sed 's/\x1b\[[0-9;]*m//g' \
+        | awk '/^Terraform used the selected providers|^Plan:/,/^Terraform will perform the following actions|^────────────────────────────────────────────/' \
+        | head -c 500)
       SLACK_PAYLOAD=$(jq -n \
         --arg pipeline "$CODEPIPELINE_NAME" \
         --arg region "$AWS_REGION" \
