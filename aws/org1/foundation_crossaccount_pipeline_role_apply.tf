@@ -85,9 +85,10 @@ locals {
                 "codebuild:Create*",
                 "codepipeline:Create*",
                 "codepipeline:TagResource",
+                "codestar-connections:PassConnection", # For modifying CodePipeline
+                "iam:Create*Role",
                 "iam:CreatePolicy*",
                 "iam:CreateRole",
-                "iam:Create*Role",
                 "iam:Tag*",
                 # "organizations:List*",
                 # "s3:GetAccelerateConfiguration",
@@ -112,7 +113,7 @@ locals {
           "Statement" : [
             {
               "Action" : [
-                "iam:PassRole"
+                "iam:PassRole",
               ],
               "Resource" : [
                 "arn:aws:iam::${var.aws_account_id_deployment_builds}:role/CodePipelineRole-TerraformPipelines"
