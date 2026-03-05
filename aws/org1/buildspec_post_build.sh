@@ -28,7 +28,7 @@ post_plan_to_slack() {
       SLACK_PAYLOAD=$(jq -n \
         --arg msg "$TF_PLAN_TEXT" \
         --arg url "https://console.aws.amazon.com/codesuite/codepipeline/pipelines/$CODEPIPELINE_NAME/view?region=$AWS_REGION" \
-        '{"text":"Plan for pipeline `$CODEPIPELINE_NAME` in region `$AWS_REGION`\n\n```"+$msg+"...```\n"+$url}')
+        '{"text":"Plan for pipeline `$CODEPIPELINE_NAME` in region `$AWS_REGION`\n\n```"+$msg+"...```\n"+$url+""}')
       echo "$SLACK_PAYLOAD"
       curl \
         -X POST \
