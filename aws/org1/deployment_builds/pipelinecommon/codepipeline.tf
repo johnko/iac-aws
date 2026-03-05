@@ -214,6 +214,7 @@ resource "aws_codepipeline" "terraform" {
     action {
       name             = "CodeConnections"
       category         = "Source"
+      namespace        = "SourceVariables"
       owner            = "AWS"
       provider         = "CodeStarSourceConnection"
       version          = "1"
