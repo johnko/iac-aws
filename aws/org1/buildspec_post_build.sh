@@ -23,6 +23,7 @@ post_plan_to_slack() {
       TF_PLAN_TEXT=$(cat "$TF_TMP_LOG" \
         | sed 's/\x1b\[[0-9;]*m//g' \
         | awk '/^Terraform used the selected providers|^Plan:/,/^Terraform will perform the following actions|^────────────────────────────────────────────/' \
+        | sed 's,──,─,g'
         | head -c 500)
       SLACK_PAYLOAD=$(jq -n \
         --arg pipeline "$CODEPIPELINE_NAME" \
