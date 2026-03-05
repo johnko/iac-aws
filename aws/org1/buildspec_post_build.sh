@@ -15,8 +15,6 @@ if [[ -n $TF_PLAN_EXIT_CODE ]] && [[ $TF_PLAN_EXIT_CODE != 2 ]]; then
     --transition-type Inbound
 fi
 
-echo "CODEBUILD_RESOLVED_SOURCE_VERSION=$CODEBUILD_RESOLVED_SOURCE_VERSION"
-
 post_plan_to_slack() {
   if [[ -e $TF_TMP_LOG ]] && [[ $TF_TMP_LOG == *plan* ]]; then
     set +ux
@@ -26,9 +24,10 @@ post_plan_to_slack() {
       SLACK_PAYLOAD=$(jq -n \
         --arg pipeline "$CODEPIPELINE_NAME" \
         --arg region "$AWS_REGION" \
+        --arg commit "$CODEBUILD_RESOLVED_SOURCE_VERSION"
         --arg msg "$TF_PLAN_TEXT" \
         --arg url "https://console.aws.amazon.com/codesuite/codepipeline/pipelines/$CODEPIPELINE_NAME/view?region=$AWS_REGION" \
-        '{"text":"Plan for pipeline `"+$pipeline+"` in region `"+$region+"`\n\n```"+$msg+"...```\n"+$url+""}')
+        '{"text":"Plan for pipeline `"+$pipeline+"` in region `"+$region+"` commit `"+$commit+"`\n\n```"+$msg+"...```\n"+$url+""}')
       echo "$SLACK_PAYLOAD"
       curl \
         -X POST \
