@@ -27,7 +27,7 @@ post_plan_to_slack() {
         --arg commit "$CODEBUILD_RESOLVED_SOURCE_VERSION"
         --arg msg "$TF_PLAN_TEXT" \
         --arg url "https://console.aws.amazon.com/codesuite/codepipeline/pipelines/$CODEPIPELINE_NAME/view?region=$AWS_REGION" \
-        '{"text":"Plan for pipeline `"+$pipeline+"` in region `"+$region+"` commit `"+$commit+"`\n\n```"+$msg+"...```\n"+$url+""}')
+        '{"text":"Plan for pipeline `\($pipeline)` in region `\($region)` commit `\($commit)`\n\n```\($msg)...```\n\($url)"}')
       echo "$SLACK_PAYLOAD"
       curl \
         -X POST \
