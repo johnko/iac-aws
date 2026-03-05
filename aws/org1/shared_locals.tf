@@ -69,9 +69,44 @@ locals {
   }
 
   slack_user_roles = {
-    "viewer"   = {}
-    "approver" = {}
-    "invoker"  = {}
+    "viewer" = {
+      inline_policy1 = jsonencode({
+        "Version" : "2012-10-17",
+        "Statement" : [
+          {
+            "Action" : [
+              "codepipeline:GetPipeline",
+              "codepipeline:GetPipelineExecution",
+              "codepipeline:GetPipelineState",
+              "codepipeline:ListPipelineExecutions",
+              "codepipeline:ListPipelines",
+            ],
+            "Effect" : "Allow",
+            "Resource" : "*"
+          }
+        ]
+      })
+    }
+    "approver" = {
+      inline_policy1 = jsonencode({
+        "Version" : "2012-10-17",
+        "Statement" : [
+          {
+            "Action" : [
+              "codepipeline:GetPipeline",
+              "codepipeline:GetPipelineExecution",
+              "codepipeline:GetPipelineState",
+              "codepipeline:ListPipelineExecutions",
+              "codepipeline:ListPipelines",
+              "codepipeline:PutApprovalResult"
+            ],
+            "Effect" : "Allow",
+            "Resource" : "*"
+          }
+        ]
+      })
+    }
+    "invoker" = {}
   }
 }
 
