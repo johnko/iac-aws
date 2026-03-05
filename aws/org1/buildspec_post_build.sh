@@ -19,12 +19,13 @@ post_plan_to_slack() {
   if [[ -e $TF_TMP_LOG ]] && [[ $TF_TMP_LOG == *plan* ]]; then
     set +ux
     if [[ $TF_PLAN_EXIT_CODE != 0 ]]; then
-      TF_PLAN_TEXT=$(cat "$TF_TMP_LOG" | awk '/^Terraform used the selected providers/,/NON MATCHING PATTERN TO GET ALL OUTPUT TO THE END/' | tr '`' "'" | tr '"' "'" | tr "\n" '`' | sed 's,`,\\n,g' | head -c 500)
-      echo "{\"text\":\"\`\`\`Plan for pipeline $CODEPIPELINE_NAME in region $AWS_REGION\n\n$TF_PLAN_TEXT ...\`\`\`\"}"
+      TF_PLAN_TEXT=$(cat "$TF_TMP_LOG" | awk '/^Terraform used the selected providers/,/NON MATCHING PATTERN TO GET ALL OUTPUT TO THE END/' | head -c 500)
+      SLACK_PAYLOAD=$(jq -n --arg msg "$TF_PLAN_TEXT" '{"text":"Plan for pipeline `$CODEPIPELINE_NAME` in region `$AWS_REGION`\n\n```"+$msg+"...```\nhttps://console.aws.amazon.com/codesuite/codepipeline/pipelines/$CODEPIPELINE_NAME/view?region=$AWS_REGION"}')
+      echo "$SLACK_PAYLOAD"
       curl \
         -X POST \
         -H 'Content-type: application/json; charset=utf-8' \
-        --data "{\"text\":\"\`\`\`Plan for pipeline $CODEPIPELINE_NAME in region $AWS_REGION\n\n$TF_PLAN_TEXT ...\`\`\`\"}" \
+        --data "$SLACK_PAYLOAD" \
         $TF_VAR_PLAN_SLACK_WEBHOOK_URL
     fi
   fi
