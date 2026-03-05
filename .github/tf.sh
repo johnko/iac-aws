@@ -69,6 +69,7 @@ if [[ -n $CROSS_ACCOUNT_PIPELINE_IAM_ROLE ]] && [[ -n $TF_VAR_aws_account_id ]];
   # Hide command
   set +x
   # Assume the Cross Account Role
+  # shellcheck disable=SC2046
   read -r AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_SESSION_TOKEN <<<$(
     aws sts assume-role \
       --role-arn "$ROLE_ARN" \
