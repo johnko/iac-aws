@@ -105,6 +105,23 @@ locals {
           ]
         })
       }
+      CodePipelinePassRole = {
+        enabled_aws_account_ids = ["${var.aws_account_id_deployment_builds}"]
+        policy_template = jsonencode({
+          "Version" : "2012-10-17",
+          "Statement" : [
+            {
+              "Action" : [
+                "iam:PassRole"
+              ],
+              "Resource" : [
+                "arn:aws:iam::${var.aws_account_id_deployment_builds}:role/CodePipelineRole-TerraformPipelines"
+              ],
+              "Effect" : "Allow"
+            }
+          ]
+        })
+      }
     }
   )
 }
