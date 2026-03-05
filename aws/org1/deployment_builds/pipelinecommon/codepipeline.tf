@@ -259,6 +259,11 @@ resource "aws_codepipeline" "terraform" {
                 type  = "PLAINTEXT"
               },
               {
+                name  = "COMMIT_MESSAGE"
+                value = "#{SourceVariables.CommitMessage}"
+                type  = "PLAINTEXT"
+              },
+              {
                 name  = "CROSS_ACCOUNT_PIPELINE_IAM_ROLE"
                 value = "CrossAccountPipelineRole-TerraformPlan"
                 type  = "PLAINTEXT"
@@ -346,6 +351,11 @@ resource "aws_codepipeline" "terraform" {
               {
                 name  = "CODEPIPELINE_NAME"
                 value = each.value.codepipeline_name
+                type  = "PLAINTEXT"
+              },
+              {
+                name  = "COMMIT_MESSAGE"
+                value = "#{SourceVariables.CommitMessage}"
                 type  = "PLAINTEXT"
               },
               {
