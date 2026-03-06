@@ -41,7 +41,7 @@ post_plan_to_slack() {
         --arg commitid "$CODEBUILD_RESOLVED_SOURCE_VERSION" \
         --arg commitmessage "$COMMIT_MESSAGE" \
         --arg msg "$TF_PLAN_TEXT" \
-        '{"text":"Plan for <\($url)|pipeline> `\($pipeline)` in region `\($region)`\n\n```\($commitid) \($commitmessage)\n\n\($msg)...```"}')
+        '{"text":":hourglass: Plan for <\($url)|pipeline> `\($pipeline)` in region `\($region)`\n\n```\($commitid) \($commitmessage)\n\n\($msg)...```"}')
       echo "$SLACK_PAYLOAD"
       curl \
         -X POST \
