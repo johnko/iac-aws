@@ -35,7 +35,6 @@ post_plan_to_slack() {
         | grep -v -E '(Terraform used the selected providers to generate|indicated with the following symbols|Terraform will perform the following actions)' \
         | sed 's/ 0 to add,//g' \
         | sed 's/, 0 to destroy//g' \
-        | sed 's/\.\.\.\./.../g' \
         | sed 's,──,,g' \
         | grep -v -E '^( *|─*)$' \
         | head -c 500)
@@ -47,7 +46,7 @@ post_plan_to_slack() {
         --arg commitid "$CODEBUILD_RESOLVED_SOURCE_VERSION" \
         --arg commitmessage "$COMMIT_MESSAGE" \
         --arg msg "$TF_PLAN_TEXT" \
-        '{"text":"\($icon) Plan for <\($url)|pipeline> `\($pipeline)` in region `\($region)`\n\n```\($commitid) \($commitmessage)\n\n\($msg)...```"}')
+        '{"text":"\($icon) Plan for <\($url)|pipeline> `\($pipeline)` in region `\($region)`\n\n```\($commitid) \($commitmessage)\n\n\($msg)```"}')
       echo "$SLACK_PAYLOAD"
       curl \
         -X POST \
