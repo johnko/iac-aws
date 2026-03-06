@@ -27,6 +27,7 @@ post_plan_to_slack() {
   if [[ -e $TF_TMP_LOG ]] && [[ $TF_TMP_LOG == *plan* ]]; then
     set +ux
     if [[ $TF_PLAN_EXIT_CODE != 0 ]]; then
+      ICON=":hourglass:"
       # use sed to strip escape sequences like color
       TF_PLAN_TEXT=$(cat "$TF_TMP_LOG" \
         | sed 's/\x1b\[[0-9;]*m//g' \
@@ -35,13 +36,14 @@ post_plan_to_slack() {
         | grep -v -E '^( *|─*)$' \
         | head -c 500)
       SLACK_PAYLOAD=$(jq -n \
+        --arg icon "$ICON" \
         --arg url "https://console.aws.amazon.com/codesuite/codepipeline/pipelines/$CODEPIPELINE_NAME/view?region=$AWS_REGION" \
         --arg pipeline "$CODEPIPELINE_NAME" \
         --arg region "$AWS_REGION" \
         --arg commitid "$CODEBUILD_RESOLVED_SOURCE_VERSION" \
         --arg commitmessage "$COMMIT_MESSAGE" \
         --arg msg "$TF_PLAN_TEXT" \
-        '{"text":":hourglass: Plan for <\($url)|pipeline> `\($pipeline)` in region `\($region)`\n\n```\($commitid) \($commitmessage)\n\n\($msg)...```"}')
+        '{"text":"\($icon) Plan for <\($url)|pipeline> `\($pipeline)` in region `\($region)`\n\n```\($commitid) \($commitmessage)\n\n\($msg)...```"}')
       echo "$SLACK_PAYLOAD"
       curl \
         -X POST \
@@ -52,3 +54,38 @@ post_plan_to_slack() {
   fi
 }
 post_plan_to_slack
+
+post_apply_to_slack() {
+  if [[ -e $TF_TMP_LOG ]] && [[ $TF_TMP_LOG == *apply* ]]; then
+    set +ux
+    if [[ $TF_APPLY_EXIT_CODE != 0 ]]; then
+      ICON=":x:"
+    else
+      ICON=":white_check_mark:"
+    fi
+    # use sed to strip escape sequences like color
+    TF_APPLY_TEXT=$(cat "$TF_TMP_LOG" \
+      | sed 's/\x1b\[[0-9;]*m//g' \
+      | awk '/^Apply complete|^. Error:/,/^────────────────────────────────────────────/' \
+      | head -n1 \
+      | sed 's,──,,g' \
+      | grep -v -E '^( *|─*)$' \
+      | head -c 500)
+    SLACK_PAYLOAD=$(jq -n \
+      --arg icon "$ICON" \
+      --arg url "https://console.aws.amazon.com/codesuite/codepipeline/pipelines/$CODEPIPELINE_NAME/view?region=$AWS_REGION" \
+      --arg pipeline "$CODEPIPELINE_NAME" \
+      --arg region "$AWS_REGION" \
+      --arg commitid "$CODEBUILD_RESOLVED_SOURCE_VERSION" \
+      --arg commitmessage "$COMMIT_MESSAGE" \
+      --arg msg "$TF_APPLY_TEXT" \
+      '{"text":"\($icon) Apply for <\($url)|pipeline> `\($pipeline)` in region `\($region)`\n\n```\($commitid) \($commitmessage)\n\n\($msg)...```"}')
+    echo "$SLACK_PAYLOAD"
+    curl \
+      -X POST \
+      -H 'Content-type: application/json; charset=utf-8' \
+      --data "$SLACK_PAYLOAD" \
+      "$TF_VAR_PLAN_SLACK_WEBHOOK_URL"
+  fi
+}
+post_apply_to_slack
