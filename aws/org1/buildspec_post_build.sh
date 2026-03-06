@@ -32,15 +32,16 @@ post_plan_to_slack() {
         | sed 's/\x1b\[[0-9;]*m//g' \
         | awk '/^Terraform used the selected providers|^Plan:/,/^Terraform will perform the following actions|^────────────────────────────────────────────/' \
         | sed 's,──,─,g' \
+        | grep -v '^ *$' \
         | head -c 500)
       SLACK_PAYLOAD=$(jq -n \
+        --arg url "https://console.aws.amazon.com/codesuite/codepipeline/pipelines/$CODEPIPELINE_NAME/view?region=$AWS_REGION" \
         --arg pipeline "$CODEPIPELINE_NAME" \
         --arg region "$AWS_REGION" \
         --arg commitid "$CODEBUILD_RESOLVED_SOURCE_VERSION" \
         --arg commitmessage "$COMMIT_MESSAGE" \
         --arg msg "$TF_PLAN_TEXT" \
-        --arg url "https://console.aws.amazon.com/codesuite/codepipeline/pipelines/$CODEPIPELINE_NAME/view?region=$AWS_REGION" \
-        '{"text":"Plan for pipeline `\($pipeline)` in region `\($region)`\n\n```\($commitid) \($commitmessage)\n\($msg)...```\n\($url)"}')
+        '{"text":"Plan for <\($url)|pipeline> `\($pipeline)` in region `\($region)`\n\n```\($commitid) \($commitmessage)\n\n\($msg)...```"}')
       echo "$SLACK_PAYLOAD"
       curl \
         -X POST \
