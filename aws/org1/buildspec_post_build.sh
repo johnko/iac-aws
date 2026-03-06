@@ -32,7 +32,7 @@ post_plan_to_slack() {
         | sed 's/\x1b\[[0-9;]*m//g' \
         | awk '/^Terraform used the selected providers|^Plan:/,/^Terraform will perform the following actions|^────────────────────────────────────────────/' \
         | sed 's,──,,g' \
-        | grep -v '^( *|─*)$' \
+        | grep -v -E '^( *|─*)$' \
         | head -c 500)
       SLACK_PAYLOAD=$(jq -n \
         --arg url "https://console.aws.amazon.com/codesuite/codepipeline/pipelines/$CODEPIPELINE_NAME/view?region=$AWS_REGION" \
