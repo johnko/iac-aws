@@ -33,6 +33,9 @@ post_plan_to_slack() {
         | sed 's/\x1b\[[0-9;]*m//g' \
         | awk '/^Terraform used the selected providers|^Plan:/,/^Terraform will perform the following actions|^────────────────────────────────────────────/' \
         | grep -v -E '(Terraform used the selected providers to generate|indicated with the following symbols|Terraform will perform the following actions)' \
+        | sed 's/ 0 to add,//g' \
+        | sed 's/, 0 to destroy//g' \
+        | sed 's/\.\.\.\./.../g' \
         | sed 's,──,,g' \
         | grep -v -E '^( *|─*)$' \
         | head -c 500)
