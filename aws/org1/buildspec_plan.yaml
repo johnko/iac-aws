@@ -87,8 +87,7 @@ phases:
 
 artifacts:
   files:
-    - "**/*.tfplan"
-  name: terraformplan
+    - "**/*"
 
 cache:
   # No effect for lambda: Cannot specify cache for lambda compute

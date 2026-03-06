@@ -245,7 +245,7 @@ resource "aws_codepipeline" "terraform" {
       input_artifacts  = ["SourceOutput"]
       name             = "TerraformPlan"
       namespace        = "TerraformPlan"
-      output_artifacts = ["PlanOutput"]
+      output_artifacts = ["TerraformPlanOutput"]
       owner            = "AWS"
       provider         = "CodeBuild" # Can't use Commands until terraform-aws-provider supports it
       run_order        = 1
@@ -338,7 +338,7 @@ resource "aws_codepipeline" "terraform" {
 
     action {
       category        = "Build"
-      input_artifacts = ["SourceOutput", "PlanOutput"]
+      input_artifacts = ["TerraformPlanOutput"] # use files from Plan stage TerraformPlan action which include a tfplan.tfplan
       name            = "TerraformApply"
       namespace       = "TerraformApply"
       owner           = "AWS"
@@ -346,8 +346,7 @@ resource "aws_codepipeline" "terraform" {
       run_order       = 3
       version         = "1"
       configuration = {
-        "PrimarySource" = "SourceOutput"
-        "ProjectName"   = "TerraformApply-${each.value.EnvironmentVariables["TF_VAR_aws_account_id"]}-${each.value.codebuild_suffix}"
+        "ProjectName" = "TerraformApply-${each.value.EnvironmentVariables["TF_VAR_aws_account_id"]}-${each.value.codebuild_suffix}"
         "EnvironmentVariables" = jsonencode(
           concat(
             [
