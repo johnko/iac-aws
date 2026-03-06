@@ -69,7 +69,7 @@ post_apply_to_slack() {
     # use sed to strip escape sequences like color
     TF_APPLY_TEXT=$(cat "$TF_TMP_LOG" |
       sed 's/\x1b\[[0-9;]*m//g' |
-      awk '/^Apply complete|^. Error:/,/^────────────────────────────────────────────/' |
+      awk '/^Apply complete| Error:/,/^────────────────────────────────────────────/' |
       sed 's/ 0 added,//g' |
       sed 's/, 0 destroyed//g' |
       head -n1 |
