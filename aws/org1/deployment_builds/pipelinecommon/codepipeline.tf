@@ -241,17 +241,18 @@ resource "aws_codepipeline" "terraform" {
     name = "Plan"
 
     action {
-      category        = "Build"
-      input_artifacts = ["SourceOutput"]
-      name            = "TerraformPlan"
-      namespace       = "TerraformPlan"
-      owner           = "AWS"
-      provider        = "CodeBuild" # Can't use Commands until terraform-aws-provider supports it
-      run_order       = 1
-      version         = "1"
+      category         = "Build"
+      input_artifacts  = ["SourceOutput"]
+      name             = "TerraformPlan"
+      namespace        = "TerraformPlan"
+      output_artifacts = ["PlanOutput"]
+      owner            = "AWS"
+      provider         = "CodeBuild" # Can't use Commands until terraform-aws-provider supports it
+      run_order        = 1
+      version          = "1"
       configuration = {
-        ProjectName = "TerraformPlan-${each.value.EnvironmentVariables["TF_VAR_aws_account_id"]}-${each.value.codebuild_suffix}"
-        EnvironmentVariables = jsonencode(
+        "ProjectName" = "TerraformPlan-${each.value.EnvironmentVariables["TF_VAR_aws_account_id"]}-${each.value.codebuild_suffix}"
+        "EnvironmentVariables" = jsonencode(
           concat(
             [
               {
@@ -337,7 +338,7 @@ resource "aws_codepipeline" "terraform" {
 
     action {
       category        = "Build"
-      input_artifacts = ["SourceOutput"]
+      input_artifacts = ["SourceOutput", "PlanOutput"]
       name            = "TerraformApply"
       namespace       = "TerraformApply"
       owner           = "AWS"
@@ -345,8 +346,9 @@ resource "aws_codepipeline" "terraform" {
       run_order       = 3
       version         = "1"
       configuration = {
-        ProjectName = "TerraformApply-${each.value.EnvironmentVariables["TF_VAR_aws_account_id"]}-${each.value.codebuild_suffix}"
-        EnvironmentVariables = jsonencode(
+        "PrimarySource" = "SourceOutput"
+        "ProjectName"   = "TerraformApply-${each.value.EnvironmentVariables["TF_VAR_aws_account_id"]}-${each.value.codebuild_suffix}"
+        "EnvironmentVariables" = jsonencode(
           concat(
             [
               {

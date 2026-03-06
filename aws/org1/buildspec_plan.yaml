@@ -85,6 +85,11 @@ phases:
       - |
         bash ./aws/org1/buildspec_post_build.sh
 
+artifacts:
+  files:
+    - "**/*.tfplan"
+  name: terraformplan
+
 cache:
   # No effect for lambda: Cannot specify cache for lambda compute
   paths:

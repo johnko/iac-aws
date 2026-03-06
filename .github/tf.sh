@@ -133,7 +133,7 @@ set +x
 if [[ "PLAN" == "$SAFE_ACTION" ]]; then
   set -x
   set +e
-  $IAC_BIN plan -detailed-exitcode -input=false
+  $IAC_BIN plan -detailed-exitcode -input=false -out=tfplan.tfplan
   TF_PLAN_EXIT_CODE=$?
   # 0 = Succeeded with empty diff (no changes), need to stop pipeline from going to TerraformApply
   # 2 = Succeeded with non-empty diff (changes present), need to continues pipeline to ApproveOrReject and TerraformApply
@@ -145,12 +145,16 @@ fi
 set +x
 if [[ "APPLY" == "$SAFE_ACTION" || "AUTO" == "$SAFE_ACTION" ]]; then
   AUTO_APPROVE_ARG=""
+  TFPLAN_FILE=""
   if [[ "AUTO" == "$SAFE_ACTION" ]]; then
     AUTO_APPROVE_ARG="-auto-approve"
+    if [[ -e tfplan.tfplan ]]; then
+      TFPLAN_FILE="tfplan.tfplan"
+    fi
   fi
   set -x
   set +e
-  $IAC_BIN apply $AUTO_APPROVE_ARG -input=false
+  $IAC_BIN apply $AUTO_APPROVE_ARG -input=false $TFPLAN_FILE
   TF_APPLY_EXIT_CODE=$?
   set -e
   exit $TF_APPLY_EXIT_CODE

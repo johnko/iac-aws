@@ -29,15 +29,15 @@ post_plan_to_slack() {
     if [[ $TF_PLAN_EXIT_CODE != 0 ]]; then
       ICON=":hourglass:"
       # use sed to strip escape sequences like color
-      TF_PLAN_TEXT=$(cat "$TF_TMP_LOG" \
-        | sed 's/\x1b\[[0-9;]*m//g' \
-        | awk '/^Terraform used the selected providers|^Plan:/,/^Terraform will perform the following actions|^────────────────────────────────────────────/' \
-        | grep -v -E '(Terraform used the selected providers to generate|indicated with the following symbols|Terraform will perform the following actions)' \
-        | sed 's/ 0 to add,//g' \
-        | sed 's/, 0 to destroy//g' \
-        | sed 's,──,,g' \
-        | grep -v -E '^( *|─*)$' \
-        | head -c 500)
+      TF_PLAN_TEXT=$(cat "$TF_TMP_LOG" |
+        sed 's/\x1b\[[0-9;]*m//g' |
+        awk '/^Terraform used the selected providers|^Plan:/,/^Terraform will perform the following actions|^────────────────────────────────────────────/' |
+        grep -v -E '(Terraform used the selected providers to generate|indicated with the following symbols|Terraform will perform the following actions)' |
+        sed 's/ 0 to add,//g' |
+        sed 's/, 0 to destroy//g' |
+        sed 's,──,,g' |
+        grep -v -E '^( *|─*)$' |
+        head -c 500)
       SLACK_PAYLOAD=$(jq -n \
         --arg icon "$ICON" \
         --arg url "https://console.aws.amazon.com/codesuite/codepipeline/pipelines/$CODEPIPELINE_NAME/view?region=$AWS_REGION" \
@@ -67,15 +67,15 @@ post_apply_to_slack() {
       ICON=":white_check_mark:"
     fi
     # use sed to strip escape sequences like color
-    TF_APPLY_TEXT=$(cat "$TF_TMP_LOG" \
-      | sed 's/\x1b\[[0-9;]*m//g' \
-      | awk '/^Apply complete|^. Error:/,/^────────────────────────────────────────────/' \
-      | sed 's/ 0 added,//g' \
-      | sed 's/, 0 destroyed//g' \
-      | head -n1 \
-      | sed 's,──,,g' \
-      | grep -v -E '^( *|─*)$' \
-      | head -c 500)
+    TF_APPLY_TEXT=$(cat "$TF_TMP_LOG" |
+      sed 's/\x1b\[[0-9;]*m//g' |
+      awk '/^Apply complete|^. Error:/,/^────────────────────────────────────────────/' |
+      sed 's/ 0 added,//g' |
+      sed 's/, 0 destroyed//g' |
+      head -n1 |
+      sed 's,──,,g' |
+      grep -v -E '^( *|─*)$' |
+      head -c 500)
     SLACK_PAYLOAD=$(jq -n \
       --arg icon "$ICON" \
       --arg url "https://console.aws.amazon.com/codesuite/codepipeline/pipelines/$CODEPIPELINE_NAME/view?region=$AWS_REGION" \
