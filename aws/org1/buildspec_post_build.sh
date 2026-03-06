@@ -70,6 +70,8 @@ post_apply_to_slack() {
     TF_APPLY_TEXT=$(cat "$TF_TMP_LOG" \
       | sed 's/\x1b\[[0-9;]*m//g' \
       | awk '/^Apply complete|^. Error:/,/^────────────────────────────────────────────/' \
+      | sed 's/ 0 added,//g' \
+      | sed 's/, 0 destroyed//g' \
       | head -n1 \
       | sed 's,──,,g' \
       | grep -v -E '^( *|─*)$' \
@@ -82,7 +84,7 @@ post_apply_to_slack() {
       --arg commitid "$CODEBUILD_RESOLVED_SOURCE_VERSION" \
       --arg commitmessage "$COMMIT_MESSAGE" \
       --arg msg "$TF_APPLY_TEXT" \
-      '{"text":"\($icon) Apply for <\($url)|pipeline> `\($pipeline)` in region `\($region)`\n\n```\($commitid) \($commitmessage)\n\n\($msg)...```"}')
+      '{"text":"\($icon) Apply for <\($url)|pipeline> `\($pipeline)` in region `\($region)`\n\n```\($commitid) \($commitmessage)\n\n\($msg)```"}')
     echo "$SLACK_PAYLOAD"
     curl \
       -X POST \
