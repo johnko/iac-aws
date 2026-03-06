@@ -76,8 +76,7 @@ locals {
                 "sns:Subscribe",
                 "sns:Unsubscribe",
                 "sns:UntagResource",
-                # "ssm:List*",
-                # "sso:Get*",
+                "ssm:RemoveTagsFromResource",
               ],
               "Resource" : "*",
               "Effect" : "Allow"
@@ -107,9 +106,7 @@ locals {
                 "s3:TagResource",
                 "sns:CreateTopic",
                 "sns:TagResource",
-                # "ssm:Describe*",
-                # "sso:Describe*",
-                # "sso:List*",
+                "ssm:AddTagsToResource",
               ],
               "Resource" : "*",
               "Effect" : "Allow"
