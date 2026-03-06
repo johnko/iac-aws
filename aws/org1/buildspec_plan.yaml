@@ -67,8 +67,8 @@ phases:
       - |
         set -uo pipefail
         set +e
-        bash .github/tf.sh $WORKSPACE_PATH plan \
-          | tee "$TF_TMP_LOG"
+        bash .github/tf.sh $WORKSPACE_PATH plan 2>&1 |
+          tee "$TF_TMP_LOG"
         export TF_PLAN_EXIT_CODE=$?
 
   post_build:
