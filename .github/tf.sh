@@ -148,9 +148,7 @@ if [[ "APPLY" == "$SAFE_ACTION" || "AUTO" == "$SAFE_ACTION" ]]; then
   TFPLAN_FILE=""
   if [[ "AUTO" == "$SAFE_ACTION" ]]; then
     AUTO_APPROVE_ARG="-auto-approve"
-    if [[ -e tfplan.tfplan ]]; then
-      TFPLAN_FILE="tfplan.tfplan"
-    fi
+    TFPLAN_FILE="tfplan.tfplan"
   fi
   set -x
   set +e
