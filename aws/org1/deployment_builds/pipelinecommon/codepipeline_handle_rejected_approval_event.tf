@@ -86,12 +86,6 @@ resource "aws_cloudwatch_event_rule" "terraform_codepipeline_rejected" {
       "state" : [
         "FAILED"
       ],
-      "type" : {
-        "category" : [
-          "Approval",
-          "Build",
-        ]
-      },
       "pipeline" : [{
         "prefix" : "TF-"
       }]
