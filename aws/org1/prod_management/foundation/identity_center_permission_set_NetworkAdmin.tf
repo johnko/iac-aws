@@ -13,7 +13,7 @@ resource "aws_ssoadmin_managed_policy_attachments_exclusive" "NetworkAdministrat
     # To delete default VPC
     "arn:aws:iam::aws:policy/job-function/NetworkAdministrator",
     # AWS Resource Explorer
-    "arn:aws:iam::aws:policy/ResourceGroupsandTagEditorFullAccess",
+    # "arn:aws:iam::aws:policy/ResourceGroupsandTagEditorFullAccess",
     "arn:aws:iam::aws:policy/ResourceGroupsTaggingAPITagUntagSupportedResources",
     # AWS CodePipeline Approver
     "arn:aws:iam::aws:policy/AWSCodePipeline_ReadOnlyAccess",
