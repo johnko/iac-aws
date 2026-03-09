@@ -121,8 +121,8 @@ locals {
                 "sns:CreateTopic",
                 "sns:TagResource",
                 "ssm:AddTagsToResource",
-                "sso:Attach*",
-                "sso:Provision*",
+                "sso:*PermissionSet",
+                "sso:PutPermissions*",
               ],
               "Resource" : "*",
               "Effect" : "Allow"
