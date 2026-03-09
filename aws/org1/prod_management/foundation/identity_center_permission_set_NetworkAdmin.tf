@@ -16,6 +16,7 @@ resource "aws_ssoadmin_managed_policy_attachments_exclusive" "NetworkAdministrat
     "arn:aws:iam::aws:policy/ResourceGroupsandTagEditorFullAccess",
     # "arn:aws:iam::aws:policy/ResourceGroupsTaggingAPITagUntagSupportedResources",
     # AWS CodePipeline Approver
+    "arn:aws:iam::aws:policy/AWSCodeBuildReadOnlyAccess",
     "arn:aws:iam::aws:policy/AWSCodePipeline_ReadOnlyAccess",
     "arn:aws:iam::aws:policy/AWSCodePipelineApproverAccess",
     "arn:aws:iam::aws:policy/AWSLambda_ReadOnlyAccess",
