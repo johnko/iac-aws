@@ -175,3 +175,27 @@ resource "aws_iam_role_policies_exclusive" "S3ReplicationRole-tfstate" {
   role_name    = aws_iam_role.S3ReplicationRole-tfstate.name
   policy_names = [aws_iam_role_policy.S3ReplicationRoleDefaultPolicy.name]
 }
+
+########################################
+
+resource "aws_s3_bucket_replication_configuration" "terraform_state_replica" {
+  # Must have bucket versioning enabled first
+  depends_on = [aws_s3_bucket_versioning.terraform_state]
+
+  role   = aws_iam_role.S3ReplicationRole-tfstate.arn
+  bucket = aws_s3_bucket.terraform_state.id
+
+  dynamic "rule" {
+    for_each = local.tfstate_replica_regions
+    content {
+      id = "to ${each.key}"
+
+      destination {
+        bucket = aws_s3_bucket.terraform_state_replica[each.key].arn
+        storage_class = "STANDARD"
+      }
+
+      status = "Disabled" # each.value.replication_enabled ? "Enabled" : "Disabled"
+    }
+  }
+}
