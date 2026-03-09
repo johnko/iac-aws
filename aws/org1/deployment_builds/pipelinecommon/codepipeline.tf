@@ -97,7 +97,7 @@ resource "aws_iam_role_policy" "CodePipelineRoleDefaultPolicy" {
         },
         "Action" : [
           "s3:GetBucketAcl",
-          "s3:GetBucketLocation"
+          "s3:GetBucketLocation",
           "s3:GetBucketVersioning",
           "s3:GetObject",
           "s3:GetObjectVersion",
