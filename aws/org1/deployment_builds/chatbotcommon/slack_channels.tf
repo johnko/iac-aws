@@ -70,7 +70,10 @@ resource "aws_chatbot_slack_channel_configuration" "channel" {
 
   iam_role_arn = aws_iam_role.channel[each.key].arn
   guardrail_policy_arns = [
-    "arn:aws:iam::aws:policy/job-function/ViewOnlyAccess"
+    "arn:aws:iam::aws:policy/job-function/ViewOnlyAccess",
+    "arn:aws:iam::aws:policy/AWSCodePipeline_ReadOnlyAccess",
+    "arn:aws:iam::aws:policy/AWSCodePipelineApproverAccess",
+    "arn:aws:iam::aws:policy/AWSLambda_ReadOnlyAccess",
   ]
 
   tags = {
