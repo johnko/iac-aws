@@ -188,14 +188,14 @@ resource "aws_s3_bucket_replication_configuration" "terraform_state_replica" {
   dynamic "rule" {
     for_each = local.tfstate_replica_regions
     content {
-      id = "to ${each.key}"
+      id = "to ${rule.key}"
 
       destination {
-        bucket = aws_s3_bucket.terraform_state_replica[each.key].arn
+        bucket = aws_s3_bucket.terraform_state_replica[rule.key].arn
         storage_class = "STANDARD"
       }
 
-      status = "Disabled" # each.value.replication_enabled ? "Enabled" : "Disabled"
+      status = "Disabled" # rule.value["replication_enabled"] ? "Enabled" : "Disabled"
     }
   }
 }
