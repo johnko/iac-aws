@@ -96,12 +96,12 @@ resource "aws_iam_role_policy" "CodePipelineRoleDefaultPolicy" {
           }
         },
         "Action" : [
-          "s3:PutObject",
-          "s3:GetObject",
-          "s3:GetObjectVersion",
-          "s3:GetBucketVersioning",
           "s3:GetBucketAcl",
           "s3:GetBucketLocation"
+          "s3:GetBucketVersioning",
+          "s3:GetObject",
+          "s3:GetObjectVersion",
+          "s3:PutObject",
         ],
         "Resource" : flatten([
           for k, v in aws_s3_bucket.codepipeline : [v.arn, "${v.arn}/*"]
@@ -130,10 +130,10 @@ resource "aws_iam_role_policy" "CodePipelineRoleDefaultPolicy" {
       {
         # See https://docs.aws.amazon.com/codepipeline/latest/userguide/action-reference-CodeBuild.html#edit-role-codebuild
         "Action" : [
+          "codebuild:BatchGetBuildBatches",
           "codebuild:BatchGetBuilds",
           "codebuild:StartBuild",
-          "codebuild:BatchGetBuildBatches",
-          "codebuild:StartBuildBatch"
+          "codebuild:StartBuildBatch",
         ],
         "Resource" : distinct([
           for v in concat(values(aws_codebuild_project.terraform_plan), values(aws_codebuild_project.terraform_apply)) :
