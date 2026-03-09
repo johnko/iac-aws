@@ -60,6 +60,9 @@ if [[ -e .envrc ]]; then
 fi
 
 if [[ -e shared_tfstate_backend.template ]]; then
+  if [[ -z "$TF_VAR_workspace" ]]; then
+    TF_VAR_workspace="$WORKSPACE"
+  fi
   envsubst <shared_tfstate_backend.template >shared_tfstate_backend.tf
 fi
 
