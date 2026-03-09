@@ -19,8 +19,9 @@ if [[ -n $TF_PLAN_EXIT_CODE ]] && [[ $TF_PLAN_EXIT_CODE != 2 ]]; then
   enable_stage_transition
 fi
 
-if [[ -n $TF_APPLY_EXIT_CODE ]]; then
+if [[ -n $TF_APPLY_EXIT_CODE ]] && [[ $TF_APPLY_EXIT_CODE == 0 ]]; then
   enable_stage_transition
+  # error will be handled by EventBridge + Lambda
 fi
 
 post_plan_to_slack() {
