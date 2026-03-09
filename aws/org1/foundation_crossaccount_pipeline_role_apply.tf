@@ -92,7 +92,7 @@ locals {
           "Statement" : [
             {
               "Action" : [
-                # "chatbot:Describe*",
+                "chatbot:*SlackChannel*",
                 "codebuild:Create*",
                 "codepipeline:Create*",
                 "codepipeline:TagResource",
