@@ -87,8 +87,12 @@ locals {
               "codepipeline:GetPipeline",
               "codepipeline:GetPipelineExecution",
               "codepipeline:GetPipelineState",
+              "codepipeline:ListActionExecutions",
+              "codepipeline:ListActionTypes",
               "codepipeline:ListPipelineExecutions",
               "codepipeline:ListPipelines",
+              "codepipeline:ListTagsForResource",
+              "s3:ListAllMyBuckets",
             ],
             "Effect" : "Allow",
             "Resource" : "*"
@@ -105,9 +109,13 @@ locals {
               "codepipeline:GetPipeline",
               "codepipeline:GetPipelineExecution",
               "codepipeline:GetPipelineState",
+              "codepipeline:ListActionExecutions",
+              "codepipeline:ListActionTypes",
               "codepipeline:ListPipelineExecutions",
               "codepipeline:ListPipelines",
-              "codepipeline:PutApprovalResult"
+              "codepipeline:ListTagsForResource",
+              "codepipeline:PutApprovalResult",
+              "s3:ListAllMyBuckets",
             ],
             "Effect" : "Allow",
             "Resource" : "*"
