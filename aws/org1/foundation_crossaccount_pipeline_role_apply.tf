@@ -29,7 +29,7 @@ locals {
       # Here, be very selective what permissions are granted
       TaggedWritePermissions1 = {
         enabled_aws_account_ids = keys(local.all_aws_account_ids)
-        policy_template = jsonencode({
+        policy = jsonencode({
           "Version" : "2012-10-17",
           "Statement" : [
             {
@@ -87,7 +87,7 @@ locals {
       }
       UntaggedWritePermissions1 = {
         enabled_aws_account_ids = keys(local.all_aws_account_ids)
-        policy_template = jsonencode({
+        policy = jsonencode({
           "Version" : "2012-10-17",
           "Statement" : [
             {
@@ -131,9 +131,9 @@ locals {
           ]
         })
       }
-      CodePipelinePassRole = {
-        enabled_aws_account_ids = ["${var.aws_account_id_deployment_builds}"]
-        policy_template = jsonencode({
+      S3ReplicationRolePassRole = {
+        enabled_aws_account_ids = keys(local.all_aws_account_ids)
+        policy = jsonencode({
           "Version" : "2012-10-17",
           "Statement" : [
             {
@@ -141,8 +141,25 @@ locals {
                 "iam:PassRole",
               ],
               "Resource" : [
-                "arn:aws:iam::${var.aws_account_id_deployment_builds}:role/CodePipelineRole-TerraformPipelines",
-                "arn:aws:iam::${var.aws_account_id_deployment_builds}:role/service-role/AWSChatbotRole-test-awschatbot",
+                "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/S3ReplicationRole-tfstate"
+              ],
+              "Effect" : "Allow"
+            }
+          ]
+        })
+      }
+      CodePipelinePassRole = {
+        enabled_aws_account_ids = ["${var.aws_account_id_deployment_builds}"]
+        policy = jsonencode({
+          "Version" : "2012-10-17",
+          "Statement" : [
+            {
+              "Action" : [
+                "iam:PassRole",
+              ],
+              "Resource" : [
+                "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/CodePipelineRole-TerraformPipelines",
+                "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/service-role/AWSChatbotRole-test-awschatbot",
               ],
               "Effect" : "Allow"
             }
@@ -161,7 +178,7 @@ resource "aws_iam_role_policy" "crossaccount_terraform_apply" {
 
   name   = each.key
   role   = aws_iam_role.crossaccount_terraform_apply.id
-  policy = replace(each.value.policy_template, "111122223333", data.aws_caller_identity.current.account_id)
+  policy = each.value.policy
 }
 
 resource "aws_iam_role_policies_exclusive" "crossaccount_terraform_apply" {

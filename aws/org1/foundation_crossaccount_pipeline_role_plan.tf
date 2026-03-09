@@ -27,7 +27,7 @@ locals {
     # Here, be very selective what permissions are granted
     WriteTerraformStateReadSSMParam = {
       enabled_aws_account_ids = keys(local.all_aws_account_ids)
-      policy_template = jsonencode({
+      policy = jsonencode({
         "Version" : "2012-10-17",
         "Statement" : [
           {
@@ -39,8 +39,8 @@ locals {
               "s3:PutObject",
             ],
             "Resource" : [
-              "arn:aws:s3:::tfstate-111122223333",
-              "arn:aws:s3:::tfstate-111122223333/*"
+              "arn:aws:s3:::tfstate-${data.aws_caller_identity.current.account_id}",
+              "arn:aws:s3:::tfstate-${data.aws_caller_identity.current.account_id}/*"
             ],
             "Effect" : "Allow"
           },
@@ -59,7 +59,7 @@ locals {
     }
     ReadSensitive = {
       enabled_aws_account_ids = ["${var.aws_account_id_deployment_builds}"]
-      policy_template = jsonencode({
+      policy = jsonencode({
         "Version" : "2012-10-17",
         "Statement" : [
           {
@@ -68,7 +68,7 @@ locals {
               "s3:Get*",
             ],
             "Resource" : [
-              "arn:aws:s3:::codepipeline-111122223333",
+              "arn:aws:s3:::codepipeline-${data.aws_caller_identity.current.account_id}",
             ],
             "Effect" : "Allow"
           },
@@ -78,7 +78,7 @@ locals {
               "ssm:GetParameter*",
             ],
             "Resource" : [
-              "arn:aws:ssm:*:111122223333:parameter/TF_VAR_*"
+              "arn:aws:ssm:*:${data.aws_caller_identity.current.account_id}:parameter/TF_VAR_*"
             ],
             "Effect" : "Allow"
           },
@@ -87,7 +87,7 @@ locals {
     }
     ReadSensitiveEncrypted = {
       enabled_aws_account_ids = ["${var.aws_account_id_management}"]
-      policy_template = jsonencode({
+      policy = jsonencode({
         "Version" : "2012-10-17",
         "Statement" : [
           {
@@ -103,7 +103,7 @@ locals {
     }
     TaggedReadPermissions1 = {
       enabled_aws_account_ids = keys(local.all_aws_account_ids)
-      policy_template = jsonencode({
+      policy = jsonencode({
         "Version" : "2012-10-17",
         "Statement" : [
           {
@@ -140,7 +140,7 @@ locals {
     }
     UntaggedReadPermissions1 = {
       enabled_aws_account_ids = keys(local.all_aws_account_ids)
-      policy_template = jsonencode({
+      policy = jsonencode({
         "Version" : "2012-10-17",
         "Statement" : [
           {
@@ -183,7 +183,7 @@ resource "aws_iam_role_policy" "crossaccount_terraform_plan" {
 
   name   = each.key
   role   = aws_iam_role.crossaccount_terraform_plan.id
-  policy = replace(each.value.policy_template, "111122223333", data.aws_caller_identity.current.account_id)
+  policy = each.value.policy
 }
 
 resource "aws_iam_role_policies_exclusive" "crossaccount_terraform_plan" {
