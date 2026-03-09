@@ -140,7 +140,8 @@ locals {
                 "iam:PassRole",
               ],
               "Resource" : [
-                "arn:aws:iam::${var.aws_account_id_deployment_builds}:role/CodePipelineRole-TerraformPipelines"
+                "arn:aws:iam::${var.aws_account_id_deployment_builds}:role/CodePipelineRole-TerraformPipelines",
+                "arn:aws:iam::${var.aws_account_id_deployment_builds}:role/service-role/AWSChatbotRole-test-awschatbot",
               ],
               "Effect" : "Allow"
             }
