@@ -117,6 +117,7 @@ locals {
                 "s3:CreateAcc*",
                 "s3:CreateBucket*",
                 "s3:PutBucket*",
+                "s3:PutReplication*",
                 "s3:TagResource",
                 "sns:CreateTopic",
                 "sns:TagResource",
