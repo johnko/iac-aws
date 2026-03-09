@@ -186,16 +186,19 @@ resource "aws_s3_bucket_replication_configuration" "terraform_state_replica" {
   bucket = aws_s3_bucket.terraform_state.id
 
   dynamic "rule" {
-    for_each = local.tfstate_replica_regions
+    # Number of distinct destination bucket ARNs cannot exceed 1
+    for_each = {
+      for k, v in local.tfstate_replica_regions : k => v if v.replication_enabled
+    }
     content {
       id = "to ${rule.key}"
 
       destination {
-        bucket = aws_s3_bucket.terraform_state_replica[rule.key].arn
+        bucket        = aws_s3_bucket.terraform_state_replica[rule.key].arn
         storage_class = "STANDARD"
       }
 
-      status = "Disabled" # rule.value["replication_enabled"] ? "Enabled" : "Disabled"
+      status = rule.value["replication_enabled"] ? "Enabled" : "Disabled"
     }
   }
 }
