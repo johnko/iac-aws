@@ -44,7 +44,7 @@ post_plan_to_slack() {
         --arg url "https://console.aws.amazon.com/codesuite/codepipeline/pipelines/$CODEPIPELINE_NAME/view?region=$AWS_REGION" \
         --arg pipeline "$CODEPIPELINE_NAME" \
         --arg region "$AWS_REGION" \
-        --arg commitid "$CODEBUILD_RESOLVED_SOURCE_VERSION" \
+        --arg commitid "$COMMIT_ID" \
         --arg commitmessage "$COMMIT_MESSAGE" \
         --arg msg "$TF_PLAN_TEXT" \
         '{"text":"\($icon) Plan for <\($url)|pipeline> `\($pipeline)` in region `\($region)`\n\n```\($commitid) \($commitmessage)\n\n\($msg)```"}')
@@ -82,7 +82,7 @@ post_apply_to_slack() {
       --arg url "https://console.aws.amazon.com/codesuite/codepipeline/pipelines/$CODEPIPELINE_NAME/view?region=$AWS_REGION" \
       --arg pipeline "$CODEPIPELINE_NAME" \
       --arg region "$AWS_REGION" \
-      --arg commitid "$CODEBUILD_RESOLVED_SOURCE_VERSION" \
+      --arg commitid "$COMMIT_ID" \
       --arg commitmessage "$COMMIT_MESSAGE" \
       --arg msg "$TF_APPLY_TEXT" \
       '{"text":"\($icon) Apply for <\($url)|pipeline> `\($pipeline)` in region `\($region)`\n\n```\($commitid) \($commitmessage)\n\n\($msg)```"}')

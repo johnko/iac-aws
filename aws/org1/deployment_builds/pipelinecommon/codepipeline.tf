@@ -261,6 +261,11 @@ resource "aws_codepipeline" "terraform" {
                 type  = "PLAINTEXT"
               },
               {
+                name  = "COMMIT_ID"
+                value = "#{SourceVariables.CommitId}"
+                type  = "PLAINTEXT"
+              },
+              {
                 name  = "COMMIT_MESSAGE"
                 value = "#{SourceVariables.CommitMessage}"
                 type  = "PLAINTEXT"
@@ -353,6 +358,11 @@ resource "aws_codepipeline" "terraform" {
               {
                 name  = "CODEPIPELINE_NAME"
                 value = each.value.codepipeline_name
+                type  = "PLAINTEXT"
+              },
+              {
+                name  = "COMMIT_ID"
+                value = "#{SourceVariables.CommitId}"
                 type  = "PLAINTEXT"
               },
               {
