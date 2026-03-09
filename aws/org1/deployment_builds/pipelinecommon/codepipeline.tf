@@ -41,12 +41,12 @@ locals {
   }
 
   DetectChanges_by_region = {
-    "${local.primary_region}"   = false
-    "${local.secondary_region}" = true
+    "${local.codepipeline_primary_region}"   = false
+    "${local.codepipeline_secondary_region}" = true
   }
 
   regional_pipelines = merge(values({
-    for r in [local.primary_region, local.secondary_region] : r => {
+    for r in [local.codepipeline_primary_region, local.codepipeline_secondary_region] : r => {
       for k, v in local.pipelines : "${r}/${k}" => merge(
         v,
         {
@@ -141,10 +141,10 @@ resource "aws_iam_role_policy" "CodePipelineRoleDefaultPolicy" {
             replace(
               replace(
                 v.arn,
-                local.codebuild_suffix_by_region[local.primary_region],
+                local.codebuild_suffix_by_region[local.codepipeline_primary_region],
                 "*"
               ),
-              local.codebuild_suffix_by_region[local.secondary_region],
+              local.codebuild_suffix_by_region[local.codepipeline_secondary_region],
               "*"
             ),
             "/arn:aws:codebuild:(.*):${data.aws_caller_identity.current.account_id}:project/",

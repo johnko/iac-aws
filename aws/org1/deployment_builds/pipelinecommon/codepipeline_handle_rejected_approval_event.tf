@@ -1,6 +1,6 @@
 resource "aws_sns_topic" "terraform_codepipeline_rejected" {
   for_each = {
-    for k in [local.primary_region, local.secondary_region] : k => {
+    for k in [local.codepipeline_primary_region, local.codepipeline_secondary_region] : k => {
       "region" : k
     }
   }
@@ -12,7 +12,7 @@ resource "aws_sns_topic" "terraform_codepipeline_rejected" {
 
 resource "aws_sns_topic_policy" "terraform_codepipeline_rejected" {
   for_each = {
-    for k in [local.primary_region, local.secondary_region] : k => {
+    for k in [local.codepipeline_primary_region, local.codepipeline_secondary_region] : k => {
       "region" : k
     }
   }
@@ -64,7 +64,7 @@ resource "aws_sns_topic_policy" "terraform_codepipeline_rejected" {
 
 resource "aws_cloudwatch_event_rule" "terraform_codepipeline_rejected" {
   for_each = {
-    for k in [local.primary_region, local.secondary_region] : k => {
+    for k in [local.codepipeline_primary_region, local.codepipeline_secondary_region] : k => {
       "region" : k
     }
   }
@@ -98,7 +98,7 @@ resource "aws_cloudwatch_event_rule" "terraform_codepipeline_rejected" {
 
 resource "aws_cloudwatch_event_target" "terraform_codepipeline_rejected" {
   for_each = {
-    for k in [local.primary_region, local.secondary_region] : k => {
+    for k in [local.codepipeline_primary_region, local.codepipeline_secondary_region] : k => {
       "region" : k
     }
   }
