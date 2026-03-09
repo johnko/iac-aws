@@ -20,7 +20,7 @@ if aws s3api get-bucket-location --bucket "codepipeline-${TF_VAR_aws_account_id_
     aws s3 cp "s3://codepipeline-${TF_VAR_aws_account_id_deployment_builds}-$i/$TERRAFORM_SHAFILE" ./ --quiet
     aws s3 cp "s3://codepipeline-${TF_VAR_aws_account_id_deployment_builds}-$i/$TERRAFORM_FILENAME" ./ --quiet
     if sha256sum --check --ignore-missing "$TERRAFORM_SHAFILE"; then
-      unzip -o "$TERRAFORM_FILENAME"
+      unzip "$TERRAFORM_FILENAME"
       mkdir -p ~/bin
       mv terraform ~/bin/
       export PATH=$PATH:~/bin
