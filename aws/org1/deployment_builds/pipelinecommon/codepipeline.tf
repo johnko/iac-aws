@@ -134,7 +134,6 @@ resource "aws_iam_role_policy" "CodePipelineRoleDefaultPolicy" {
           "codebuild:BatchGetBuilds",
           "codebuild:StartBuild",
           "codebuild:StartBuildBatch",
-          "codebuild:StopBuild", # TEMP TESTING
         ],
         "Resource" : distinct([
           for v in concat(values(aws_codebuild_project.terraform_plan), values(aws_codebuild_project.terraform_apply)) :
