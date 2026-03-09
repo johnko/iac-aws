@@ -122,6 +122,7 @@ locals {
                 "sns:TagResource",
                 "ssm:AddTagsToResource",
                 "sso:Attach*",
+                "sso:Provision*",
               ],
               "Resource" : "*",
               "Effect" : "Allow"
