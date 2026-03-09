@@ -97,7 +97,7 @@ locals {
         "events:DescribeRule",
         "events:ListRuleNamesByTarget",
         "events:ListTargetsByRule",
-        "s3:ListAllMyBuckets",
+        # "s3:ListAllMyBuckets",
       ],
       "Effect" : "Allow",
       "Resource" : "*"
