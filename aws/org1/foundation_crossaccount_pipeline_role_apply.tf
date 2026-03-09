@@ -121,6 +121,7 @@ locals {
                 "sns:CreateTopic",
                 "sns:TagResource",
                 "ssm:AddTagsToResource",
+                "sso:Attach*",
               ],
               "Resource" : "*",
               "Effect" : "Allow"
