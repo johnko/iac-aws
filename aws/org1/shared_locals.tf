@@ -77,26 +77,51 @@ locals {
     for k, v in local.codebuild_types : v.region => k
   }
 
+  slack_common_policy_statement = {
+    codebuild_codepipeline_read = {
+      "Action" : [
+        "cloudwatch:GetMetricStatistics",
+        "codebuild:BatchGet*",
+        "codebuild:DescribeCodeCoverages",
+        "codebuild:DescribeTestCases",
+        "codebuild:GetResourcePolicy",
+        "codebuild:List*",
+        "codepipeline:GetPipeline",
+        "codepipeline:GetPipelineExecution",
+        "codepipeline:GetPipelineState",
+        "codepipeline:ListActionExecutions",
+        "codepipeline:ListActionTypes",
+        "codepipeline:ListPipelineExecutions",
+        "codepipeline:ListPipelines",
+        "codepipeline:ListTagsForResource",
+        "events:DescribeRule",
+        "events:ListRuleNamesByTarget",
+        "events:ListTargetsByRule",
+        "s3:ListAllMyBuckets",
+      ],
+      "Effect" : "Allow",
+      "Resource" : "*"
+    }
+    logs_read = {
+      "Action" : [
+        "logs:GetLogEvents",
+      ],
+      "Effect" : "Allow",
+      "Resource" : [
+        "arn:aws:logs:*:${var.aws_account_id_deployment_builds}:log-group:/aws/codebuild/Terraform*",
+        "arn:aws:logs:*:${var.aws_account_id_deployment_builds}:log-group:/aws/codepipeline/TF-*",
+        "arn:aws:logs:*:${var.aws_account_id_deployment_builds}:log-group:/aws/lambda/Terraform*",
+      ]
+    }
+  }
+
   slack_user_roles = {
     "viewer" = {
       inline_policy1 = jsonencode({
         "Version" : "2012-10-17",
         "Statement" : [
-          {
-            "Action" : [
-              "codepipeline:GetPipeline",
-              "codepipeline:GetPipelineExecution",
-              "codepipeline:GetPipelineState",
-              "codepipeline:ListActionExecutions",
-              "codepipeline:ListActionTypes",
-              "codepipeline:ListPipelineExecutions",
-              "codepipeline:ListPipelines",
-              "codepipeline:ListTagsForResource",
-              "s3:ListAllMyBuckets",
-            ],
-            "Effect" : "Allow",
-            "Resource" : "*"
-          }
+          local.slack_common_policy_statement["codebuild_codepipeline_read"],
+          local.slack_common_policy_statement["logs_read"],
         ]
       })
     }
@@ -106,20 +131,13 @@ locals {
         "Statement" : [
           {
             "Action" : [
-              "codepipeline:GetPipeline",
-              "codepipeline:GetPipelineExecution",
-              "codepipeline:GetPipelineState",
-              "codepipeline:ListActionExecutions",
-              "codepipeline:ListActionTypes",
-              "codepipeline:ListPipelineExecutions",
-              "codepipeline:ListPipelines",
-              "codepipeline:ListTagsForResource",
               "codepipeline:PutApprovalResult",
-              "s3:ListAllMyBuckets",
             ],
             "Effect" : "Allow",
             "Resource" : "*"
-          }
+          },
+          local.slack_common_policy_statement["codebuild_codepipeline_read"],
+          local.slack_common_policy_statement["logs_read"],
         ]
       })
     }
