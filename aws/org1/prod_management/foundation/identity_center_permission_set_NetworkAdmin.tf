@@ -17,6 +17,10 @@ resource "aws_ssoadmin_managed_policy_attachments_exclusive" "NetworkAdministrat
     # AWS Resource Explorer
     "arn:aws:iam::aws:policy/ResourceGroupsandTagEditorFullAccess",
     "arn:aws:iam::aws:policy/ResourceGroupsTaggingAPITagUntagSupportedResources",
+    # AWS CodePipeline Approver
+    "arn:aws:iam::aws:policy/AWSCodePipelineApproverAccess",
+    "arn:aws:iam::aws:policy/AWSLambda_ReadOnlyAccess",
+    "arn:aws:iam::aws:policy/CloudWatchLogsReadOnlyAccess",
   ]
 }
 
