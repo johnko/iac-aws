@@ -40,8 +40,17 @@ locals {
     "us-west-1",
   ]
 
-  primary_region   = "ca-central-1"
-  secondary_region = "us-east-2"
+  tfstate_replica_regions = {
+    "ca-west-1" = {
+      replication_enabled = true
+    }
+    "us-east-2" = {
+      replication_enabled = false
+    }
+  }
+
+  codepipeline_primary_region   = "ca-central-1"
+  codepipeline_secondary_region = "us-east-2"
 
   codebuild_types = {
     container-linux-small = {
@@ -50,7 +59,7 @@ locals {
       image           = "aws/codebuild/amazonlinux-x86_64-standard:5.0"
       privileged_mode = true
       queued_timeout  = 90
-      region          = local.primary_region
+      region          = local.codepipeline_primary_region
       type            = "LINUX_CONTAINER"
     }
     lambda-linux-1 = {
@@ -59,7 +68,7 @@ locals {
       image           = "aws/codebuild/amazonlinux-x86_64-lambda-standard:python3.13"
       privileged_mode = false
       queued_timeout  = null
-      region          = local.secondary_region
+      region          = local.codepipeline_secondary_region
       type            = "LINUX_LAMBDA_CONTAINER"
     }
   }
