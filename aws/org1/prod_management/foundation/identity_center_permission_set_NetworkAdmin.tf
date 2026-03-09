@@ -8,15 +8,19 @@ resource "aws_ssoadmin_managed_policy_attachments_exclusive" "NetworkAdministrat
   permission_set_arn = aws_ssoadmin_permission_set.NetworkAdministrator.arn
 
   managed_policy_arns = [
-    "arn:aws:iam::aws:policy/AWSCloudShellFullAccess",
     "arn:aws:iam::aws:policy/job-function/ViewOnlyAccess",
-    # AWS Billing
-    "arn:aws:iam::aws:policy/AWSBillingReadOnlyAccess",
-    # delete default VPC
+    # To delete default VPC
+    "arn:aws:iam::aws:policy/AWSCloudShellFullAccess",
     "arn:aws:iam::aws:policy/job-function/NetworkAdministrator",
     # AWS Resource Explorer
     "arn:aws:iam::aws:policy/ResourceGroupsandTagEditorFullAccess",
-    "arn:aws:iam::aws:policy/ResourceGroupsTaggingAPITagUntagSupportedResources",
+    # "arn:aws:iam::aws:policy/ResourceGroupsTaggingAPITagUntagSupportedResources",
+    # AWS CodePipeline Approver
+    "arn:aws:iam::aws:policy/AWSCodeBuildReadOnlyAccess",
+    "arn:aws:iam::aws:policy/AWSCodePipeline_ReadOnlyAccess",
+    "arn:aws:iam::aws:policy/AWSCodePipelineApproverAccess",
+    "arn:aws:iam::aws:policy/AWSLambda_ReadOnlyAccess",
+    "arn:aws:iam::aws:policy/CloudWatchLogsReadOnlyAccess",
   ]
 }
 

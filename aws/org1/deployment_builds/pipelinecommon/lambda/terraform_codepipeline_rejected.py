@@ -17,13 +17,7 @@ def lambda_handler(event, context):
         logger.info(detail)
         logger.info("")
         if (
-            detail["type"]["category"]
-            and detail["type"]["category"] == "Approval"
-            and detail["type"]["provider"]
-            and detail["type"]["provider"] == "Manual"
-            and detail["action"]
-            and detail["action"] == "ApproveOrReject"
-            and detail["state"]
+            detail["state"]
             and detail["state"] == "FAILED"
             and detail["pipeline"].startswith("TF-")
         ):

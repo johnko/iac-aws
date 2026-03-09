@@ -40,8 +40,17 @@ locals {
     "us-west-1",
   ]
 
-  primary_region   = "ca-central-1"
-  secondary_region = "us-east-2"
+  tfstate_replica_regions = {
+    "ca-west-1" = {
+      replication_enabled = true
+    }
+    "us-east-2" = {
+      replication_enabled = false
+    }
+  }
+
+  codepipeline_primary_region   = "ca-central-1"
+  codepipeline_secondary_region = "us-east-2"
 
   codebuild_types = {
     container-linux-small = {
@@ -50,7 +59,7 @@ locals {
       image           = "aws/codebuild/amazonlinux-x86_64-standard:5.0"
       privileged_mode = true
       queued_timeout  = 90
-      region          = local.primary_region
+      region          = local.codepipeline_primary_region
       type            = "LINUX_CONTAINER"
     }
     lambda-linux-1 = {
@@ -59,7 +68,7 @@ locals {
       image           = "aws/codebuild/amazonlinux-x86_64-lambda-standard:python3.13"
       privileged_mode = false
       queued_timeout  = null
-      region          = local.secondary_region
+      region          = local.codepipeline_secondary_region
       type            = "LINUX_LAMBDA_CONTAINER"
     }
   }
@@ -68,22 +77,51 @@ locals {
     for k, v in local.codebuild_types : v.region => k
   }
 
+  slack_common_policy_statement = {
+    codebuild_codepipeline_read = {
+      "Action" : [
+        "cloudwatch:GetMetricStatistics",
+        "codebuild:BatchGet*",
+        "codebuild:DescribeCodeCoverages",
+        "codebuild:DescribeTestCases",
+        "codebuild:GetResourcePolicy",
+        "codebuild:List*",
+        "codepipeline:GetPipeline",
+        "codepipeline:GetPipelineExecution",
+        "codepipeline:GetPipelineState",
+        "codepipeline:ListActionExecutions",
+        "codepipeline:ListActionTypes",
+        "codepipeline:ListPipelineExecutions",
+        "codepipeline:ListPipelines",
+        "codepipeline:ListTagsForResource",
+        "events:DescribeRule",
+        "events:ListRuleNamesByTarget",
+        "events:ListTargetsByRule",
+        "s3:ListAllMyBuckets",
+      ],
+      "Effect" : "Allow",
+      "Resource" : "*"
+    }
+    logs_read = {
+      "Action" : [
+        "logs:GetLogEvents",
+      ],
+      "Effect" : "Allow",
+      "Resource" : [
+        "arn:aws:logs:*:${var.aws_account_id_deployment_builds}:log-group:/aws/codebuild/Terraform*",
+        "arn:aws:logs:*:${var.aws_account_id_deployment_builds}:log-group:/aws/codepipeline/TF-*",
+        "arn:aws:logs:*:${var.aws_account_id_deployment_builds}:log-group:/aws/lambda/Terraform*",
+      ]
+    }
+  }
+
   slack_user_roles = {
     "viewer" = {
       inline_policy1 = jsonencode({
         "Version" : "2012-10-17",
         "Statement" : [
-          {
-            "Action" : [
-              "codepipeline:GetPipeline",
-              "codepipeline:GetPipelineExecution",
-              "codepipeline:GetPipelineState",
-              "codepipeline:ListPipelineExecutions",
-              "codepipeline:ListPipelines",
-            ],
-            "Effect" : "Allow",
-            "Resource" : "*"
-          }
+          local.slack_common_policy_statement["codebuild_codepipeline_read"],
+          local.slack_common_policy_statement["logs_read"],
         ]
       })
     }
@@ -93,16 +131,13 @@ locals {
         "Statement" : [
           {
             "Action" : [
-              "codepipeline:GetPipeline",
-              "codepipeline:GetPipelineExecution",
-              "codepipeline:GetPipelineState",
-              "codepipeline:ListPipelineExecutions",
-              "codepipeline:ListPipelines",
-              "codepipeline:PutApprovalResult"
+              "codepipeline:PutApprovalResult",
             ],
             "Effect" : "Allow",
             "Resource" : "*"
-          }
+          },
+          local.slack_common_policy_statement["codebuild_codepipeline_read"],
+          local.slack_common_policy_statement["logs_read"],
         ]
       })
     }

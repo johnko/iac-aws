@@ -41,12 +41,12 @@ locals {
   }
 
   DetectChanges_by_region = {
-    "${local.primary_region}"   = false
-    "${local.secondary_region}" = true
+    "${local.codepipeline_primary_region}"   = false
+    "${local.codepipeline_secondary_region}" = true
   }
 
   regional_pipelines = merge(values({
-    for r in [local.primary_region, local.secondary_region] : r => {
+    for r in [local.codepipeline_primary_region, local.codepipeline_secondary_region] : r => {
       for k, v in local.pipelines : "${r}/${k}" => merge(
         v,
         {
@@ -96,12 +96,12 @@ resource "aws_iam_role_policy" "CodePipelineRoleDefaultPolicy" {
           }
         },
         "Action" : [
-          "s3:PutObject",
+          "s3:GetBucketAcl",
+          "s3:GetBucketLocation",
+          "s3:GetBucketVersioning",
           "s3:GetObject",
           "s3:GetObjectVersion",
-          "s3:GetBucketVersioning",
-          "s3:GetBucketAcl",
-          "s3:GetBucketLocation"
+          "s3:PutObject",
         ],
         "Resource" : flatten([
           for k, v in aws_s3_bucket.codepipeline : [v.arn, "${v.arn}/*"]
@@ -130,10 +130,10 @@ resource "aws_iam_role_policy" "CodePipelineRoleDefaultPolicy" {
       {
         # See https://docs.aws.amazon.com/codepipeline/latest/userguide/action-reference-CodeBuild.html#edit-role-codebuild
         "Action" : [
+          "codebuild:BatchGetBuildBatches",
           "codebuild:BatchGetBuilds",
           "codebuild:StartBuild",
-          "codebuild:BatchGetBuildBatches",
-          "codebuild:StartBuildBatch"
+          "codebuild:StartBuildBatch",
         ],
         "Resource" : distinct([
           for v in concat(values(aws_codebuild_project.terraform_plan), values(aws_codebuild_project.terraform_apply)) :
@@ -141,10 +141,10 @@ resource "aws_iam_role_policy" "CodePipelineRoleDefaultPolicy" {
             replace(
               replace(
                 v.arn,
-                local.codebuild_suffix_by_region[local.primary_region],
+                local.codebuild_suffix_by_region[local.codepipeline_primary_region],
                 "*"
               ),
-              local.codebuild_suffix_by_region[local.secondary_region],
+              local.codebuild_suffix_by_region[local.codepipeline_secondary_region],
               "*"
             ),
             "/arn:aws:codebuild:(.*):${data.aws_caller_identity.current.account_id}:project/",
@@ -261,6 +261,11 @@ resource "aws_codepipeline" "terraform" {
                 type  = "PLAINTEXT"
               },
               {
+                name  = "COMMIT_ID"
+                value = "#{SourceVariables.CommitId}"
+                type  = "PLAINTEXT"
+              },
+              {
                 name  = "COMMIT_MESSAGE"
                 value = "#{SourceVariables.CommitMessage}"
                 type  = "PLAINTEXT"
@@ -353,6 +358,11 @@ resource "aws_codepipeline" "terraform" {
               {
                 name  = "CODEPIPELINE_NAME"
                 value = each.value.codepipeline_name
+                type  = "PLAINTEXT"
+              },
+              {
+                name  = "COMMIT_ID"
+                value = "#{SourceVariables.CommitId}"
                 type  = "PLAINTEXT"
               },
               {

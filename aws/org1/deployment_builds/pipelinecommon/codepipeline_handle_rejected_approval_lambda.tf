@@ -57,7 +57,7 @@ data "archive_file" "terraform_codepipeline_rejected" {
 
 resource "aws_lambda_function" "terraform_codepipeline_rejected" {
   for_each = {
-    for k in [local.primary_region, local.secondary_region] : k => {
+    for k in [local.codepipeline_primary_region, local.codepipeline_secondary_region] : k => {
       "region" : k
     }
   }
@@ -75,7 +75,7 @@ resource "aws_lambda_function" "terraform_codepipeline_rejected" {
 
 resource "aws_lambda_function_event_invoke_config" "terraform_codepipeline_rejected" {
   for_each = {
-    for k in [local.primary_region, local.secondary_region] : k => {
+    for k in [local.codepipeline_primary_region, local.codepipeline_secondary_region] : k => {
       "region" : k
     }
   }
@@ -90,7 +90,7 @@ resource "aws_lambda_function_event_invoke_config" "terraform_codepipeline_rejec
 
 resource "aws_lambda_permission" "terraform_codepipeline_rejected" {
   for_each = {
-    for k in [local.primary_region, local.secondary_region] : k => {
+    for k in [local.codepipeline_primary_region, local.codepipeline_secondary_region] : k => {
       "region" : k
     }
   }
@@ -106,7 +106,7 @@ resource "aws_lambda_permission" "terraform_codepipeline_rejected" {
 
 resource "aws_sns_topic_subscription" "terraform_codepipeline_rejected" {
   for_each = {
-    for k in [local.primary_region, local.secondary_region] : k => {
+    for k in [local.codepipeline_primary_region, local.codepipeline_secondary_region] : k => {
       "region" : k
     }
   }

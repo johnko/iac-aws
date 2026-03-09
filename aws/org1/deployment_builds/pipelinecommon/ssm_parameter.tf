@@ -44,7 +44,7 @@ resource "aws_ssm_parameter" "param" {
 resource "aws_ssm_parameter" "secondary" {
   for_each = local.ssm_parameters
 
-  region = local.secondary_region
+  region = local.codepipeline_secondary_region
 
   name  = "TF_VAR_${each.key}"
   value = each.value.value

@@ -19,8 +19,9 @@ if [[ -n $TF_PLAN_EXIT_CODE ]] && [[ $TF_PLAN_EXIT_CODE != 2 ]]; then
   enable_stage_transition
 fi
 
-if [[ -n $TF_APPLY_EXIT_CODE ]]; then
+if [[ -n $TF_APPLY_EXIT_CODE ]] && [[ $TF_APPLY_EXIT_CODE == 0 ]]; then
   enable_stage_transition
+  # error will be handled by EventBridge + Lambda
 fi
 
 post_plan_to_slack() {
@@ -31,7 +32,7 @@ post_plan_to_slack() {
       # use sed to strip escape sequences like color
       TF_PLAN_TEXT=$(cat "$TF_TMP_LOG" |
         sed 's/\x1b\[[0-9;]*m//g' |
-        awk '/^Terraform used the selected providers|^Plan:/,/^Terraform will perform the following actions|^────────────────────────────────────────────/' |
+        awk '/^Terraform used the selected providers|^Plan:| Error:/,/^Terraform will perform the following actions|^────────────────────────────────────────────/' |
         grep -v -E '(Terraform used the selected providers to generate|indicated with the following symbols|Terraform will perform the following actions)' |
         sed 's/ 0 to add,//g' |
         sed 's/, 0 to destroy//g' |
@@ -43,7 +44,7 @@ post_plan_to_slack() {
         --arg url "https://console.aws.amazon.com/codesuite/codepipeline/pipelines/$CODEPIPELINE_NAME/view?region=$AWS_REGION" \
         --arg pipeline "$CODEPIPELINE_NAME" \
         --arg region "$AWS_REGION" \
-        --arg commitid "$CODEBUILD_RESOLVED_SOURCE_VERSION" \
+        --arg commitid "$COMMIT_ID" \
         --arg commitmessage "$COMMIT_MESSAGE" \
         --arg msg "$TF_PLAN_TEXT" \
         '{"text":"\($icon) Plan for <\($url)|pipeline> `\($pipeline)` in region `\($region)`\n\n```\($commitid) \($commitmessage)\n\n\($msg)```"}')
@@ -81,7 +82,7 @@ post_apply_to_slack() {
       --arg url "https://console.aws.amazon.com/codesuite/codepipeline/pipelines/$CODEPIPELINE_NAME/view?region=$AWS_REGION" \
       --arg pipeline "$CODEPIPELINE_NAME" \
       --arg region "$AWS_REGION" \
-      --arg commitid "$CODEBUILD_RESOLVED_SOURCE_VERSION" \
+      --arg commitid "$COMMIT_ID" \
       --arg commitmessage "$COMMIT_MESSAGE" \
       --arg msg "$TF_APPLY_TEXT" \
       '{"text":"\($icon) Apply for <\($url)|pipeline> `\($pipeline)` in region `\($region)`\n\n```\($commitid) \($commitmessage)\n\n\($msg)```"}')

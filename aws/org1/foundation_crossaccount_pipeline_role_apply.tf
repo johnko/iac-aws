@@ -29,7 +29,7 @@ locals {
       # Here, be very selective what permissions are granted
       TaggedWritePermissions1 = {
         enabled_aws_account_ids = keys(local.all_aws_account_ids)
-        policy_template = jsonencode({
+        policy = jsonencode({
           "Version" : "2012-10-17",
           "Statement" : [
             {
@@ -52,26 +52,22 @@ locals {
                 "events:Remove*",
                 "events:UntagResource",
                 "events:Update*",
-                "iam:Attach*Policy",
-                "iam:DeletePolicy*",
-                "iam:DeleteRole*",
-                "iam:Detach*Policy",
-                "iam:PutRole*",
-                "iam:Untag*",
-                "iam:UpdateAssumeRolePolicy",
-                "iam:UpdateRole*",
                 # "kms:Describe*",
                 # "kms:Get*",
                 # "kms:List*",
-                # "lambda:Describe*",
-                # "lambda:Get*",
+                "lambda:Add*",
+                "lambda:Delete*",
+                "lambda:Publish*",
+                "lambda:Put*",
+                "lambda:Remove*",
+                "lambda:Untag*",
+                "lambda:Update*",
                 # "resource-explorer-2:Get*",
                 # "resource-explorer-2:List*",
                 "s3:DeleteAcc*",
                 "s3:DeleteBucket*",
                 "s3:PutAcc*",
                 "s3:Put*Configuration",
-                "s3:PutBucket*",
                 "s3:UntagResource",
                 "s3:Update*Configuration",
                 "sns:*Permission",
@@ -91,29 +87,43 @@ locals {
       }
       UntaggedWritePermissions1 = {
         enabled_aws_account_ids = keys(local.all_aws_account_ids)
-        policy_template = jsonencode({
+        policy = jsonencode({
           "Version" : "2012-10-17",
           "Statement" : [
             {
               "Action" : [
-                # "chatbot:Describe*",
+                "chatbot:*SlackChannel*",
                 "codebuild:Create*",
                 "codepipeline:Create*",
                 "codepipeline:TagResource",
                 "codestar-connections:PassConnection", # For modifying CodePipeline
                 "events:Create*",
                 "events:TagResource",
+                "iam:Attach*Policy", # iam permissions here because SSO/AWS Identity Center may not have tagged the resources
                 "iam:Create*Role",
                 "iam:CreatePolicy*",
                 "iam:CreateRole",
+                "iam:DeletePolicy*",
+                "iam:DeleteRole*",
+                "iam:Detach*Policy",
+                "iam:PutRole*",
                 "iam:Tag*",
+                "iam:Untag*",
+                "iam:UpdateAssumeRolePolicy",
+                "iam:UpdateRole*",
+                "lambda:Create*",
+                "lambda:Tag*",
                 # "organizations:List*",
                 "s3:CreateAcc*",
                 "s3:CreateBucket*",
+                "s3:PutBucket*",
+                "s3:PutReplication*",
                 "s3:TagResource",
                 "sns:CreateTopic",
                 "sns:TagResource",
                 "ssm:AddTagsToResource",
+                "sso:*PermissionSet", # sso permissions here because SSO/AWS Identity Center may not have tagged the resources
+                "sso:PutPermissions*",
               ],
               "Resource" : "*",
               "Effect" : "Allow"
@@ -121,9 +131,9 @@ locals {
           ]
         })
       }
-      CodePipelinePassRole = {
-        enabled_aws_account_ids = ["${var.aws_account_id_deployment_builds}"]
-        policy_template = jsonencode({
+      S3ReplicationRolePassRole = {
+        enabled_aws_account_ids = keys(local.all_aws_account_ids)
+        policy = jsonencode({
           "Version" : "2012-10-17",
           "Statement" : [
             {
@@ -131,7 +141,25 @@ locals {
                 "iam:PassRole",
               ],
               "Resource" : [
-                "arn:aws:iam::${var.aws_account_id_deployment_builds}:role/CodePipelineRole-TerraformPipelines"
+                "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/S3ReplicationRole-tfstate"
+              ],
+              "Effect" : "Allow"
+            }
+          ]
+        })
+      }
+      CodePipelinePassRole = {
+        enabled_aws_account_ids = ["${var.aws_account_id_deployment_builds}"]
+        policy = jsonencode({
+          "Version" : "2012-10-17",
+          "Statement" : [
+            {
+              "Action" : [
+                "iam:PassRole",
+              ],
+              "Resource" : [
+                "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/CodePipelineRole-TerraformPipelines",
+                "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/service-role/AWSChatbotRole-test-awschatbot",
               ],
               "Effect" : "Allow"
             }
@@ -150,7 +178,7 @@ resource "aws_iam_role_policy" "crossaccount_terraform_apply" {
 
   name   = each.key
   role   = aws_iam_role.crossaccount_terraform_apply.id
-  policy = replace(each.value.policy_template, "111122223333", data.aws_caller_identity.current.account_id)
+  policy = each.value.policy
 }
 
 resource "aws_iam_role_policies_exclusive" "crossaccount_terraform_apply" {
