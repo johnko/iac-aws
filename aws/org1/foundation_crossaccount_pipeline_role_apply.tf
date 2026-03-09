@@ -99,7 +99,7 @@ locals {
                 "codestar-connections:PassConnection", # For modifying CodePipeline
                 "events:Create*",
                 "events:TagResource",
-                "iam:Attach*Policy",
+                "iam:Attach*Policy", # iam permissions here because SSO/AWS Identity Center may not have tagged the resources
                 "iam:Create*Role",
                 "iam:CreatePolicy*",
                 "iam:CreateRole",
@@ -121,7 +121,7 @@ locals {
                 "sns:CreateTopic",
                 "sns:TagResource",
                 "ssm:AddTagsToResource",
-                "sso:*PermissionSet",
+                "sso:*PermissionSet", # sso permissions here because SSO/AWS Identity Center may not have tagged the resources
                 "sso:PutPermissions*",
               ],
               "Resource" : "*",
