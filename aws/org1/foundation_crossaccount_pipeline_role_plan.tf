@@ -38,7 +38,7 @@ locals {
               "s3:GetObjectVersion",
               "s3:PutObject",
             ],
-            "Resource" : flatten(
+            "Resource" : flatten(concat(
               [
                 "arn:aws:s3:::tfstate-${data.aws_caller_identity.current.account_id}",
                 "arn:aws:s3:::tfstate-${data.aws_caller_identity.current.account_id}/*",
@@ -52,7 +52,7 @@ locals {
                   "arn:aws:s3:::tfstate-${data.aws_caller_identity.current.account_id}-${replace(k, "-", "")}/*",
                 ]
               ]),
-            )
+            ))
             "Effect" : "Allow"
           },
           {
