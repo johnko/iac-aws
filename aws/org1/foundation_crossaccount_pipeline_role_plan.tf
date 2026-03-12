@@ -77,7 +77,7 @@ locals {
               "s3:Get*",
             ],
             "Resource" : [
-              "arn:aws:s3:::codepipeline-${data.aws_caller_identity.current.account_id}",
+              "arn:aws:s3:::codepipeline-${data.aws_caller_identity.current.account_id}-*",
             ],
             "Effect" : "Allow"
           },
