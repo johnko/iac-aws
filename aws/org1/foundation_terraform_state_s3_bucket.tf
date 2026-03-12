@@ -1,5 +1,5 @@
 resource "aws_s3_bucket" "terraform_state" {
-  bucket = "tfstate-${data.aws_caller_identity.current.account_id}"
+  bucket = "tfstate-${data.aws_caller_identity.current.account_id}-${replace(local.tfstate_primary_region, "-", "")}"
 }
 
 resource "aws_s3_bucket_ownership_controls" "terraform_state" {
