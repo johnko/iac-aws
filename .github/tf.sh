@@ -99,6 +99,17 @@ fi
 
 set -x
 set +e
+$IAC_BIN validate
+TF_VALIDATE_EXIT_CODE=$?
+set +x
+if [[ "VALIDATE" == "$SAFE_ACTION" || "0" != "$TF_VALIDATE_EXIT_CODE" ]]; then
+  set -x
+  set -e
+  exit $TF_VALIDATE_EXIT_CODE
+fi
+
+set -x
+set +e
 $IAC_BIN init
 TF_INIT_EXIT_CODE=$?
 set +x
@@ -107,17 +118,6 @@ if [[ "INIT" == "$SAFE_ACTION" || "0" != "$TF_INIT_EXIT_CODE" ]]; then
   $IAC_BIN providers
   set -e
   exit $TF_INIT_EXIT_CODE
-fi
-
-set -x
-set +e
-$IAC_BIN validate
-TF_VALIDATE_EXIT_CODE=$?
-set +x
-if [[ "VALIDATE" == "$SAFE_ACTION" || "0" != "$TF_VALIDATE_EXIT_CODE" ]]; then
-  set -x
-  set -e
-  exit $TF_VALIDATE_EXIT_CODE
 fi
 
 set +x
