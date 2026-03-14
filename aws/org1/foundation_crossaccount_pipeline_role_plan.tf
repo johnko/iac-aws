@@ -38,10 +38,19 @@ locals {
               "s3:GetObjectVersion",
               "s3:PutObject",
             ],
-            "Resource" : [
-              "arn:aws:s3:::tfstate-${data.aws_caller_identity.current.account_id}",
-              "arn:aws:s3:::tfstate-${data.aws_caller_identity.current.account_id}/*"
-            ],
+            "Resource" : flatten(concat(
+              [
+                "arn:aws:s3:::tfstate-${data.aws_caller_identity.current.account_id}-${replace(local.tfstate_primary_region, "-", "")}",
+                "arn:aws:s3:::tfstate-${data.aws_caller_identity.current.account_id}-${replace(local.tfstate_primary_region, "-", "")}/*",
+              ],
+              flatten([
+                for k, v in local.tfstate_replica_regions :
+                [
+                  "arn:aws:s3:::tfstate-${data.aws_caller_identity.current.account_id}-${replace(k, "-", "")}",
+                  "arn:aws:s3:::tfstate-${data.aws_caller_identity.current.account_id}-${replace(k, "-", "")}/*",
+                ]
+              ]),
+            ))
             "Effect" : "Allow"
           },
           {
@@ -68,7 +77,7 @@ locals {
               "s3:Get*",
             ],
             "Resource" : [
-              "arn:aws:s3:::codepipeline-${data.aws_caller_identity.current.account_id}",
+              "arn:aws:s3:::codepipeline-${data.aws_caller_identity.current.account_id}-*",
             ],
             "Effect" : "Allow"
           },

@@ -40,6 +40,7 @@ locals {
     "us-west-1",
   ]
 
+  tfstate_primary_region = "ca-central-1"
   tfstate_replica_regions = {
     "ca-west-1" = {
       replication_enabled = true
@@ -49,7 +50,7 @@ locals {
     }
   }
 
-  codepipeline_primary_region   = "ca-central-1"
+  codepipeline_primary_region   = local.tfstate_primary_region
   codepipeline_secondary_region = "us-east-2"
 
   codebuild_types = {
