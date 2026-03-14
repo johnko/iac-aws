@@ -30,6 +30,7 @@ post_plan_to_slack() {
     if [[ $TF_PLAN_EXIT_CODE != 0 ]]; then
       ICON=":hourglass:"
       # use sed to strip escape sequences like color
+      # shellcheck disable=SC2002
       TF_PLAN_TEXT=$(cat "$TF_TMP_LOG" |
         sed 's/\x1b\[[0-9;]*m//g' |
         awk '/^Terraform used the selected providers|^Plan:| Error:/,/^Terraform will perform the following actions|^────────────────────────────────────────────/' |
@@ -68,6 +69,7 @@ post_apply_to_slack() {
       ICON=":white_check_mark:"
     fi
     # use sed to strip escape sequences like color
+    # shellcheck disable=SC2002
     TF_APPLY_TEXT=$(cat "$TF_TMP_LOG" |
       sed 's/\x1b\[[0-9;]*m//g' |
       awk '/^Apply complete| Error:/,/^────────────────────────────────────────────/' |
