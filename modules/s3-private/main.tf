@@ -3,6 +3,12 @@ resource "aws_s3_bucket" "bucket" {
 
   bucket = var.bucket_full_name
   bucket_namespace = var.bucket_namespace
+
+  lifecycle {
+    ignore_changes = [
+      policy,
+    ]
+  }
 }
 
 resource "aws_s3_bucket_ownership_controls" "bucket" {
