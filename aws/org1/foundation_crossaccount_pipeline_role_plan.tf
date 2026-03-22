@@ -75,8 +75,7 @@ locals {
               "s3:Get*",
             ],
             "Resource" : flatten([
-              for k, v in local.codebuild_suffix_by_region :
-              [
+              for k, v in local.codebuild_suffix_by_region : [
                 "arn:aws:s3:::codepipeline-${format("codepipeline-%s-%s-an", data.aws_caller_identity.current.account_id, k)}",
                 "arn:aws:s3:::codepipeline-${format("codepipeline-%s-%s-an", data.aws_caller_identity.current.account_id, k)}/*",
               ]
