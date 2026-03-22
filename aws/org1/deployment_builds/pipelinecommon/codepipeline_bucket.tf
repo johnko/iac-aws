@@ -110,16 +110,3 @@ resource "aws_s3_bucket_policy" "codepipeline" {
     ]
   })
 }
-
-resource "aws_s3_bucket_server_side_encryption_configuration" "codepipeline" {
-  for_each = local.codebuild_suffix_by_region
-
-  region = each.key
-
-  bucket = aws_s3_bucket.codepipeline[each.key].id
-  rule {
-    apply_server_side_encryption_by_default {
-      sse_algorithm = "aws:kms"
-    }
-  }
-}
