@@ -1,10 +1,33 @@
+module "codepipeline" {
+  source = "../../../../modules/s3-private"
+
+  for_each = local.codebuild_suffix_by_region
+
+  bucket_full_name = format("codepipeline-%s-%s-an", data.aws_caller_identity.current.account_id, each.key)
+  bucket_namespace = "account-regional"
+  region           = each.key
+}
+
+resource "aws_s3_bucket_server_side_encryption_configuration" "codepipeline" {
+  for_each = local.codebuild_suffix_by_region
+
+  bucket = module.codepipeline[each.key].bucket.id
+  region = each.key
+  rule {
+    apply_server_side_encryption_by_default {
+      sse_algorithm = "aws:kms"
+    }
+  }
+}
+
+#############
+
 resource "aws_s3_bucket" "codepipeline" {
   for_each = local.codebuild_suffix_by_region
 
   region = each.key
 
-  bucket = format("codepipeline-%s-%s-an", data.aws_caller_identity.current.account_id, each.key)
-  bucket_namespace = "account-regional"
+  bucket = "codepipeline-${data.aws_caller_identity.current.account_id}-${replace(each.key, "-", "")}"
 }
 
 resource "aws_s3_bucket_ownership_controls" "codepipeline" {
