@@ -40,18 +40,9 @@ locals {
             ],
             "Resource" : flatten(concat(
               [
-                "arn:aws:s3:::tfstate-${data.aws_caller_identity.current.account_id}-${replace(local.tfstate_primary_region, "-", "")}",
-                "arn:aws:s3:::tfstate-${data.aws_caller_identity.current.account_id}-${replace(local.tfstate_primary_region, "-", "")}/*",
                 module.terraform_state.bucket.arn,
                 "${module.terraform_state.bucket.arn}/*",
               ],
-              flatten([
-                for k, v in local.tfstate_replica_regions :
-                [
-                  "arn:aws:s3:::tfstate-${data.aws_caller_identity.current.account_id}-${replace(k, "-", "")}",
-                  "arn:aws:s3:::tfstate-${data.aws_caller_identity.current.account_id}-${replace(k, "-", "")}/*",
-                ]
-              ]),
               flatten([
                 for k, v in module.terraform_state_replica : [
                   "${v.bucket.arn}/*"
