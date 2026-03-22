@@ -74,13 +74,19 @@ locals {
             "Action" : [
               "s3:Get*",
             ],
-            "Resource" : flatten([
-              "arn:aws:s3:::${format("codepipeline-%s-*", data.aws_caller_identity.current.account_id)}",
-              for k, v in local.codebuild_suffix_by_region : [
-                "arn:aws:s3:::${format("codepipeline-%s-%s-an", data.aws_caller_identity.current.account_id, k)}",
-                "arn:aws:s3:::${format("codepipeline-%s-%s-an", data.aws_caller_identity.current.account_id, k)}/*",
+            "Resource" : flatten(concat(
+              [
+                [
+                  "arn:aws:s3:::${format("codepipeline-%s-*", data.aws_caller_identity.current.account_id)}",
+                ],
+                flatten([
+                  for k, v in local.codebuild_suffix_by_region : [
+                    "arn:aws:s3:::${format("codepipeline-%s-%s-an", data.aws_caller_identity.current.account_id, k)}",
+                    "arn:aws:s3:::${format("codepipeline-%s-%s-an", data.aws_caller_identity.current.account_id, k)}/*",
+                  ]
+                ]),
               ]
-            ]),
+            )),
             "Effect" : "Allow"
           },
           {
