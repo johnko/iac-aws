@@ -19,5 +19,5 @@ for i in \
   'aws_s3_bucket_versioning.terraform_state_replica["us-east-2"]' \
   ; do
   terraform state show "$i" &&
-    terraform state rm "$i"
+    terraform state rm "$i" || true
 done
