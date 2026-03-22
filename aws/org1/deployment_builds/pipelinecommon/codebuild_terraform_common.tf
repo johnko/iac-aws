@@ -16,38 +16,23 @@ locals {
           "s3:ListBucket",        # To fetch terraform zip
           "s3:PutObject",         # default
         ],
-        "Resource" : flatten(concat(
-          flatten([
-            for k, v in aws_s3_bucket.codepipeline : [
-              v.arn,
-              "${v.arn}/*",
-            ]
-          ]),
-          flatten([
-            for k, v in module.codepipeline : [
-              v.bucket.arn,
-              "${v.bucket.arn}/*",
-            ]
-          ]),
-        )),
+        "Resource" : flatten([
+          for k, v in module.codepipeline : [
+            v.bucket.arn,
+            "${v.bucket.arn}/*",
+          ]
+        ]),
         "Effect" : "Allow"
       },
       {
         "Action" : [
           "s3:PutObject",
         ],
-        "Resource" : flatten(concat(
-          flatten([
-            for k, v in aws_s3_bucket.codepipeline : [
-              "${v.arn}/terraform_*",
-            ]
-          ]),
-          flatten([
-            for k, v in module.codepipeline : [
-              "${v.bucket.arn}/terraform_*",
-            ]
-          ]),
-        )),
+        "Resource" : flatten([
+          for k, v in module.codepipeline : [
+            "${v.bucket.arn}/terraform_*",
+          ]
+        ]),
         "Effect" : "Deny"
       },
       {
