@@ -49,7 +49,7 @@ resource "aws_iam_role_policy" "S3ReplicationRoleDefaultPolicy" {
           "s3:ListBucket",
         ],
         "Resource" : [
-          module.terraform_state.aws_s3_bucket.bucket.arn,
+          module.terraform_state.bucket.arn,
         ],
         "Effect" : "Allow"
       },
@@ -60,7 +60,7 @@ resource "aws_iam_role_policy" "S3ReplicationRoleDefaultPolicy" {
           "s3:GetObjectVersionTagging",
         ],
         "Resource" : [
-          "${module.terraform_state.aws_s3_bucket.bucket.arn}/*"
+          "${module.terraform_state.bucket.arn}/*"
         ],
         "Effect" : "Allow"
       },
@@ -72,7 +72,7 @@ resource "aws_iam_role_policy" "S3ReplicationRoleDefaultPolicy" {
         ],
         "Resource" : flatten([
           for k, v in module.terraform_state_replica : [
-            "${v.aws_s3_bucket.bucket.arn}/*"
+            "${v.bucket.arn}/*"
           ]
         ]),
         "Effect" : "Allow"
@@ -90,10 +90,10 @@ resource "aws_iam_role_policies_exclusive" "S3ReplicationRole-tfstate" {
 
 resource "aws_s3_bucket_replication_configuration" "terraform_state_replica" {
   # Must have bucket versioning enabled first
-  depends_on = [module.terraform_state.aws_s3_bucket_versioning.bucket]
+  depends_on = [module.terraform_state.bucket_versioning]
 
   role   = aws_iam_role.S3ReplicationRole-tfstate.arn
-  bucket = module.terraform_state.aws_s3_bucket.bucket.id
+  bucket = module.terraform_state.bucket.id
 
   dynamic "rule" {
     # Number of distinct destination bucket ARNs cannot exceed 1
@@ -104,7 +104,7 @@ resource "aws_s3_bucket_replication_configuration" "terraform_state_replica" {
       id = "to ${rule.key}"
 
       destination {
-        bucket        = module.terraform_state_replica[rule.key].aws_s3_bucket.bucket.arn
+        bucket        = module.terraform_state_replica[rule.key].bucket.arn
         storage_class = "STANDARD"
       }
 
