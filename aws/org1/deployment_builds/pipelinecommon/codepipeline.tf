@@ -201,6 +201,7 @@ resource "aws_codepipeline" "terraform" {
               "${local.workspace_path_prefix}buildspec_*",
               "${local.workspace_path_prefix}foundation_*",
               "${local.workspace_path_prefix}shared_*",
+              "modules/**",
             ]
           }
         }
