@@ -1,113 +1,21 @@
-resource "aws_s3_bucket" "terraform_state" {
-  bucket = format("tfstate-%s-%s-an", data.aws_caller_identity.current.account_id, data.aws_region.current.name)
+module "terraform_state" {
+  source = "../../../modules/s3-private"
+
+  bucket_full_name = format("tfstate-%s-%s-an", data.aws_caller_identity.current.account_id, local.tfstate_primary_region)
   bucket_namespace = "account-regional"
-}
-
-resource "aws_s3_bucket_ownership_controls" "terraform_state" {
-  bucket = aws_s3_bucket.terraform_state.id
-  rule {
-    object_ownership = "BucketOwnerEnforced"
-  }
-}
-
-# resource "aws_s3_bucket_acl" "terraform_state" {
-#   bucket = aws_s3_bucket.terraform_state.id
-#   acl    = "private"
-
-#   depends_on = [
-#     aws_s3_bucket_ownership_controls.terraform_state
-#   ]
-# }
-
-resource "aws_s3_bucket_versioning" "terraform_state" {
-  bucket = aws_s3_bucket.terraform_state.id
-  versioning_configuration {
-    status = "Enabled"
-  }
-}
-
-resource "aws_s3_bucket_public_access_block" "terraform_state" {
-  bucket                  = aws_s3_bucket.terraform_state.id
-  block_public_acls       = true
-  block_public_policy     = true
-  ignore_public_acls      = true
-  restrict_public_buckets = true
-
-  skip_destroy = true
-}
-
-resource "aws_s3_bucket_request_payment_configuration" "terraform_state" {
-  bucket = aws_s3_bucket.terraform_state.id
-  payer  = "Requester"
+  region           = local.tfstate_primary_region
 }
 
 ########################################
 
-resource "aws_s3_bucket" "terraform_state_replica" {
+module "terraform_state_replica" {
+  source = "../../../modules/s3-private"
+
   for_each = local.tfstate_replica_regions
 
-  region = each.key
-
-  bucket = format("tfstate-%s-%s-an", data.aws_caller_identity.current.account_id, each.key)
+  bucket_full_name = format("tfstate-%s-%s-an", data.aws_caller_identity.current.account_id, each.key)
   bucket_namespace = "account-regional"
-}
-
-resource "aws_s3_bucket_ownership_controls" "terraform_state_replica" {
-  for_each = local.tfstate_replica_regions
-
-  region = each.key
-
-  bucket = aws_s3_bucket.terraform_state_replica[each.key].id
-  rule {
-    object_ownership = "BucketOwnerEnforced"
-  }
-}
-
-# resource "aws_s3_bucket_acl" "terraform_state_replica" {
-#   for_each = local.tfstate_replica_regions
-
-#   region = each.key
-
-#   bucket = aws_s3_bucket.terraform_state_replica[each.key].id
-#   acl    = "private"
-
-#   depends_on = [
-#     aws_s3_bucket_ownership_controls.terraform_state_replica
-#   ]
-# }
-
-resource "aws_s3_bucket_versioning" "terraform_state_replica" {
-  for_each = local.tfstate_replica_regions
-
-  region = each.key
-
-  bucket = aws_s3_bucket.terraform_state_replica[each.key].id
-  versioning_configuration {
-    status = "Enabled"
-  }
-}
-
-resource "aws_s3_bucket_public_access_block" "terraform_state_replica" {
-  for_each = local.tfstate_replica_regions
-
-  region = each.key
-
-  bucket                  = aws_s3_bucket.terraform_state_replica[each.key].id
-  block_public_acls       = true
-  block_public_policy     = true
-  ignore_public_acls      = true
-  restrict_public_buckets = true
-
-  skip_destroy = true
-}
-
-resource "aws_s3_bucket_request_payment_configuration" "terraform_state_replica" {
-  for_each = local.tfstate_replica_regions
-
-  region = each.key
-
-  bucket = aws_s3_bucket.terraform_state_replica[each.key].id
-  payer  = "Requester"
+  region           = each.key
 }
 
 ########################################
@@ -141,7 +49,7 @@ resource "aws_iam_role_policy" "S3ReplicationRoleDefaultPolicy" {
           "s3:ListBucket",
         ],
         "Resource" : [
-          aws_s3_bucket.terraform_state.arn,
+          module.terraform_state.aws_s3_bucket.bucket.arn,
         ],
         "Effect" : "Allow"
       },
@@ -152,7 +60,7 @@ resource "aws_iam_role_policy" "S3ReplicationRoleDefaultPolicy" {
           "s3:GetObjectVersionTagging",
         ],
         "Resource" : [
-          "${aws_s3_bucket.terraform_state.arn}/*"
+          "${module.terraform_state.aws_s3_bucket.bucket.arn}/*"
         ],
         "Effect" : "Allow"
       },
@@ -163,8 +71,8 @@ resource "aws_iam_role_policy" "S3ReplicationRoleDefaultPolicy" {
           "s3:ReplicateTags",
         ],
         "Resource" : flatten([
-          for k, v in aws_s3_bucket.terraform_state_replica : [
-            "${v.arn}/*"
+          for k, v in module.terraform_state_replica : [
+            "${v.aws_s3_bucket.bucket.arn}/*"
           ]
         ]),
         "Effect" : "Allow"
@@ -182,10 +90,10 @@ resource "aws_iam_role_policies_exclusive" "S3ReplicationRole-tfstate" {
 
 resource "aws_s3_bucket_replication_configuration" "terraform_state_replica" {
   # Must have bucket versioning enabled first
-  depends_on = [aws_s3_bucket_versioning.terraform_state]
+  depends_on = [module.terraform_state.aws_s3_bucket_versioning.bucket]
 
   role   = aws_iam_role.S3ReplicationRole-tfstate.arn
-  bucket = aws_s3_bucket.terraform_state.id
+  bucket = module.terraform_state.aws_s3_bucket.bucket.id
 
   dynamic "rule" {
     # Number of distinct destination bucket ARNs cannot exceed 1
@@ -196,7 +104,7 @@ resource "aws_s3_bucket_replication_configuration" "terraform_state_replica" {
       id = "to ${rule.key}"
 
       destination {
-        bucket        = aws_s3_bucket.terraform_state_replica[rule.key].arn
+        bucket        = module.terraform_state_replica[rule.key].aws_s3_bucket.bucket.arn
         storage_class = "STANDARD"
       }
 
