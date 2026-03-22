@@ -1,23 +1,11 @@
 module "codepipeline" {
-  source = "../../../../modules/s3-private"
+  source = "../../../../modules/s3-codepipeline"
 
   for_each = local.codebuild_suffix_by_region
 
   bucket_full_name = format("codepipeline-%s-%s-an", data.aws_caller_identity.current.account_id, each.key)
   bucket_namespace = "account-regional"
   region           = each.key
-}
-
-resource "aws_s3_bucket_server_side_encryption_configuration" "codepipeline" {
-  for_each = local.codebuild_suffix_by_region
-
-  bucket = module.codepipeline[each.key].bucket.id
-  region = each.key
-  rule {
-    apply_server_side_encryption_by_default {
-      sse_algorithm = "aws:kms"
-    }
-  }
 }
 
 #############
@@ -41,26 +29,6 @@ resource "aws_s3_bucket_ownership_controls" "codepipeline" {
   }
 }
 
-# resource "aws_s3_bucket_acl" "codepipeline" {
-#   for_each = local.codebuild_suffix_by_region
-#   region = each.key
-#   bucket = aws_s3_bucket.codepipeline[each.key].id
-#   acl    = "private"
-
-#   depends_on = [
-#     aws_s3_bucket_ownership_controls.codepipeline
-#   ]
-# }
-
-# resource "aws_s3_bucket_versioning" "codepipeline" {
-#   for_each = local.codebuild_suffix_by_region
-#   region = each.key
-#   bucket = aws_s3_bucket.codepipeline[each.key].id
-#   versioning_configuration {
-#     status = "Enabled"
-#   }
-# }
-
 resource "aws_s3_bucket_public_access_block" "codepipeline" {
   for_each = local.codebuild_suffix_by_region
 
@@ -74,13 +42,6 @@ resource "aws_s3_bucket_public_access_block" "codepipeline" {
 
   skip_destroy = true
 }
-
-# resource "aws_s3_bucket_request_payment_configuration" "codepipeline" {
-#   for_each = local.codebuild_suffix_by_region
-#   region = each.key
-#   bucket = aws_s3_bucket.codepipeline[each.key].id
-#   payer  = "Requester"
-# }
 
 resource "aws_s3_bucket_policy" "codepipeline" {
   for_each = local.codebuild_suffix_by_region

@@ -46,23 +46,23 @@ resource "aws_s3_bucket_public_access_block" "bucket" {
   skip_destroy = true
 }
 
-resource "aws_s3_bucket_request_payment_configuration" "bucket" {
-  region = var.region
-
-  bucket = aws_s3_bucket.bucket.id
-  payer  = "Requester"
-}
-
-# resource "aws_s3_bucket_server_side_encryption_configuration" "bucket" {
+# resource "aws_s3_bucket_request_payment_configuration" "bucket" {
 #   region = var.region
 
 #   bucket = aws_s3_bucket.bucket.id
-#   rule {
-#     apply_server_side_encryption_by_default {
-#       sse_algorithm = "aws:kms"
-#     }
-#   }
+#   payer  = "Requester"
 # }
+
+resource "aws_s3_bucket_server_side_encryption_configuration" "bucket" {
+  region = var.region
+
+  bucket = aws_s3_bucket.bucket.id
+  rule {
+    apply_server_side_encryption_by_default {
+      sse_algorithm = "aws:kms"
+    }
+  }
+}
 
 resource "aws_s3_bucket_policy" "bucket" {
   region = var.region
