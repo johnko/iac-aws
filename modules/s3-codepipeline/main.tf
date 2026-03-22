@@ -7,6 +7,7 @@ resource "aws_s3_bucket" "bucket" {
   lifecycle {
     ignore_changes = [
       policy,
+      server_side_encryption_configuration,
     ]
   }
 }
