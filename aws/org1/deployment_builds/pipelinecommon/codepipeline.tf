@@ -103,9 +103,20 @@ resource "aws_iam_role_policy" "CodePipelineRoleDefaultPolicy" {
           "s3:GetObjectVersion",
           "s3:PutObject",
         ],
-        "Resource" : flatten([
-          for k, v in aws_s3_bucket.codepipeline : [v.arn, "${v.arn}/*"]
-        ]),
+        "Resource" : flatten(concat(
+          flatten([
+            for k, v in aws_s3_bucket.codepipeline : [
+              v.arn,
+              "${v.arn}/*",
+            ]
+          ]),
+          flatten([
+            for k, v in module.codepipeline : [
+              v.bucket.arn,
+              "${v.bucket.arn}/*",
+            ]
+          ]),
+        )),
         "Effect" : "Allow"
       },
       {
@@ -178,7 +189,7 @@ resource "aws_codepipeline" "terraform" {
   pipeline_type  = "V2"
 
   artifact_store {
-    location = aws_s3_bucket.codepipeline[each.value.region].id
+    location = module.codepipeline[each.value.region].bucket.id
     type     = "S3"
   }
 
