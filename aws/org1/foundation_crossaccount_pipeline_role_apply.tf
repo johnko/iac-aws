@@ -115,6 +115,7 @@ locals {
                 # "organizations:List*",
                 "s3:CreateAcc*",
                 "s3:CreateBucket*",
+                "s3:DeleteBucketPolicy",
                 "s3:Put*Configuration",
                 "s3:PutBucket*",
                 "s3:PutReplication*",
