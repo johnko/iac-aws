@@ -1,5 +1,5 @@
 module "terraform_state" {
-  source = "../../../modules/s3-private"
+  source = "../../../../modules/s3-private"
 
   bucket_full_name = format("tfstate-%s-%s-an", data.aws_caller_identity.current.account_id, local.tfstate_primary_region)
   bucket_namespace = "account-regional"
@@ -9,7 +9,7 @@ module "terraform_state" {
 ########################################
 
 module "terraform_state_replica" {
-  source = "../../../modules/s3-private"
+  source = "../../../../modules/s3-private"
 
   for_each = local.tfstate_replica_regions
 
