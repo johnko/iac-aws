@@ -1,5 +1,6 @@
 resource "aws_s3_bucket" "terraform_state" {
-  bucket = "tfstate-${data.aws_caller_identity.current.account_id}-${replace(local.tfstate_primary_region, "-", "")}"
+  bucket = format("tfstate-%s-%s-an", data.aws_caller_identity.current.account_id, data.aws_region.current.name)
+  bucket_namespace = "account-regional"
 }
 
 resource "aws_s3_bucket_ownership_controls" "terraform_state" {
@@ -47,7 +48,8 @@ resource "aws_s3_bucket" "terraform_state_replica" {
 
   region = each.key
 
-  bucket = "tfstate-${data.aws_caller_identity.current.account_id}-${replace(each.key, "-", "")}"
+  bucket = format("tfstate-%s-%s-an", data.aws_caller_identity.current.account_id, each.key)
+  bucket_namespace = "account-regional"
 }
 
 resource "aws_s3_bucket_ownership_controls" "terraform_state_replica" {

@@ -3,7 +3,8 @@ resource "aws_s3_bucket" "codepipeline" {
 
   region = each.key
 
-  bucket = "codepipeline-${data.aws_caller_identity.current.account_id}-${replace(each.key, "-", "")}"
+  bucket = format("codepipeline-%s-%s-an", data.aws_caller_identity.current.account_id, each.key)
+  bucket_namespace = "account-regional"
 }
 
 resource "aws_s3_bucket_ownership_controls" "codepipeline" {
