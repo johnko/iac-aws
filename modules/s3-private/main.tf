@@ -1,7 +1,7 @@
 resource "aws_s3_bucket" "bucket" {
   region = var.region
 
-  bucket = var.bucket_full_name
+  bucket           = var.bucket_full_name
   bucket_namespace = var.bucket_namespace
 }
 
@@ -46,13 +46,6 @@ resource "aws_s3_bucket_public_access_block" "bucket" {
   skip_destroy = true
 }
 
-resource "aws_s3_bucket_request_payment_configuration" "bucket" {
-  region = var.region
-
-  bucket = aws_s3_bucket.bucket.id
-  payer  = "Requester"
-}
-
 # resource "aws_s3_bucket_server_side_encryption_configuration" "bucket" {
 #   region = var.region
 
@@ -90,4 +83,11 @@ resource "aws_s3_bucket_policy" "bucket" {
       }
     ]
   })
+}
+
+resource "aws_s3_bucket_request_payment_configuration" "bucket" {
+  region = var.region
+
+  bucket = aws_s3_bucket.bucket.id
+  payer  = "Requester"
 }

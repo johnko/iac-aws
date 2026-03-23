@@ -1,0 +1,1 @@
+../../foundation_s3_bucket_logging.tf
