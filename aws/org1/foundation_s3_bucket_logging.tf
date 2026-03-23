@@ -1,4 +1,4 @@
-module "logging" {
+module "logging_bucket" {
   source = "../../../../modules/s3-logging"
 
   for_each = {
