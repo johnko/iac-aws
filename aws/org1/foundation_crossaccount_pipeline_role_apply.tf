@@ -139,6 +139,7 @@ locals {
             {
               # Allow to put SSM Parameter
               "Action" : [
+                "ssm:DeleteParameter",
                 "ssm:PutParameter*",
               ],
               "Resource" : [
