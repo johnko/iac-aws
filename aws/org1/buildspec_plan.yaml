@@ -40,8 +40,8 @@ env:
     TF_VAR_aws_org_id: TF_VAR_aws_org_id
     TF_VAR_aws_org_root_id: TF_VAR_aws_org_root_id
     TF_VAR_aws_ou_id_deployment: TF_VAR_aws_ou_id_deployment
-    TF_VAR_aws_ou_id_quarantine: TF_VAR_aws_ou_id_quarantine
     TF_VAR_aws_ou_id_playground: TF_VAR_aws_ou_id_playground
+    TF_VAR_aws_ou_id_quarantine: TF_VAR_aws_ou_id_quarantine
     TF_VAR_aws_ou_id_security: TF_VAR_aws_ou_id_security
     TF_VAR_codeconnection_deployment_builds: TF_VAR_codeconnection_deployment_builds
     TF_VAR_slack_team_name: TF_VAR_slack_team_name
