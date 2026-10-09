@@ -131,8 +131,8 @@ locals {
           ]
         })
       }
-      UntaggedWritePermissions2 = {
-        enabled_aws_account_ids = keys(local.all_aws_account_ids)
+      SSMWritePermissions1 = {
+        enabled_aws_account_ids = ["${var.aws_account_id_deployment_builds}"]
         policy = jsonencode({
           "Version" : "2012-10-17",
           "Statement" : [
