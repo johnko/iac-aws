@@ -60,7 +60,7 @@ locals {
           "path" : k,
           "region" : r,
           "codebuild_suffix" : local.codebuild_suffix_by_region[r],
-          "DetectChanges" : v.DetectChanges ? v.DetectChanges : local.DetectChanges_by_region[r],
+          "DetectChanges" : lookup(v, "DetectChanges", local.DetectChanges_by_region[r]),
         }
       )
     }
