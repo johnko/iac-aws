@@ -154,8 +154,7 @@ locals {
               ],
               "Resource" : flatten([
                 for k, v in local.codebuild_suffix_by_region : [
-                  "arn:aws:s3:::${format("codepipeline-%s-%s-an", data.aws_caller_identity.current.account_id, k)}",
-                  "arn:aws:s3:::${format("codepipeline-%s-%s-an", data.aws_caller_identity.current.account_id, k)}/*",
+                  "arn:aws:s3:::${format("codepipeline-%s-%s-an", data.aws_caller_identity.current.account_id, k)}/terraform_*",
                 ]
               ]),
               "Effect" : "Allow"
