@@ -11,8 +11,9 @@ fi
 # verbose to see install steps
 set -x
 
-TERRAFORM_FILENAME="terraform_${TERRAFORM_VERSION}_linux_amd64.zip"
-TERRAFORM_SHAFILE="terraform_${TERRAFORM_VERSION}_SHA256SUMS"
+VERSION_NUMBER="${TERRAFORM_VERSION#v}"
+TERRAFORM_FILENAME="terraform_${VERSION_NUMBER}_linux_amd64.zip"
+TERRAFORM_SHAFILE="terraform_${VERSION_NUMBER}_SHA256SUMS"
 i="$AWS_REGION"
 if aws s3api get-bucket-location --bucket "codepipeline-${TF_VAR_aws_account_id_deployment_builds}-$i-an" --no-cli-pager; then
   maybe_filename=$(aws s3api list-objects-v2 --bucket "codepipeline-${TF_VAR_aws_account_id_deployment_builds}-$i-an" --prefix "$TERRAFORM_FILENAME" --output text --no-cli-pager --query 'Contents[].Key')
