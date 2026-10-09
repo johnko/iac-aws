@@ -37,3 +37,5 @@ if aws s3api get-bucket-location --bucket "codepipeline-${TF_VAR_aws_account_id_
 
   fi
 fi
+
+bash ../../buildspec_install.sh
