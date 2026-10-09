@@ -131,7 +131,7 @@ locals {
           ]
         })
       }
-      SSMWritePermissions1 = {
+      S3SSMWritePermissions1 = {
         enabled_aws_account_ids = ["${var.aws_account_id_deployment_builds}"]
         policy = jsonencode({
           "Version" : "2012-10-17",
@@ -145,6 +145,19 @@ locals {
               "Resource" : [
                 "arn:aws:ssm:*:${data.aws_caller_identity.current.account_id}:parameter/cached_*"
               ],
+              "Effect" : "Allow"
+            },
+            {
+              # Allow to put object for cache dependencies
+              "Action" : [
+                "s3:PutObject"
+              ],
+              "Resource" : flatten([
+                for k, v in local.codebuild_suffix_by_region : [
+                  "arn:aws:s3:::${format("codepipeline-%s-%s-an", data.aws_caller_identity.current.account_id, k)}",
+                  "arn:aws:s3:::${format("codepipeline-%s-%s-an", data.aws_caller_identity.current.account_id, k)}/*",
+                ]
+              ]),
               "Effect" : "Allow"
             },
           ]
