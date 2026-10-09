@@ -151,6 +151,15 @@ fi
 
 set +x
 if [[ "APPLY" == "$SAFE_ACTION" || "AUTO" == "$SAFE_ACTION" ]]; then
+  if [[ -e _pre_apply.sh ]]; then
+    set -x
+    bash -ex _pre_apply.sh
+    TF_PRE_APPLY_EXIT_CODE=$?
+    set -e
+    if [[ $TF_PRE_APPLY_EXIT_CODE != 0 ]]; then
+      exit $TF_PRE_APPLY_EXIT_CODE
+    fi
+  fi
   AUTO_APPROVE_ARG=""
   TFPLAN_FILE=""
   if [[ "AUTO" == "$SAFE_ACTION" ]]; then

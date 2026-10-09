@@ -3,6 +3,11 @@ locals {
   workspace_path_prefix = "aws/org1/"
   pipelines = {
     # find aws -type f -name _import.sh | sort | xargs dirname | sed 's,aws/org1/,,' | awk '{print "\""$1"\" = {}"}'
+    "deployment_builds/cachedependencies" = {
+      EnvironmentVariables = {
+        TF_VAR_aws_account_id = var.aws_account_id_deployment_builds
+      }
+    }
     "deployment_builds/chatbotcommon" = {
       EnvironmentVariables = {
         TF_VAR_aws_account_id = var.aws_account_id_deployment_builds
