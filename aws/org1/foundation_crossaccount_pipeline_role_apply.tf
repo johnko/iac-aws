@@ -131,6 +131,24 @@ locals {
           ]
         })
       }
+      UntaggedWritePermissions2 = {
+        enabled_aws_account_ids = keys(local.all_aws_account_ids)
+        policy = jsonencode({
+          "Version" : "2012-10-17",
+          "Statement" : [
+            {
+              # Allow to put SSM Parameter
+              "Action" : [
+                "ssm:PutParameter*",
+              ],
+              "Resource" : [
+                "arn:aws:ssm:*:${data.aws_caller_identity.current.account_id}:parameter/cached_*"
+              ],
+              "Effect" : "Allow"
+            },
+          ]
+        })
+      }
       S3ReplicationRolePassRole = {
         enabled_aws_account_ids = keys(local.all_aws_account_ids)
         policy = jsonencode({

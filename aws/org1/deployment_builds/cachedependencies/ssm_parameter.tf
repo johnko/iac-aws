@@ -13,7 +13,7 @@ locals {
 resource "aws_ssm_parameter" "param" {
   for_each = local.ssm_parameters
 
-  name  = "TF_VAR_${each.key}"
+  name  = each.key
   value = each.value.value
   type  = "String"
 }
@@ -23,7 +23,7 @@ resource "aws_ssm_parameter" "secondary" {
 
   region = local.codepipeline_secondary_region
 
-  name  = "TF_VAR_${each.key}"
+  name  = each.key
   value = each.value.value
   type  = "String"
 }
