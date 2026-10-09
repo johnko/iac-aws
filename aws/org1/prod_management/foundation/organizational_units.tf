@@ -6,9 +6,9 @@ import {
 }
 
 import {
-  to = aws_organizations_organizational_unit.ou["sandbox"]
+  to = aws_organizations_organizational_unit.ou["playground"]
   identity = {
-    id = var.aws_ou_id_sandbox
+    id = var.aws_ou_id_playground
   }
 }
 
@@ -37,8 +37,8 @@ locals {
       name      = "Quarantine"
       parent_id = aws_organizations_organization.org.roots[0].id
     }
-    sandbox = {
-      name      = "Sandbox"
+    playground = {
+      name      = "Playground"
       parent_id = aws_organizations_organization.org.roots[0].id
     }
     security = {

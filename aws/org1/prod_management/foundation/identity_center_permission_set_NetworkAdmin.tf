@@ -34,7 +34,7 @@ resource "aws_ssoadmin_account_assignment" "NetworkAdministrator" {
   for_each = merge(
     aws_organizations_account.security_account,
     aws_organizations_account.deployment_account,
-    aws_organizations_account.sandbox_account,
+    aws_organizations_account.playground_account,
     { "management" : data.aws_organizations_account.management }
   )
 

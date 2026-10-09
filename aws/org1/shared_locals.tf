@@ -4,7 +4,7 @@ locals {
     "${var.aws_account_id_security_aggregator}" = {}
     "${var.aws_account_id_security_cloudtrail}" = {}
     "${var.aws_account_id_deployment_builds}"   = {}
-    "${var.aws_account_id_sandbox_bedrock}"     = {}
+    "${var.aws_account_id_playground_bedrock}"  = {}
   }
 
   resourceExplorerAccountWithoutUnusedRegions = [
@@ -12,7 +12,7 @@ locals {
     var.aws_account_id_security_aggregator,
     var.aws_account_id_security_cloudtrail,
     var.aws_account_id_deployment_builds,
-    var.aws_account_id_sandbox_bedrock,
+    var.aws_account_id_playground_bedrock,
   ]
 
   governedRegions = [ # List of regions to govern

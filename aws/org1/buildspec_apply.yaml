@@ -26,19 +26,19 @@ env:
     TF_VAR_aws_TAG_iacdeployerEnumValues_POLICY: TF_VAR_aws_TAG_iacdeployerEnumValues_POLICY
     TF_VAR_aws_account_id_deployment_builds: TF_VAR_aws_account_id_deployment_builds
     TF_VAR_aws_account_id_management: TF_VAR_aws_account_id_management
-    TF_VAR_aws_account_id_sandbox_bedrock: TF_VAR_aws_account_id_sandbox_bedrock
+    TF_VAR_aws_account_id_playground_bedrock: TF_VAR_aws_account_id_playground_bedrock
     TF_VAR_aws_account_id_security_aggregator: TF_VAR_aws_account_id_security_aggregator
     TF_VAR_aws_account_id_security_cloudtrail: TF_VAR_aws_account_id_security_cloudtrail
     TF_VAR_aws_controltower_landingzone_id: TF_VAR_aws_controltower_landingzone_id
     TF_VAR_aws_email_deployment_builds: TF_VAR_aws_email_deployment_builds
-    TF_VAR_aws_email_sandbox_bedrock: TF_VAR_aws_email_sandbox_bedrock
+    TF_VAR_aws_email_playground_bedrock: TF_VAR_aws_email_playground_bedrock
     TF_VAR_aws_email_security_aggregator: TF_VAR_aws_email_security_aggregator
     TF_VAR_aws_email_security_cloudtrail: TF_VAR_aws_email_security_cloudtrail
     TF_VAR_aws_org_id: TF_VAR_aws_org_id
     TF_VAR_aws_org_root_id: TF_VAR_aws_org_root_id
     TF_VAR_aws_ou_id_deployment: TF_VAR_aws_ou_id_deployment
     TF_VAR_aws_ou_id_quarantine: TF_VAR_aws_ou_id_quarantine
-    TF_VAR_aws_ou_id_sandbox: TF_VAR_aws_ou_id_sandbox
+    TF_VAR_aws_ou_id_playground: TF_VAR_aws_ou_id_playground
     TF_VAR_aws_ou_id_security: TF_VAR_aws_ou_id_security
     TF_VAR_codeconnection_deployment_builds: TF_VAR_codeconnection_deployment_builds
     TF_VAR_slack_team_name: TF_VAR_slack_team_name

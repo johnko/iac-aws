@@ -11,7 +11,7 @@ variable "aws_account_id_management" {
   type        = string
   description = "AWS Account ID, eg. 111111111111"
 }
-variable "aws_account_id_sandbox_bedrock" {
+variable "aws_account_id_playground_bedrock" {
   type        = string
   description = "AWS Account ID, eg. 111111111111"
 }
@@ -63,7 +63,7 @@ variable "aws_email_deployment_builds" {
   type        = string
   description = "Email address for the aws account"
 }
-variable "aws_email_sandbox_bedrock" {
+variable "aws_email_playground_bedrock" {
   type        = string
   description = "Email address for the aws account"
 }
@@ -91,7 +91,7 @@ variable "aws_ou_id_quarantine" {
   type        = string
   description = "Organizational Unit ID, eg. ou-xyz789"
 }
-variable "aws_ou_id_sandbox" {
+variable "aws_ou_id_playground" {
   type        = string
   description = "Organizational Unit ID, eg. ou-xyz789"
 }
