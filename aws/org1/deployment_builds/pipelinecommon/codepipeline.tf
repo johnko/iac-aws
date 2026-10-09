@@ -4,7 +4,7 @@ locals {
   pipelines = {
     # find aws -type f -name _import.sh | sort | xargs dirname | sed 's,aws/org1/,,' | awk '{print "\""$1"\" = {}"}'
     "deployment_builds/cachedependencies" = {
-      DetectChanges = false
+      # DetectChanges = false
       EnvironmentVariables = {
         TF_VAR_aws_account_id = var.aws_account_id_deployment_builds
       }
