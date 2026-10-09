@@ -11,7 +11,7 @@ variable "aws_account_id_management" {
   type        = string
   description = "AWS Account ID, eg. 111111111111"
 }
-variable "aws_account_id_playground_bedrock" {
+variable "aws_account_id_playground_rswea" {
   type        = string
   description = "AWS Account ID, eg. 111111111111"
 }
@@ -63,7 +63,7 @@ variable "aws_email_deployment_builds" {
   type        = string
   description = "Email address for the aws account"
 }
-variable "aws_email_playground_bedrock" {
+variable "aws_email_playground_rswea" {
   type        = string
   description = "Email address for the aws account"
 }

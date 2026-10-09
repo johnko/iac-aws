@@ -30,7 +30,7 @@ bash .github/tf.sh aws/org1/prod_management/foundation plan
 
 bash .github/tf.sh aws/org1/prod_management/foundation apply
 bash .github/tf.sh aws/org1/deployment_builds/foundation apply
-bash .github/tf.sh aws/org1/playground_bedrock/foundation apply
+bash .github/tf.sh aws/org1/playground_rswea/foundation apply
 bash .github/tf.sh aws/org1/security_aggregator/foundation apply
 bash .github/tf.sh aws/org1/security_cloudtrail/foundation apply
 
@@ -40,7 +40,7 @@ git checkout aws/org1/shared_tfstate_backend.template
 
 bash .github/tf.sh aws/org1/prod_management/foundation apply
 bash .github/tf.sh aws/org1/deployment_builds/foundation apply
-bash .github/tf.sh aws/org1/playground_bedrock/foundation apply
+bash .github/tf.sh aws/org1/playground_rswea/foundation apply
 bash .github/tf.sh aws/org1/security_aggregator/foundation apply
 bash .github/tf.sh aws/org1/security_cloudtrail/foundation apply
 ```

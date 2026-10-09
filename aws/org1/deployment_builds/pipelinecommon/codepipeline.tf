@@ -23,9 +23,9 @@ locals {
         TF_VAR_aws_account_id = var.aws_account_id_management
       }
     }
-    "playground_bedrock/foundation" = {
+    "playground_rswea/foundation" = {
       EnvironmentVariables = {
-        TF_VAR_aws_account_id = var.aws_account_id_playground_bedrock
+        TF_VAR_aws_account_id = var.aws_account_id_playground_rswea
       }
     }
     "security_aggregator/foundation" = {

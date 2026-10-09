@@ -2,7 +2,7 @@ locals {
   ssm_parameters = {
     aws_account_id_deployment_builds       = { value = var.aws_account_id_deployment_builds }
     aws_account_id_management              = { value = var.aws_account_id_management }
-    aws_account_id_playground_bedrock      = { value = var.aws_account_id_playground_bedrock }
+    aws_account_id_playground_rswea      = { value = var.aws_account_id_playground_rswea }
     aws_account_id_security_aggregator     = { value = var.aws_account_id_security_aggregator }
     aws_account_id_security_cloudtrail     = { value = var.aws_account_id_security_cloudtrail }
     aws_AISERVICES_OPT_OUT_POLICY          = { value = var.aws_AISERVICES_OPT_OUT_POLICY }
@@ -15,7 +15,7 @@ locals {
     aws_EC2_NoPublicSharingSnapshot_POLICY = { value = var.aws_EC2_NoPublicSharingSnapshot_POLICY }
     aws_EC2_NoSerial_POLICY                = { value = var.aws_EC2_NoSerial_POLICY }
     aws_email_deployment_builds            = { value = var.aws_email_deployment_builds }
-    aws_email_playground_bedrock           = { value = var.aws_email_playground_bedrock }
+    aws_email_playground_rswea           = { value = var.aws_email_playground_rswea }
     aws_email_security_aggregator          = { value = var.aws_email_security_aggregator }
     aws_email_security_cloudtrail          = { value = var.aws_email_security_cloudtrail }
     aws_org_id                             = { value = var.aws_org_id }

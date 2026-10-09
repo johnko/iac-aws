@@ -1,13 +1,13 @@
 import {
-  to = aws_organizations_account.playground_account["playground_bedrock"]
-  id = var.aws_account_id_playground_bedrock
+  to = aws_organizations_account.playground_account["playground_rswea"]
+  id = var.aws_account_id_playground_rswea
 }
 
 locals {
   playground_accounts = {
-    playground_bedrock = {
-      name  = "PlaygroundBedrock"
-      email = var.aws_email_playground_bedrock
+    playground_rswea = {
+      name  = "PlaygroundRSWEA"
+      email = var.aws_email_playground_rswea
     }
   }
 }
