@@ -1,18 +1,20 @@
 locals {
   FullRepositoryId      = "johnko/iac-aws"
   workspace_path_prefix = "aws/org1/"
-  pipelines = {
+  terraform_aws_pipelines = {
     # find aws -type f -name _import.sh | sort | xargs dirname | sed 's,aws/org1/,,' | awk '{print "\""$1"\" = {}"}'
     "deployment_builds/cachedependencies" = {
       # DetectChanges = false
       EnvironmentVariables = {
         TF_VAR_aws_account_id = var.aws_account_id_deployment_builds
       }
+      RequireManualApproval = false
     }
     "deployment_builds/chatbotcommon" = {
       EnvironmentVariables = {
         TF_VAR_aws_account_id = var.aws_account_id_deployment_builds
       }
+      RequireManualApproval = false
     }
     "deployment_builds/foundation" = {
       EnvironmentVariables = {
@@ -53,7 +55,7 @@ locals {
 
   regional_pipelines = merge(values({
     for r in [local.codepipeline_primary_region, local.codepipeline_secondary_region] : r => {
-      for k, v in local.pipelines : "${r}/${k}" => merge(
+      for k, v in local.terraform_aws_pipelines : "${r}/${k}" => merge(
         v,
         {
           "codepipeline_name" : "TF-aws-${replace(k, "/", "-")}"
@@ -335,19 +337,22 @@ resource "aws_codepipeline" "terraform" {
       }
     }
 
+    dynamic "action" {
+      for_each = lookup(each.value, "RequireManualApproval", true) == false ? [] : [1]
 
-    action {
-      category           = "Approval"
-      name               = "ApproveOrReject"
-      owner              = "AWS"
-      provider           = "Manual"
-      run_order          = 2
-      timeout_in_minutes = 15
-      version            = "1"
-      configuration = {
-        # See https://docs.aws.amazon.com/codepipeline/latest/userguide/structure-configuration-examples.html
-        "CustomData" : "Last chance to cancel if the TerraformPlan looks wrong! Please REJECT if you're unsure. Only APPROVE if you are 100% sure.",
-        "ExternalEntityLink" : "https://github.com/${local.FullRepositoryId}"
+      content {
+        category           = "Approval"
+        name               = "ApproveOrReject"
+        owner              = "AWS"
+        provider           = "Manual"
+        run_order          = 2
+        timeout_in_minutes = 15
+        version            = "1"
+        configuration = {
+          # See https://docs.aws.amazon.com/codepipeline/latest/userguide/structure-configuration-examples.html
+          "CustomData" : "Last chance to cancel if the TerraformPlan looks wrong! Please REJECT if you're unsure. Only APPROVE if you are 100% sure.",
+          "ExternalEntityLink" : "https://github.com/${local.FullRepositoryId}"
+        }
       }
     }
 
