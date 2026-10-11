@@ -56,7 +56,7 @@ locals {
       for k, v in local.pipelines : "${r}/${k}" => merge(
         v,
         {
-          "codepipeline_name" : "TF-${replace(k, "/", "-")}"
+          "codepipeline_name" : "TF-aws-${replace(k, "/", "-")}"
           "path" : k,
           "region" : r,
           "codebuild_suffix" : local.codebuild_suffix_by_region[r],
