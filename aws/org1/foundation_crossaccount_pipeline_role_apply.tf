@@ -17,7 +17,9 @@ resource "aws_iam_role" "crossaccount_terraform_apply" {
 resource "aws_iam_role_policy_attachments_exclusive" "crossaccount_terraform_apply" {
   role_name = aws_iam_role.crossaccount_terraform_apply.name
   policy_arns = [
-    "arn:aws:iam::aws:policy/job-function/ViewOnlyAccess" # ViewOnly to avoid reading sensitive data like Secrets or S3
+    "arn:aws:iam::aws:policy/job-function/ViewOnlyAccess", # ViewOnly avoids reading sensitive data like Secrets or S3
+    "arn:aws:iam::aws:policy/ReadOnlyAccess",              # ReadOnly allows reading everything including sensitive data
+    "arn:aws:iam::aws:policy/AdministratorAccess",         # Administrator allows create, read, update, delete
   ]
 }
 
