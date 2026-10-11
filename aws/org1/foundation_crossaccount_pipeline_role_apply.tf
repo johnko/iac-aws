@@ -26,8 +26,53 @@ locals {
     local.crossaccount_inline_policies_plan,
     {
       # This role starts with ViewOnly to avoid reading sensitive data like Secrets or S3
-      # Here, be very selective what permissions are granted
-      TaggedWritePermissions1 = {
+      # Be very selective what permissions are granted
+      # TaggedWritePermissions1 = {
+      #   enabled_aws_account_ids = keys(local.all_aws_account_ids)
+      #   policy = jsonencode({
+      #     "Version" : "2012-10-17",
+      #     "Statement" : [
+      #       {
+      #         "Condition" : {
+      #           # https://docs.aws.amazon.com/IAM/latest/UserGuide/access_tags.html#access_tags_control-resources
+      #           "StringEquals" : { "aws:ResourceTag/iacdeployer" : "terraform" }
+      #         },
+      #         "Action" : [
+      #           "iam:PassRole"
+      #         ],
+      #         "Resource" : "*",
+      #         "Effect" : "Allow"
+      #       },
+      #     ]
+      #   })
+      # }
+      UntaggedPermissions1 = {
+        enabled_aws_account_ids = keys(local.all_aws_account_ids)
+        policy = jsonencode({
+          "Version" : "2012-10-17",
+          "Statement" : [
+            {
+              "Action" : [
+                "chatbot:*",
+                "codebuild:*",
+                "codepipeline:*",
+                "codestar-connections:*",
+                "events:*",
+                "iam:*",
+                "kms:*",
+                "lambda:*",
+                "s3:*",
+                "sns:*",
+                "ssm:*",
+                "sso:*",
+              ],
+              "Resource" : "*",
+              "Effect" : "Allow"
+            },
+          ]
+        })
+      }
+      IAMPassRolePermissions1 = {
         enabled_aws_account_ids = keys(local.all_aws_account_ids)
         policy = jsonencode({
           "Version" : "2012-10-17",
@@ -38,170 +83,11 @@ locals {
                 "StringEquals" : { "aws:ResourceTag/iacdeployer" : "terraform" }
               },
               "Action" : [
-                "codebuild:Delete*",
-                "codebuild:PutResourcePolicy",
-                "codebuild:Update*",
-                "codepipeline:Delete*",
-                "codepipeline:PutActionRevision",
-                "codepipeline:UntagResource",
-                "codepipeline:Update*",
-                "events:Delete*",
-                "events:Disable*",
-                "events:Enable*",
-                "events:Put*",
-                "events:Remove*",
-                "events:UntagResource",
-                "events:Update*",
-                "kms:Delete*",
-                "kms:Disable*",
-                "kms:Enable*",
-                "kms:Generate*",
-                "kms:RotateKeyOnDemand",
-                "kms:ScheduleKeyDeletion",
-                "kms:UntagResource",
-                "lambda:Add*",
-                "lambda:Delete*",
-                "lambda:Publish*",
-                "lambda:Put*",
-                "lambda:Remove*",
-                "lambda:Untag*",
-                "lambda:Update*",
-                "s3:DeleteAcc*",
-                "s3:PutAcc*",
-                "s3:UntagResource",
-                "s3:Update*Configuration",
-                "sns:*Permission",
-                "sns:DeleteTopic",
-                "sns:PutDataProtectionPolicy",
-                "sns:Set*Attributes",
-                "sns:Subscribe",
-                "sns:Unsubscribe",
-                "sns:UntagResource",
-                "ssm:RemoveTagsFromResource",
+                "iam:PassRole"
               ],
               "Resource" : "*",
               "Effect" : "Allow"
             },
-          ]
-        })
-      }
-      UntaggedWritePermissions1 = {
-        enabled_aws_account_ids = keys(local.all_aws_account_ids)
-        policy = jsonencode({
-          "Version" : "2012-10-17",
-          "Statement" : [
-            {
-              "Action" : [
-                "chatbot:*SlackChannel*",
-                "codebuild:Create*",
-                "codepipeline:Create*",
-                "codepipeline:TagResource",
-                "codestar-connections:PassConnection", # For modifying CodePipeline
-                "events:Create*",
-                "events:TagResource",
-                "iam:Attach*Policy", # iam permissions here because SSO/AWS Identity Center may not have tagged the resources
-                "iam:Create*Role",
-                "iam:CreatePolicy*",
-                "iam:CreateRole",
-                "iam:DeletePolicy*",
-                "iam:DeleteRole*",
-                "iam:Detach*Policy",
-                "iam:PutRole*",
-                "iam:Tag*",
-                "iam:Untag*",
-                "iam:UpdateAssumeRolePolicy",
-                "iam:UpdateRole*",
-                "kms:Create*",
-                "kms:PutKeyPolicy",
-                "kms:ReplicateKey",
-                "kms:RetireGrant",
-                "kms:RevokeGrant",
-                "kms:TagResource",
-                "kms:Update*",
-                "lambda:Create*",
-                "lambda:Tag*",
-                "s3:CreateAcc*",
-                "s3:CreateBucket*",
-                "s3:DeleteBucket*",
-                "s3:Put*Configuration",
-                "s3:PutBucket*",
-                "s3:PutReplication*",
-                "s3:TagResource",
-                "sns:CreateTopic",
-                "sns:TagResource",
-                "ssm:AddTagsToResource",
-                "sso:*PermissionSet", # sso permissions here because SSO/AWS Identity Center may not have tagged the resources
-                "sso:PutPermissions*",
-              ],
-              "Resource" : "*",
-              "Effect" : "Allow"
-            },
-          ]
-        })
-      }
-      S3SSMWritePermissions1 = {
-        enabled_aws_account_ids = ["${var.aws_account_id_deployment_builds}"]
-        policy = jsonencode({
-          "Version" : "2012-10-17",
-          "Statement" : [
-            {
-              # Allow to put SSM Parameter
-              "Action" : [
-                "ssm:DeleteParameter",
-                "ssm:PutParameter*",
-              ],
-              "Resource" : [
-                "arn:aws:ssm:*:${data.aws_caller_identity.current.account_id}:parameter/cached_*"
-              ],
-              "Effect" : "Allow"
-            },
-            {
-              # Allow to put object for cache dependencies
-              "Action" : [
-                "s3:PutObject"
-              ],
-              "Resource" : flatten([
-                for k, v in local.codebuild_suffix_by_region : [
-                  "arn:aws:s3:::${format("codepipeline-%s-%s-an", data.aws_caller_identity.current.account_id, k)}/terraform_*",
-                ]
-              ]),
-              "Effect" : "Allow"
-            },
-          ]
-        })
-      }
-      S3ReplicationRolePassRole = {
-        enabled_aws_account_ids = keys(local.all_aws_account_ids)
-        policy = jsonencode({
-          "Version" : "2012-10-17",
-          "Statement" : [
-            {
-              "Action" : [
-                "iam:PassRole",
-              ],
-              "Resource" : [
-                "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/S3ReplicationRole-tfstate"
-              ],
-              "Effect" : "Allow"
-            }
-          ]
-        })
-      }
-      CodePipelinePassRole = {
-        enabled_aws_account_ids = ["${var.aws_account_id_deployment_builds}"]
-        policy = jsonencode({
-          "Version" : "2012-10-17",
-          "Statement" : [
-            {
-              "Action" : [
-                "iam:PassRole",
-              ],
-              "Resource" : [
-                "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/CodePipelineRole-TerraformPipelines",
-                "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/service-role/AWSChatbotRole-test-awschatbot",
-              ],
-              "Effect" : "Allow"
-            }
           ]
         })
       }
