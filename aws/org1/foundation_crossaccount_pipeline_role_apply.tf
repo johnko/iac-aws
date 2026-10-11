@@ -27,53 +27,6 @@ locals {
   crossaccount_inline_policies_apply = merge(
     local.crossaccount_inline_policies_plan,
     {
-      # This role starts with ViewOnly to avoid reading sensitive data like Secrets or S3
-      # Be very selective what permissions are granted
-      # TaggedWritePermissions1 = {
-      #   enabled_aws_account_ids = keys(local.all_aws_account_ids)
-      #   policy = jsonencode({
-      #     "Version" : "2012-10-17",
-      #     "Statement" : [
-      #       {
-      #         "Condition" : {
-      #           # https://docs.aws.amazon.com/IAM/latest/UserGuide/access_tags.html#access_tags_control-resources
-      #           "StringEquals" : { "aws:ResourceTag/iacdeployer" : "terraform" }
-      #         },
-      #         "Action" : [
-      #           "iam:PassRole"
-      #         ],
-      #         "Resource" : "*",
-      #         "Effect" : "Allow"
-      #       },
-      #     ]
-      #   })
-      # }
-      UntaggedPermissions1 = {
-        enabled_aws_account_ids = keys(local.all_aws_account_ids)
-        policy = jsonencode({
-          "Version" : "2012-10-17",
-          "Statement" : [
-            {
-              "Action" : [
-                "chatbot:*",
-                "codebuild:*",
-                "codepipeline:*",
-                "codestar-connections:*",
-                "events:*",
-                "iam:*",
-                "kms:*",
-                "lambda:*",
-                "s3:*",
-                "sns:*",
-                "ssm:*",
-                "sso:*",
-              ],
-              "Resource" : "*",
-              "Effect" : "Allow"
-            },
-          ]
-        })
-      }
       IAMPassRolePermissions1 = {
         enabled_aws_account_ids = keys(local.all_aws_account_ids)
         policy = jsonencode({
