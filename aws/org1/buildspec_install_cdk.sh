@@ -14,9 +14,10 @@ set -x
 if [[ -e package-lock.json ]]; then
   if grep -q '"cdk"' package-lock.json; then
     npm ci
-  else
-    npm install cdk@2.1144.0
   fi
+fi
+if ! cdk --version &>/dev/null; then
+  npm install cdk@2.1144.0
 fi
 
 cdk --version
