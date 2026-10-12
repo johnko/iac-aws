@@ -11,6 +11,8 @@ fi
 # verbose to see install steps
 set -x
 
+pushd "$WORKSPACE_PATH"
+
 if [[ -e package-lock.json ]]; then
   if grep -q '"cdk"' package-lock.json; then
     npm ci
