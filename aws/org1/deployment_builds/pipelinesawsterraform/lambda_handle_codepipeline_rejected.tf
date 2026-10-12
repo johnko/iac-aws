@@ -82,7 +82,7 @@ resource "aws_lambda_function_event_invoke_config" "terraform_codepipeline_rejec
 
   region = each.value.region
 
-  function_name = "TerraformCodePipelineRejectedEnableStageTransition"
+  function_name = aws_lambda_function.terraform_codepipeline_rejected[each.key].function_name
 
   maximum_event_age_in_seconds = 300
   maximum_retry_attempts       = 0

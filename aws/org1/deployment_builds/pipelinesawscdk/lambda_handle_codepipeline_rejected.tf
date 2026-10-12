@@ -82,7 +82,7 @@ resource "aws_lambda_function_event_invoke_config" "cdk_codepipeline_rejected" {
 
   region = each.value.region
 
-  function_name = "CDKCodePipelineRejectedEnableStageTransition"
+  function_name = aws_lambda_function.cdk_codepipeline_rejected[each.key].function_name
 
   maximum_event_age_in_seconds = 300
   maximum_retry_attempts       = 0
