@@ -150,7 +150,7 @@ resource "aws_codebuild_project" "aws_terraform_plan" {
   }
 
   source {
-    buildspec = "aws/org1/buildspec_aws_plan.yaml"
+    buildspec = "aws/org1/buildspec_aws_terraform_plan.yaml"
     type      = "CODEPIPELINE"
   }
 

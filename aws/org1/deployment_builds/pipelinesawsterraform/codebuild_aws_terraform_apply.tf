@@ -151,7 +151,7 @@ resource "aws_codebuild_project" "aws_terraform_apply" {
   }
 
   source {
-    buildspec = "aws/org1/buildspec_aws_apply.yaml"
+    buildspec = "aws/org1/buildspec_aws_terraform_apply.yaml"
     type      = "CODEPIPELINE"
   }
 
