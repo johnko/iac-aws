@@ -30,7 +30,7 @@ def lambda_handler(event, context):
             region = detail["region"]
             logger.info(f"region: {region}")
             logger.info("")
-            stage_name = "Plan"
+            stage_name = "Diff"
             transition_type = "Inbound"
             logger.info(
                 f"Attempting to enable '{transition_type}' transition for stage '{stage_name}' in pipeline '{pipeline_name}'..."
