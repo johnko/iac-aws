@@ -103,7 +103,7 @@ resource "aws_iam_role_policies_exclusive" "aws_terraform_plan" {
 
   role_name = aws_iam_role.aws_terraform_plan[each.key].name
   policy_names = [
-    aws_iam_role_policy.CodeBuildRolePlan-CommonPolicy[each.key].name,
+    aws_iam_role_policy.aws_terraform_plan-CodeBuildRolePlan-CommonPolicy[each.key].name,
     aws_iam_role_policy.CodeBuildRolePlanPolicy[each.key].name,
   ]
 }
