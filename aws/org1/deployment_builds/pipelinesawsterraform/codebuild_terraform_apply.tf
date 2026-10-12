@@ -21,6 +21,29 @@ resource "aws_iam_role" "terraform_apply" {
   })
 }
 
+resource "aws_iam_role" "aws_terraform_apply" {
+  for_each = local.all_aws_account_ids
+
+  name = "CodeBuildRole-AWSTerraformApply-${each.key}"
+  assume_role_policy = jsonencode({
+    "Version" : "2012-10-17",
+    "Statement" : [
+      {
+        "Effect" : "Allow",
+        "Principal" : {
+          "Service" : "codebuild.amazonaws.com"
+        },
+        "Action" : "sts:AssumeRole",
+        "Condition" : {
+          "StringEquals" : {
+            "aws:SourceAccount" : "${data.aws_caller_identity.current.account_id}"
+          }
+        }
+      }
+    ]
+  })
+}
+
 resource "aws_iam_role_policy_attachments_exclusive" "terraform_apply" {
   for_each = local.all_aws_account_ids
 
