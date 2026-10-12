@@ -29,6 +29,7 @@ phases:
   install:
     runtime-versions:
       # See https://docs.aws.amazon.com/codebuild/latest/userguide/available-runtimes.html
+      # NOTE: this is ignored in CodeBuild compute_type == "BUILD_LAMBDA_1GB"
       nodejs: 24
   post_build:
     commands:

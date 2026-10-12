@@ -9,7 +9,7 @@ cache:
 # See https://docs.aws.amazon.com/codebuild/latest/userguide/build-spec-ref.html
 env:
   exported-variables:
-    - CDK_DIFF_EXIT_CODE # pass this variable up to CodePipeline so we can skip the Apply stage
+    - CDK_DIFF_EXIT_CODE # pass this variable up to CodePipeline so we can skip the Deploy stage
   # secrets-manager:
   #   key: secret-id:json-key:version-stage:version-id
 
@@ -32,11 +32,12 @@ phases:
   install:
     runtime-versions:
       # See https://docs.aws.amazon.com/codebuild/latest/userguide/available-runtimes.html
+      # NOTE: this is ignored in CodeBuild compute_type == "BUILD_LAMBDA_1GB"
       nodejs: 24
   post_build:
     commands:
-      # 0 = Succeeded with empty diff (no changes), need to stop pipeline from going to TerraformApply
-      # 1 = Succeeded with non-empty diff (changes present), need to continues pipeline to ApproveOrReject and TerraformApply
+      # 0 = Succeeded with empty diff (no changes), need to stop pipeline from going to CDKDeploy
+      # 1 = Succeeded with non-empty diff (changes present), need to continues pipeline to ApproveOrReject and CDKDeploy
       # don't exit on 1 because it will stop pipeline, so exit on 0
       - |
         if [[ $CDK_DIFF_EXIT_CODE != 1 ]]; then
@@ -47,7 +48,6 @@ phases:
         bash ./aws/org1/buildspec_post_build.sh
   pre_build:
     commands:
-      - node -v
       - bash ./aws/org1/buildspec_pre_build.sh
       - |
         bash ./aws/org1/buildspec_install_cdk.sh
