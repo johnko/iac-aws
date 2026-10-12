@@ -25,11 +25,13 @@ locals {
       EnvironmentVariables = {
         TF_VAR_aws_account_id = var.aws_account_id_deployment_builds
       }
+      RequireManualApproval = false
     }
     "deployment_builds/pipelinesawsterraform" = {
       EnvironmentVariables = {
         TF_VAR_aws_account_id = var.aws_account_id_deployment_builds
       }
+      RequireManualApproval = false
     }
     "prod_management/foundation" = {
       EnvironmentVariables = {
