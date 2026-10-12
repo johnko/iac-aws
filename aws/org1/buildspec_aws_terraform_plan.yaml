@@ -67,7 +67,7 @@ phases:
     commands:
       - |
         mkdir -p "$TF_PLUGIN_CACHE_DIR"
-        bash ./aws/org1/buildspec_install.sh
+        bash ./aws/org1/buildspec_install_terraform.sh
         export PATH=$PATH:~/bin
         terraform version
   post_build:
