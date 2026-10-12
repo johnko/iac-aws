@@ -56,7 +56,9 @@ locals {
   codebuild_terraform_types = {
     container-linux-small = {
       build_timeout   = 60
+      # https://docs.aws.amazon.com/codebuild/latest/userguide/build-env-ref-compute-types.html
       compute_type    = "BUILD_GENERAL1_SMALL"
+      # https://docs.aws.amazon.com/codebuild/latest/userguide/ec2-compute-images.html
       image           = "aws/codebuild/amazonlinux-x86_64-standard:5.0"
       privileged_mode = true
       queued_timeout  = 90
@@ -65,6 +67,7 @@ locals {
     }
     lambda-linux-1 = {
       build_timeout   = 15
+      # https://docs.aws.amazon.com/codebuild/latest/userguide/build-env-ref-compute-types.html
       compute_type    = "BUILD_LAMBDA_1GB"
       # https://docs.aws.amazon.com/codebuild/latest/userguide/lambda-compute-images.html
       image           = "aws/codebuild/amazonlinux-x86_64-lambda-standard:python3.13"
