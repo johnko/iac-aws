@@ -186,7 +186,7 @@ resource "aws_codepipeline" "cdk" {
   }
 
   dynamic "trigger" {
-    for_each = lookup(each.value, "SecondFullRepositoryId", null) != null && lookup(each.value, "SecondDetectChanges", true) ? [1] : []
+    for_each = lookup(each.value, "SecondFullRepositoryId", null) != null && lookup(each.value, "SecondDetectChanges", each.value.DetectChanges) ? [1] : []
 
     content {
       provider_type = "CodeStarSourceConnection"
@@ -239,7 +239,7 @@ resource "aws_codepipeline" "cdk" {
         configuration = {
           BranchName           = lookup(each.value, "SecondBranchName", "main")
           ConnectionArn        = aws_codeconnections_connection.johnko.arn
-          DetectChanges        = lookup(each.value, "SecondDetectChanges", true)
+          DetectChanges        = lookup(each.value, "SecondDetectChanges", each.value.DetectChanges)
           FullRepositoryId     = lookup(each.value, "SecondFullRepositoryId", local.FullRepositoryId)
           OutputArtifactFormat = "CODEBUILD_CLONE_REF"
         }
