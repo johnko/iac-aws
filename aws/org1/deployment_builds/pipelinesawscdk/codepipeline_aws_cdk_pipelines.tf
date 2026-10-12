@@ -2,53 +2,10 @@ locals {
   FullRepositoryId      = "johnko/iac-aws"
   workspace_path_prefix = "aws/org1/"
   aws_cdk_pipelines = {
-    # find aws -type f -name _import.sh | sort | xargs dirname | sed 's,aws/org1/,,' | awk '{print "\""$1"\" = {}"}'
-    "deployment_builds/cachedependencies" = {
+    "playground_rswea/rswea" = {
       # DetectChanges = false
       EnvironmentVariables = {
-        TF_VAR_aws_account_id = var.aws_account_id_deployment_builds
-      }
-      RequireManualApproval = false
-    }
-    "deployment_builds/chatbotcommon" = {
-      EnvironmentVariables = {
-        TF_VAR_aws_account_id = var.aws_account_id_deployment_builds
-      }
-      RequireManualApproval = false
-    }
-    "deployment_builds/foundation" = {
-      EnvironmentVariables = {
-        TF_VAR_aws_account_id = var.aws_account_id_deployment_builds
-      }
-    }
-    "deployment_builds/pipelinesawscdk" = {
-      EnvironmentVariables = {
-        TF_VAR_aws_account_id = var.aws_account_id_deployment_builds
-      }
-    }
-    "deployment_builds/pipelinesawsterraform" = {
-      EnvironmentVariables = {
-        TF_VAR_aws_account_id = var.aws_account_id_deployment_builds
-      }
-    }
-    "prod_management/foundation" = {
-      EnvironmentVariables = {
-        TF_VAR_aws_account_id = var.aws_account_id_management
-      }
-    }
-    "playground_rswea/foundation" = {
-      EnvironmentVariables = {
         TF_VAR_aws_account_id = var.aws_account_id_playground_rswea
-      }
-    }
-    "security_aggregator/foundation" = {
-      EnvironmentVariables = {
-        TF_VAR_aws_account_id = var.aws_account_id_security_aggregator
-      }
-    }
-    "security_cloudtrail/foundation" = {
-      EnvironmentVariables = {
-        TF_VAR_aws_account_id = var.aws_account_id_security_cloudtrail
       }
     }
   }
@@ -63,7 +20,7 @@ locals {
       for k, v in local.aws_cdk_pipelines : "${r}/${k}" => merge(
         v,
         {
-          "codepipeline_name" : "TF-aws-${replace(k, "/", "-")}"
+          "codepipeline_name" : "CDK-aws-${replace(k, "/", "-")}"
           "path" : k,
           "region" : r,
           "codebuild_suffix" : local.codebuild_suffix_by_region[r],
@@ -75,7 +32,7 @@ locals {
 }
 
 resource "aws_iam_role" "CodePipelineRole" {
-  name = "CodePipelineRole-TerraformPipelines"
+  name = "CodePipelineRole-CDKPipelines"
   assume_role_policy = jsonencode({
     "Version" : "2012-10-17",
     "Statement" : [
@@ -138,8 +95,8 @@ resource "aws_iam_role_policy" "CodePipelineRoleDefaultPolicy" {
           "logs:PutLogEvents"
         ],
         "Resource" : [
-          "arn:aws:logs:*:${data.aws_caller_identity.current.account_id}:log-group:/aws/codepipeline/TF-*",
-          "arn:aws:logs:*:${data.aws_caller_identity.current.account_id}:log-group:/aws/codepipeline/TF-*:*"
+          "arn:aws:logs:*:${data.aws_caller_identity.current.account_id}:log-group:/aws/codepipeline/CDK-*",
+          "arn:aws:logs:*:${data.aws_caller_identity.current.account_id}:log-group:/aws/codepipeline/CDK-*:*"
         ],
         "Effect" : "Allow"
       },
@@ -182,7 +139,7 @@ output "regional_pipelines" {
   value = local.regional_pipelines
 }
 
-resource "aws_codepipeline" "terraform" {
+resource "aws_codepipeline" "cdk" {
   for_each = local.regional_pipelines
 
   region = each.value.region
@@ -260,15 +217,15 @@ resource "aws_codepipeline" "terraform" {
     action {
       category         = "Build"
       input_artifacts  = ["SourceOutput"]
-      name             = "TerraformPlan"
-      namespace        = "TerraformPlan"
-      output_artifacts = ["TerraformPlanOutput"]
+      name             = "CDKDiff"
+      namespace        = "CDKDiff"
+      output_artifacts = ["CDKDiffOutput"]
       owner            = "AWS"
       provider         = "CodeBuild" # Can't use Commands until terraform-aws-provider supports it
       run_order        = 1
       version          = "1"
       configuration = {
-        "ProjectName" = "AWSTerraformPlan-${each.value.EnvironmentVariables["TF_VAR_aws_account_id"]}-${each.value.codebuild_suffix}"
+        "ProjectName" = "AWSCDKDiff-${each.value.EnvironmentVariables["TF_VAR_aws_account_id"]}-${each.value.codebuild_suffix}"
         "EnvironmentVariables" = jsonencode(
           concat(
             [
@@ -325,10 +282,9 @@ resource "aws_codepipeline" "terraform" {
           configuration = {
             "Operator" = "EQ"
             "Value"    = "2"
-            "Variable" = "#{TerraformPlan.TF_PLAN_EXIT_CODE}"
-            # 0 = Succeeded with empty diff (no changes), need to stop pipeline from going to TerraformApply
-            # 2 = Succeeded with non-empty diff (changes present), need to continues pipeline to ApproveOrReject and TerraformApply
-            # 1 = Error
+            "Variable" = "#{CDKDiff.CDK_DIFF_EXIT_CODE}"
+            # 0 = Succeeded with empty diff (no changes), need to stop pipeline from going to CDKDeploy
+            # 1 = Succeeded with non-empty diff (changes present), need to continues pipeline to ApproveOrReject and CDKDeploy
           }
           name   = "ChangesPresent"
           region = each.value.region
@@ -355,7 +311,7 @@ resource "aws_codepipeline" "terraform" {
         version            = "1"
         configuration = {
           # See https://docs.aws.amazon.com/codepipeline/latest/userguide/structure-configuration-examples.html
-          "CustomData" : "Last chance to cancel if the TerraformPlan looks wrong! Please REJECT if you're unsure. Only APPROVE if you are 100% sure.",
+          "CustomData" : "Last chance to cancel if the CDKDiff looks wrong! Please REJECT if you're unsure. Only APPROVE if you are 100% sure.",
           "ExternalEntityLink" : "https://github.com/${local.FullRepositoryId}"
         }
       }
@@ -363,15 +319,15 @@ resource "aws_codepipeline" "terraform" {
 
     action {
       category        = "Build"
-      input_artifacts = ["TerraformPlanOutput"] # use files from Plan stage TerraformPlan action which include a tfplan.tfplan
-      name            = "TerraformApply"
-      namespace       = "TerraformApply"
+      input_artifacts = ["CDKDiffOutput"] # use files from Plan stage CDKDiff action which include a tfplan.tfplan
+      name            = "CDKDeploy"
+      namespace       = "CDKDeploy"
       owner           = "AWS"
       provider        = "CodeBuild" # Can't use Commands until terraform-aws-provider supports it
       run_order       = 3
       version         = "1"
       configuration = {
-        "ProjectName" = "AWSTerraformApply-${each.value.EnvironmentVariables["TF_VAR_aws_account_id"]}-${each.value.codebuild_suffix}"
+        "ProjectName" = "AWSCDKDeploy-${each.value.EnvironmentVariables["TF_VAR_aws_account_id"]}-${each.value.codebuild_suffix}"
         "EnvironmentVariables" = jsonencode(
           concat(
             [
