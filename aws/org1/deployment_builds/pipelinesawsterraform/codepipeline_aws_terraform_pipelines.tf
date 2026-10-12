@@ -21,6 +21,11 @@ locals {
         TF_VAR_aws_account_id = var.aws_account_id_deployment_builds
       }
     }
+    "deployment_builds/pipelinesawscdk" = {
+      EnvironmentVariables = {
+        TF_VAR_aws_account_id = var.aws_account_id_deployment_builds
+      }
+    }
     "deployment_builds/pipelinesawsterraform" = {
       EnvironmentVariables = {
         TF_VAR_aws_account_id = var.aws_account_id_deployment_builds
