@@ -7,6 +7,8 @@ locals {
       EnvironmentVariables = {
         TF_VAR_aws_account_id = var.aws_account_id_playground_rswea
       }
+      SecondFullRepositoryId = "johnko/remote-swe-agents"
+      SecondBranchName = "main"
     }
   }
 
@@ -191,17 +193,42 @@ resource "aws_codepipeline" "cdk" {
       namespace        = "SourceVariables"
       owner            = "AWS"
       provider         = "CodeStarSourceConnection"
+      run_order        = 1
       version          = "1"
       output_artifacts = ["SourceOutput"]
 
       configuration = {
-        BranchName           = "main"
+        BranchName           = lookup(each.value, "BranchName", "main")
         ConnectionArn        = aws_codeconnections_connection.johnko.arn
         DetectChanges        = each.value.DetectChanges
         FullRepositoryId     = local.FullRepositoryId
         OutputArtifactFormat = "CODEBUILD_CLONE_REF"
       }
     }
+
+    dynamic "action" {
+      for_each = lookup(each.value, "SecondFullRepositoryId", null) == null ? [] : [1]
+
+      content {
+        name             = "CodeConnections"
+        category         = "Source"
+        namespace        = "SourceVariables"
+        owner            = "AWS"
+        provider         = "CodeStarSourceConnection"
+        run_order        = 2
+        version          = "1"
+        output_artifacts = ["SecondSourceOutput"]
+
+        configuration = {
+          BranchName           = lookup(each.value, "SecondBranchName", "main")
+          ConnectionArn        = aws_codeconnections_connection.johnko.arn
+          DetectChanges        = each.value.DetectChanges
+          FullRepositoryId     = lookup(each.value, "SecondFullRepositoryId", local.FullRepositoryId)
+          OutputArtifactFormat = "CODEBUILD_CLONE_REF"
+        }
+      }
+    }
+
     on_failure {
       result = "RETRY"
 

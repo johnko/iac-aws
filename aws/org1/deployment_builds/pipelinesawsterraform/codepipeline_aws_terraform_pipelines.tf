@@ -236,11 +236,12 @@ resource "aws_codepipeline" "terraform" {
       namespace        = "SourceVariables"
       owner            = "AWS"
       provider         = "CodeStarSourceConnection"
+      run_order        = 1
       version          = "1"
       output_artifacts = ["SourceOutput"]
 
       configuration = {
-        BranchName           = "main"
+        BranchName           = lookup(each.value, "BranchName", "main")
         ConnectionArn        = aws_codeconnections_connection.johnko.arn
         DetectChanges        = each.value.DetectChanges
         FullRepositoryId     = local.FullRepositoryId
