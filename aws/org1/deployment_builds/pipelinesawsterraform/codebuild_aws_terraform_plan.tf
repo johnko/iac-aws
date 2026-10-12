@@ -28,7 +28,7 @@ resource "aws_iam_role_policy_attachments_exclusive" "aws_terraform_plan" {
   policy_arns = []
 }
 
-resource "aws_iam_role_policy" "CodeBuildRolePlan-CommonPolicy" {
+resource "aws_iam_role_policy" "aws_terraform_plan-CodeBuildRolePlan-CommonPolicy" {
   for_each = local.all_aws_account_ids
 
   name   = "CodeBuildRoleTerraformCommonPolicy"
@@ -36,7 +36,7 @@ resource "aws_iam_role_policy" "CodeBuildRolePlan-CommonPolicy" {
   policy = local.terraform_common_policy
 }
 
-resource "aws_iam_role_policy" "CodeBuildRolePlanPolicy" {
+resource "aws_iam_role_policy" "aws_terraform_plan-CodeBuildRolePlanPolicy" {
   for_each = local.all_aws_account_ids
 
   name = "CodeBuildRolePlanPolicy"
