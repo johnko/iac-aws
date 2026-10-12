@@ -16,10 +16,13 @@ pushd "$WORKSPACE_PATH"
 if [[ -e package-lock.json ]]; then
   if grep -q '"cdk"' package-lock.json; then
     npm ci
+    npm pack
   fi
 fi
 if ! cdk --version &>/dev/null; then
-  npm install --global cdk@2.1144.0
+  # npm install --global cdk@2.1144.0
+  ls -l *.tgz
+  npm install --global *.tgz
 fi
 
 cdk --version
