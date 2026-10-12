@@ -228,7 +228,7 @@ resource "aws_codepipeline" "terraform" {
   }
 
   dynamic "trigger" {
-    for_each = lookup(each.value, "SecondDetectChanges", true) ? [1] : []
+    for_each = lookup(each.value, "SecondFullRepositoryId", null) != null && lookup(each.value, "SecondDetectChanges", true) ? [1] : []
 
     content {
       provider_type = "CodeStarSourceConnection"
@@ -266,7 +266,7 @@ resource "aws_codepipeline" "terraform" {
     }
 
     dynamic "action" {
-      for_each = lookup(each.value, "SecondFullRepositoryId", null) == null ? [] : [1]
+      for_each = lookup(each.value, "SecondFullRepositoryId", null) != null ? [1] : []
 
       content {
         name             = "CodeConnection2"
@@ -386,7 +386,7 @@ resource "aws_codepipeline" "terraform" {
     }
 
     dynamic "action" {
-      for_each = lookup(each.value, "RequireManualApproval", true) == false ? [] : [1]
+      for_each = lookup(each.value, "RequireManualApproval", true) == true ? [1] : []
 
       content {
         category           = "Approval"
