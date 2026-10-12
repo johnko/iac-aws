@@ -59,7 +59,7 @@ locals {
       # https://docs.aws.amazon.com/codebuild/latest/userguide/build-env-ref-compute-types.html
       compute_type    = "BUILD_GENERAL1_SMALL"
       # https://docs.aws.amazon.com/codebuild/latest/userguide/ec2-compute-images.html
-      image           = "aws/codebuild/amazonlinux-x86_64-standard:5.0"
+      image           = "aws/codebuild/amazonlinux-x86_64-standard:6.0"
       privileged_mode = true
       queued_timeout  = 90
       region          = local.codepipeline_primary_region
@@ -70,7 +70,7 @@ locals {
       # https://docs.aws.amazon.com/codebuild/latest/userguide/build-env-ref-compute-types.html
       compute_type    = "BUILD_LAMBDA_1GB"
       # https://docs.aws.amazon.com/codebuild/latest/userguide/lambda-compute-images.html
-      image           = "aws/codebuild/amazonlinux-x86_64-lambda-standard:python3.13"
+      image           = "aws/codebuild/amazonlinux-x86_64-lambda-standard:python3.14"
       privileged_mode = false
       queued_timeout  = null
       region          = local.codepipeline_secondary_region
