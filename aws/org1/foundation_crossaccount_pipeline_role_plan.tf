@@ -113,6 +113,23 @@ locals {
         ]
       })
     }
+    UntaggedReadPermissions1 = {
+      enabled_aws_account_ids = keys(local.all_aws_account_ids)
+      policy = jsonencode({
+        "Version" : "2012-10-17",
+        "Statement" : [
+          {
+            "Action" : [
+              "controltower:Describe*", # these were not part of ReadOnlyAccess
+              "controltower:Get*",      # these were not part of ReadOnlyAccess
+              "controltower:List*",     # these were not part of ReadOnlyAccess
+            ],
+            "Resource" : "*",
+            "Effect" : "Allow"
+          },
+        ]
+      })
+    }
   }
 }
 
