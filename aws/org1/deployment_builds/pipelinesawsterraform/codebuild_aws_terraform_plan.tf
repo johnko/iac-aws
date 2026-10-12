@@ -56,8 +56,8 @@ resource "aws_iam_role_policy" "aws_terraform_plan-CodeBuildRolePlanPolicy" {
           "logs:PutLogEvents",    # default
         ],
         "Resource" : [
-          "arn:aws:logs:*:${data.aws_caller_identity.current.account_id}:log-group:/aws/codebuild/TerraformPlan-${each.key}-*",
-          "arn:aws:logs:*:${data.aws_caller_identity.current.account_id}:log-group:/aws/codebuild/TerraformPlan-${each.key}-*:*"
+          "arn:aws:logs:*:${data.aws_caller_identity.current.account_id}:log-group:/aws/codebuild/AWSTerraformPlan-${each.key}-*",
+          "arn:aws:logs:*:${data.aws_caller_identity.current.account_id}:log-group:/aws/codebuild/AWSTerraformPlan-${each.key}-*:*"
         ],
         "Effect" : "Allow"
       },
