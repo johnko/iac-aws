@@ -57,8 +57,8 @@ resource "aws_iam_role_policy" "aws_terraform_apply-CodeBuildRoleApplyPolicy" {
           "logs:PutLogEvents",    # default
         ],
         "Resource" : [
-          "arn:aws:logs:*:${data.aws_caller_identity.current.account_id}:log-group:/aws/codebuild/TerraformApply-${each.key}-*",
-          "arn:aws:logs:*:${data.aws_caller_identity.current.account_id}:log-group:/aws/codebuild/TerraformApply-${each.key}-*:*"
+          "arn:aws:logs:*:${data.aws_caller_identity.current.account_id}:log-group:/aws/codebuild/AWSTerraformApply-${each.key}-*",
+          "arn:aws:logs:*:${data.aws_caller_identity.current.account_id}:log-group:/aws/codebuild/AWSTerraformApply-${each.key}-*:*"
         ],
         "Effect" : "Allow"
       },
@@ -77,7 +77,7 @@ resource "aws_iam_role_policy" "aws_terraform_apply-CodeBuildRoleApplyPolicy" {
           "codebuild:UpdateReport",          # default
         ],
         "Resource" : [
-          "arn:aws:codebuild:*:${data.aws_caller_identity.current.account_id}:report-group/TerraformApply-${each.key}-*"
+          "arn:aws:codebuild:*:${data.aws_caller_identity.current.account_id}:report-group/AWSTerraformApply-${each.key}-*"
         ]
       },
       {
@@ -122,7 +122,7 @@ resource "aws_codebuild_project" "aws_terraform_apply" {
   region = each.value.region
 
   # Per account CodeBuild Project + CodeBuild IAM Role to prevent 1 account buildspec from being able to go into another AWS account
-  name         = "TerraformApply-${each.value.aws_account_id}-${each.value.codebuild_type}"
+  name         = "AWSTerraformApply-${each.value.aws_account_id}-${each.value.codebuild_type}"
   service_role = aws_iam_role.aws_terraform_apply[each.value.aws_account_id].arn
 
   build_timeout  = each.value.build_timeout
