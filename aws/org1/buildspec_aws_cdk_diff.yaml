@@ -33,11 +33,6 @@ phases:
     runtime-versions:
       # See https://docs.aws.amazon.com/codebuild/latest/userguide/available-runtimes.html
       nodejs: 24
-    commands:
-      - |
-        bash ./aws/org1/buildspec_install_cdk.sh
-        export PATH=$PATH:~/bin
-        cdk --version
   post_build:
     commands:
       # 0 = Succeeded with empty diff (no changes), need to stop pipeline from going to TerraformApply
@@ -53,4 +48,8 @@ phases:
   pre_build:
     commands:
       - bash ./aws/org1/buildspec_pre_build.sh
+      - |
+        bash ./aws/org1/buildspec_install_cdk.sh
+        export PATH=$PATH:~/bin
+        cdk --version
 version: 0.2
