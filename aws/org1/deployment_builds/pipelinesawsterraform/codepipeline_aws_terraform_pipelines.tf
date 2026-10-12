@@ -66,7 +66,7 @@ locals {
           "codepipeline_name" : "TF-aws-${replace(k, "/", "-")}"
           "path" : k,
           "region" : r,
-          "codebuild_suffix" : local.codebuild_suffix_by_region[r],
+          "codebuild_suffix" : local.codebuild_terraform_suffix_by_region[r],
           "DetectChanges" : lookup(v, "DetectChanges", local.DetectChanges_by_region[r]),
         }
       )
@@ -157,10 +157,10 @@ resource "aws_iam_role_policy" "CodePipelineRoleDefaultPolicy" {
             replace(
               replace(
                 v.arn,
-                local.codebuild_suffix_by_region[local.codepipeline_primary_region],
+                local.codebuild_terraform_suffix_by_region[local.codepipeline_primary_region],
                 "*"
               ),
-              local.codebuild_suffix_by_region[local.codepipeline_secondary_region],
+              local.codebuild_terraform_suffix_by_region[local.codepipeline_secondary_region],
               "*"
             ),
             "/arn:aws:codebuild:(.*):${data.aws_caller_identity.current.account_id}:project/",
@@ -294,7 +294,7 @@ resource "aws_codepipeline" "terraform" {
               },
               {
                 name  = "EXECUTOR_TYPE"
-                value = local.codebuild_types[each.value.codebuild_suffix].type
+                value = local.codebuild_terraform_types[each.value.codebuild_suffix].type
                 type  = "PLAINTEXT"
               },
               {
@@ -397,7 +397,7 @@ resource "aws_codepipeline" "terraform" {
               },
               {
                 name  = "EXECUTOR_TYPE"
-                value = local.codebuild_types[each.value.codebuild_suffix].type
+                value = local.codebuild_terraform_types[each.value.codebuild_suffix].type
                 type  = "PLAINTEXT"
               },
               {

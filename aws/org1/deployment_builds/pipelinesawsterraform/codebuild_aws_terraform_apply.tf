@@ -112,7 +112,7 @@ resource "aws_iam_role_policies_exclusive" "aws_terraform_apply" {
 resource "aws_codebuild_project" "aws_terraform_apply" {
   for_each = merge(values({
     for a, z in local.all_aws_account_ids : a => {
-      for k, v in local.codebuild_types : "${a}/${k}" => merge(v, {
+      for k, v in local.codebuild_terraform_types : "${a}/${k}" => merge(v, {
         "aws_account_id" : a,
         "codebuild_type" : k,
       })

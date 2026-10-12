@@ -53,7 +53,7 @@ locals {
   codepipeline_primary_region   = local.tfstate_primary_region
   codepipeline_secondary_region = "us-east-2"
 
-  codebuild_types = {
+  codebuild_terraform_types = {
     container-linux-small = {
       build_timeout   = 60
       compute_type    = "BUILD_GENERAL1_SMALL"
@@ -74,8 +74,18 @@ locals {
     }
   }
 
-  codebuild_suffix_by_region = {
-    for k, v in local.codebuild_types : v.region => k
+  codebuild_terraform_suffix_by_region = {
+    for k, v in local.codebuild_terraform_types : v.region => k
+  }
+
+  codebuild_cdk_types = {
+    for k, v in local.codebuild_terraform_types : k => k == "lambda-linux-1" ? merge(v, {
+      image = "aws/codebuild/amazonlinux-x86_64-lambda-standard:nodejs24"
+    }) : v
+  }
+
+  codebuild_cdk_suffix_by_region = {
+    for k, v in local.codebuild_cdk_types : v.region => k
   }
 
   slack_common_policy_statement = {
