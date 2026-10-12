@@ -147,7 +147,7 @@ resource "aws_iam_role_policy" "CodePipelineRoleDefaultPolicy" {
           "codebuild:StartBuildBatch",
         ],
         "Resource" : distinct([
-          for v in concat(values(aws_codebuild_project.aws_terraform_plan), values(aws_codebuild_project.terraform_apply)) :
+          for v in concat(values(aws_codebuild_project.aws_terraform_plan), values(aws_codebuild_project.aws_terraform_apply)) :
           replace(
             replace(
               replace(
