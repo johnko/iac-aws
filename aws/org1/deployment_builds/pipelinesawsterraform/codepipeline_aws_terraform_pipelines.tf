@@ -1,7 +1,7 @@
 locals {
   FullRepositoryId      = "johnko/iac-aws"
   workspace_path_prefix = "aws/org1/"
-  terraform_aws_pipelines = {
+  aws_terraform_pipelines = {
     # find aws -type f -name _import.sh | sort | xargs dirname | sed 's,aws/org1/,,' | awk '{print "\""$1"\" = {}"}'
     "deployment_builds/cachedependencies" = {
       # DetectChanges = false
@@ -55,7 +55,7 @@ locals {
 
   regional_pipelines = merge(values({
     for r in [local.codepipeline_primary_region, local.codepipeline_secondary_region] : r => {
-      for k, v in local.terraform_aws_pipelines : "${r}/${k}" => merge(
+      for k, v in local.aws_terraform_pipelines : "${r}/${k}" => merge(
         v,
         {
           "codepipeline_name" : "TF-aws-${replace(k, "/", "-")}"
