@@ -17,7 +17,7 @@ locals {
           "s3:PutObject",         # default
         ],
         "Resource" : flatten([
-          for k, v in data.aws_s3_bucket.codepipeline : [
+          for k, v in data.aws_s3_bucket.s3_codepipeline : [
             v.bucket.arn,
             "${v.bucket.arn}/*",
           ]
@@ -29,7 +29,7 @@ locals {
           "s3:PutObject",
         ],
         "Resource" : flatten([
-          for k, v in data.aws_s3_bucket.codepipeline : [
+          for k, v in data.aws_s3_bucket.s3_codepipeline : [
             "${v.bucket.arn}/terraform_*",
           ]
         ]),

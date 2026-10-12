@@ -9,7 +9,7 @@ locals {
 }
 
 # Loop through the list of bucket names using for_each
-data "aws_s3_bucket" "codepipeline" {
+data "aws_s3_bucket" "s3_codepipeline" {
   for_each = local.bucket_names
 
   bucket = each.key
