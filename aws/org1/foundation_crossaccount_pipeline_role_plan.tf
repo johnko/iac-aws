@@ -97,6 +97,22 @@ locals {
         ]
       })
     }
+    ReadSensitiveEncrypted = {
+      enabled_aws_account_ids = ["${var.aws_account_id_management}"]
+      policy = jsonencode({
+        "Version" : "2012-10-17",
+        "Statement" : [
+          {
+            # Allow to decrypt using IAM Identity Center multi region kms key
+            "Action" : [
+              "kms:Decrypt",
+            ],
+            "Resource" : local.aws_kms_key_identitycenter_arns,
+            "Effect" : "Allow"
+          },
+        ]
+      })
+    }
   }
 }
 
