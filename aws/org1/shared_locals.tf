@@ -66,6 +66,7 @@ locals {
     lambda-linux-1 = {
       build_timeout   = 15
       compute_type    = "BUILD_LAMBDA_1GB"
+      # https://docs.aws.amazon.com/codebuild/latest/userguide/lambda-compute-images.html
       image           = "aws/codebuild/amazonlinux-x86_64-lambda-standard:python3.13"
       privileged_mode = false
       queued_timeout  = null
