@@ -229,7 +229,7 @@ resource "aws_codepipeline" "cdk" {
       content {
         name             = "CodeConnection2"
         category         = "Source"
-        namespace        = "SourceVariables"
+        namespace        = "SecondSourceVariables"
         owner            = "AWS"
         provider         = "CodeStarSourceConnection"
         run_order        = 2
@@ -260,7 +260,7 @@ resource "aws_codepipeline" "cdk" {
 
     action {
       category         = "Build"
-      input_artifacts  = ["SourceOutput"]
+      input_artifacts  = lookup(each.value, "SecondFullRepositoryId", null) != null ? ["SourceOutput", "SecondSourceOutput"] : ["SourceOutput"]
       name             = "CDKDiff"
       namespace        = "CDKDiff"
       output_artifacts = ["CDKDiffOutput"]
