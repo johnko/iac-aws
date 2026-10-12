@@ -3,10 +3,15 @@ set -euxo pipefail
 
 set +eu
 enable_stage_transition() {
+  STAGE_NAME=Plan
+  if [[ $CODEPIPELINE_NAME =~ ^CDK-.* ]]; then
+    STAGE_NAME=Diff
+  fi
+
   # Try to enable the current pipeline's stage transition if error or No changes to allow the pipeline to resume after pausing for current execution
   aws codepipeline enable-stage-transition \
     --pipeline-name "$CODEPIPELINE_NAME" \
-    --stage-name Plan \
+    --stage-name "$STAGE_NAME" \
     --transition-type Inbound
 }
 
