@@ -212,7 +212,7 @@ resource "aws_codepipeline" "cdk" {
   }
 
   stage {
-    name = "Plan"
+    name = "Diff"
 
     action {
       category         = "Build"
@@ -273,7 +273,7 @@ resource "aws_codepipeline" "cdk" {
   }
 
   stage {
-    name = "Apply"
+    name = "Deploy"
 
     before_entry {
       condition {
@@ -319,7 +319,7 @@ resource "aws_codepipeline" "cdk" {
 
     action {
       category        = "Build"
-      input_artifacts = ["CDKDiffOutput"] # use files from Plan stage CDKDiff action which include a tfplan.tfplan
+      input_artifacts = ["CDKDiffOutput"] # use files from Diff stage CDKDiff action
       name            = "CDKDeploy"
       namespace       = "CDKDeploy"
       owner           = "AWS"

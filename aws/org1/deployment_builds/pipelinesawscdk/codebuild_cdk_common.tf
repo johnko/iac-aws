@@ -64,7 +64,7 @@ locals {
         "Effect" : "Allow"
       },
       {
-        # Allow to enable/disable the Plan stage transition so Plan doesn't get wiped by next queued execution
+        # Allow to enable/disable the Diff stage transition so Diff doesn't get wiped by next queued execution
         "Condition" : {
           "StringEquals" : {
             "aws:ResourceAccount" : "${data.aws_caller_identity.current.account_id}"
@@ -75,7 +75,7 @@ locals {
           "codepipeline:EnableStageTransition",
         ],
         "Resource" : [
-          "arn:aws:codepipeline:*:${data.aws_caller_identity.current.account_id}:CDK-*/Plan",
+          "arn:aws:codepipeline:*:${data.aws_caller_identity.current.account_id}:CDK-*/Diff",
         ],
         "Effect" : "Allow"
       },
