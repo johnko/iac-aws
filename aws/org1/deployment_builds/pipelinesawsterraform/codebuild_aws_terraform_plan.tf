@@ -76,7 +76,7 @@ resource "aws_iam_role_policy" "aws_terraform_plan-CodeBuildRolePlanPolicy" {
           "codebuild:UpdateReport",          # default
         ],
         "Resource" : [
-          "arn:aws:codebuild:*:${data.aws_caller_identity.current.account_id}:report-group/TerraformApply-${each.key}-*"
+          "arn:aws:codebuild:*:${data.aws_caller_identity.current.account_id}:report-group/AWSTerraformPlan-${each.key}-*"
         ]
       },
       {
