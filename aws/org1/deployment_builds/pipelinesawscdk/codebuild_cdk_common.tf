@@ -18,8 +18,8 @@ locals {
         ],
         "Resource" : flatten([
           for k, v in data.aws_s3_bucket.s3_codepipeline : [
-            v.bucket.arn,
-            "${v.bucket.arn}/*",
+            v.arn,
+            "${v.arn}/*",
           ]
         ]),
         "Effect" : "Allow"
@@ -30,7 +30,7 @@ locals {
         ],
         "Resource" : flatten([
           for k, v in data.aws_s3_bucket.s3_codepipeline : [
-            "${v.bucket.arn}/terraform_*",
+            "${v.arn}/terraform_*",
           ]
         ]),
         "Effect" : "Deny"
