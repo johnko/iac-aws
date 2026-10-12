@@ -206,7 +206,7 @@ resource "aws_codepipeline" "terraform" {
     content {
       provider_type = "CodeStarSourceConnection"
       git_configuration {
-        source_action_name = "CodeConnections"
+        source_action_name = "CodeConnection1"
         push {
           branches {
             includes = ["main"]
@@ -227,11 +227,27 @@ resource "aws_codepipeline" "terraform" {
     }
   }
 
+  dynamic "trigger" {
+    for_each = lookup(each.value, "SecondDetectChanges", true) ? [1] : []
+
+    content {
+      provider_type = "CodeStarSourceConnection"
+      git_configuration {
+        source_action_name = "CodeConnection2"
+        push {
+          branches {
+            includes = [lookup(each.value, "SecondBranchName", "main")]
+          }
+        }
+      }
+    }
+  }
+
   stage {
     name = "Source"
 
     action {
-      name             = "CodeConnections"
+      name             = "CodeConnection1"
       category         = "Source"
       namespace        = "SourceVariables"
       owner            = "AWS"
@@ -248,6 +264,30 @@ resource "aws_codepipeline" "terraform" {
         OutputArtifactFormat = "CODEBUILD_CLONE_REF"
       }
     }
+
+    dynamic "action" {
+      for_each = lookup(each.value, "SecondFullRepositoryId", null) == null ? [] : [1]
+
+      content {
+        name             = "CodeConnection2"
+        category         = "Source"
+        namespace        = "SourceVariables"
+        owner            = "AWS"
+        provider         = "CodeStarSourceConnection"
+        run_order        = 2
+        version          = "1"
+        output_artifacts = ["SecondSourceOutput"]
+
+        configuration = {
+          BranchName           = lookup(each.value, "SecondBranchName", "main")
+          ConnectionArn        = aws_codeconnections_connection.johnko.arn
+          DetectChanges        = lookup(each.value, "SecondDetectChanges", true)
+          FullRepositoryId     = lookup(each.value, "SecondFullRepositoryId", local.FullRepositoryId)
+          OutputArtifactFormat = "CODEBUILD_CLONE_REF"
+        }
+      }
+    }
+
     on_failure {
       result = "RETRY"
 

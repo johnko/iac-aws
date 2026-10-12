@@ -7,8 +7,9 @@ locals {
       EnvironmentVariables = {
         TF_VAR_aws_account_id = var.aws_account_id_playground_rswea
       }
-      SecondFullRepositoryId = "johnko/remote-swe-agents"
       SecondBranchName = "main"
+      # SecondDetectChanges = false
+      SecondFullRepositoryId = "johnko/remote-swe-agents"
     }
   }
 
@@ -163,7 +164,7 @@ resource "aws_codepipeline" "cdk" {
     content {
       provider_type = "CodeStarSourceConnection"
       git_configuration {
-        source_action_name = "CodeConnections"
+        source_action_name = "CodeConnection1"
         push {
           branches {
             includes = ["main"]
@@ -184,11 +185,27 @@ resource "aws_codepipeline" "cdk" {
     }
   }
 
+  dynamic "trigger" {
+    for_each = lookup(each.value, "SecondDetectChanges", true) ? [1] : []
+
+    content {
+      provider_type = "CodeStarSourceConnection"
+      git_configuration {
+        source_action_name = "CodeConnection2"
+        push {
+          branches {
+            includes = [lookup(each.value, "SecondBranchName", "main")]
+          }
+        }
+      }
+    }
+  }
+
   stage {
     name = "Source"
 
     action {
-      name             = "CodeConnections"
+      name             = "CodeConnection1"
       category         = "Source"
       namespace        = "SourceVariables"
       owner            = "AWS"
@@ -210,7 +227,7 @@ resource "aws_codepipeline" "cdk" {
       for_each = lookup(each.value, "SecondFullRepositoryId", null) == null ? [] : [1]
 
       content {
-        name             = "CodeConnections"
+        name             = "CodeConnection2"
         category         = "Source"
         namespace        = "SourceVariables"
         owner            = "AWS"
@@ -222,7 +239,7 @@ resource "aws_codepipeline" "cdk" {
         configuration = {
           BranchName           = lookup(each.value, "SecondBranchName", "main")
           ConnectionArn        = aws_codeconnections_connection.johnko.arn
-          DetectChanges        = each.value.DetectChanges
+          DetectChanges        = lookup(each.value, "SecondDetectChanges", true)
           FullRepositoryId     = lookup(each.value, "SecondFullRepositoryId", local.FullRepositoryId)
           OutputArtifactFormat = "CODEBUILD_CLONE_REF"
         }
