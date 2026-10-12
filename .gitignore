@@ -43,3 +43,5 @@ terraform_*.zip
 terraform_*_SHA256SUMS
 
 *.zip
+
+node_modules/
