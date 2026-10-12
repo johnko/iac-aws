@@ -15,18 +15,33 @@ enable_stage_transition() {
     --transition-type Inbound
 }
 
-# don't enable on TF_PLAN_EXIT_CODE 2 because it will enable stage transition for current pipeline, which will cause plan to be overwritten by next queued execution
-if [[ -n $TF_PLAN_EXIT_CODE ]] && [[ $TF_PLAN_EXIT_CODE != 2 ]]; then
-  # TF_PLAN_EXIT_CODE
-  # 0 = Succeeded with empty diff (no changes), need to stop pipeline from going to TerraformApply
-  # 2 = Succeeded with non-empty diff (changes present), need to continues pipeline to ApproveOrReject and TerraformApply
-  # 1 = Error
-  enable_stage_transition
-fi
+if [[ $CODEPIPELINE_NAME =~ ^CDK-.* ]]; then
+  # don't enable on CDK_DIFF_EXIT_CODE 2 because it will enable stage transition for current pipeline, which will cause plan to be overwritten by next queued execution
+  if [[ -n $CDK_DIFF_EXIT_CODE ]] && [[ $CDK_DIFF_EXIT_CODE != 2 ]]; then
+    # CDK_DIFF_EXIT_CODE
+    # 0 = Succeeded with empty diff (no changes), need to stop pipeline from going to TerraformApply
+    # 1 = Succeeded with non-empty diff (changes present), need to continues pipeline to ApproveOrReject and TerraformApply
+    enable_stage_transition
+  fi
 
-if [[ -n $TF_APPLY_EXIT_CODE ]] && [[ $TF_APPLY_EXIT_CODE == 0 ]]; then
-  enable_stage_transition
-  # error will be handled by EventBridge + Lambda
+  if [[ -n $CDK_DEPLOY_EXIT_CODE ]] && [[ $CDK_DEPLOY_EXIT_CODE == 0 ]]; then
+    enable_stage_transition
+    # error will be handled by EventBridge + Lambda
+  fi
+else
+  # don't enable on TF_PLAN_EXIT_CODE 2 because it will enable stage transition for current pipeline, which will cause plan to be overwritten by next queued execution
+  if [[ -n $TF_PLAN_EXIT_CODE ]] && [[ $TF_PLAN_EXIT_CODE != 2 ]]; then
+    # TF_PLAN_EXIT_CODE
+    # 0 = Succeeded with empty diff (no changes), need to stop pipeline from going to TerraformApply
+    # 2 = Succeeded with non-empty diff (changes present), need to continues pipeline to ApproveOrReject and TerraformApply
+    # 1 = Error
+    enable_stage_transition
+  fi
+
+  if [[ -n $TF_APPLY_EXIT_CODE ]] && [[ $TF_APPLY_EXIT_CODE == 0 ]]; then
+    enable_stage_transition
+    # error will be handled by EventBridge + Lambda
+  fi
 fi
 
 post_plan_to_slack() {

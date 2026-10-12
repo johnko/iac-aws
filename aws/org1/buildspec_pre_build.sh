@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euxo pipefail
 
-# Try to disable the current pipeline's stage transition to prevent the TerraformPlan stage to be superseded by the next queued execution
+# Try to disable the current pipeline's stage transition to prevent the TerraformPlan or CDKDiff stage to be superseded by the next queued execution
 # Will need to re-enable stage transition via the buildspec_post_build.sh
 set +e
 
