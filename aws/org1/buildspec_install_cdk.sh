@@ -19,7 +19,7 @@ if [[ -e package-lock.json ]]; then
   fi
 fi
 if ! cdk --version &>/dev/null; then
-  npm install cdk@2.1144.0
+  npm install --global cdk@2.1144.0
 fi
 
 cdk --version
