@@ -47,6 +47,7 @@ phases:
         bash ./aws/org1/buildspec_post_build.sh
   pre_build:
     commands:
+      - node -v
       - bash ./aws/org1/buildspec_pre_build.sh
       - |
         bash ./aws/org1/buildspec_install_cdk.sh
