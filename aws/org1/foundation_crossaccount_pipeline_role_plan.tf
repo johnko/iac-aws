@@ -130,18 +130,44 @@ locals {
         ]
       })
     }
-    CDKCreateChangeSet = {
+    CDKBootstrapPermissions = {
       enabled_aws_account_ids = keys(local.all_aws_account_ids)
       policy = jsonencode({
         "Version" : "2012-10-17",
         "Statement" : [
           {
             "Action" : [
-              "cloudformation:CreateChangeSet"
+              "cloudformation:CreateStack",
+              "cloudformation:UpdateStack",
+              "cloudformation:DescribeStacks",
+              "cloudformation:CreateChangeSet",
+              "cloudformation:DescribeChangeSet",
+              "cloudformation:ExecuteChangeSet",
+              "cloudformation:GetTemplate",
+              "cloudformation:DeleteStack"
             ],
-            "Resource" : "*",
+            "Resource" : "arn:aws:cloudformation:REGION:ACCOUNT-ID:stack/CDKToolkit/*"
             "Effect" : "Allow"
           },
+          {
+            "Action" : [
+              "cloudformation:CreateChangeSet",
+            ],
+            "Resource" : "*"
+            "Effect" : "Allow"
+          },
+          {
+            "Effect" : "Allow",
+            "Action" : [
+              "iam:CreateRole",
+              "iam:AttachRolePolicy",
+              "iam:PutRolePolicy",
+              "s3:CreateBucket",
+              "s3:PutBucketPublicAccessBlock",
+              "ssm:PutParameter"
+            ],
+            "Resource" : "*"
+          }
         ]
       })
     }
