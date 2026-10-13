@@ -232,7 +232,7 @@ resource "aws_codepipeline" "cdk" {
         namespace        = "SecondSourceVariables"
         owner            = "AWS"
         provider         = "CodeStarSourceConnection"
-        run_order        = 2
+        run_order        = 1
         version          = "1"
         output_artifacts = ["SecondSourceOutput"]
 
