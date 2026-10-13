@@ -64,6 +64,7 @@ fi
 popd
 echo "WORKSPACE=$WORKSPACE"
 pushd "$WORKSPACE"
+pwd
 
 if [[ -n $CROSS_ACCOUNT_PIPELINE_IAM_ROLE ]] && [[ -n $TF_VAR_aws_account_id ]]; then
   ROLE_ARN="arn:aws:iam::$TF_VAR_aws_account_id:role/$CROSS_ACCOUNT_PIPELINE_IAM_ROLE"
@@ -89,6 +90,7 @@ fi
 set -ux
 
 set +e
+npm ci
 $IAC_BIN bootstrap
 CDK_BOOTSTRAP_EXIT_CODE=$?
 set +x
