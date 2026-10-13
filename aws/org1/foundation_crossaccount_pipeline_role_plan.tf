@@ -130,6 +130,21 @@ locals {
         ]
       })
     }
+    CDKCreateChangeSet = {
+      enabled_aws_account_ids = keys(local.all_aws_account_ids)
+      policy = jsonencode({
+        "Version" : "2012-10-17",
+        "Statement" : [
+          {
+            "Action" : [
+              "cloudformation:CreateChangeSet"
+            ],
+            "Resource" : "*",
+            "Effect" : "Allow"
+          },
+        ]
+      })
+    }
   }
 }
 
