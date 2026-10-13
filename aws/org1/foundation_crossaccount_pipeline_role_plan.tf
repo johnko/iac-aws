@@ -146,7 +146,7 @@ locals {
               "cloudformation:GetTemplate",
               "cloudformation:DeleteStack"
             ],
-            "Resource" : "arn:aws:cloudformation:${data.aws_region.current.region}:${data.aws_caller_identity.current.account_id}:stack/CDKToolkit/*"
+            "Resource" : "arn:aws:cloudformation:*:${data.aws_caller_identity.current.account_id}:stack/CDKToolkit/*"
             "Effect" : "Allow"
           },
           {
