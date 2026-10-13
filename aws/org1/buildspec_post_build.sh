@@ -17,7 +17,7 @@ enable_stage_transition() {
 
 if [[ $CODEPIPELINE_NAME =~ ^CDK-.* ]]; then
   # don't enable on CDK_DIFF_EXIT_CODE 2 because it will enable stage transition for current pipeline, which will cause plan to be overwritten by next queued execution
-  if [[ -n $CDK_DIFF_EXIT_CODE ]] && [[ $CDK_DIFF_EXIT_CODE != 2 ]]; then
+  if [[ -n $CDK_DIFF_EXIT_CODE ]] && [[ $CDK_DIFF_EXIT_CODE != 1 ]]; then
     # CDK_DIFF_EXIT_CODE
     # 0 = Succeeded with empty diff (no changes), need to stop pipeline from going to TerraformApply
     # 1 = Succeeded with non-empty diff (changes present), need to continues pipeline to ApproveOrReject and TerraformApply
