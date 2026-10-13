@@ -140,7 +140,7 @@ locals {
               "cloudformation:CreateChangeSet",
               "cloudformation:CreateStack",
               "cloudformation:DeleteChangeSet",
-              "cloudformation:DeleteStack"
+              "cloudformation:DeleteStack",
               "cloudformation:DescribeChangeSet",
               "cloudformation:DescribeStacks",
               "cloudformation:ExecuteChangeSet",
