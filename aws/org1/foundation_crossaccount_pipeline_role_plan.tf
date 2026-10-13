@@ -177,9 +177,10 @@ locals {
           {
             "Effect" : "Allow",
             "Action" : [
-              "ssm:PutParameter"
+              "ssm:DeleteParameter",
+              "ssm:PutParameter",
             ],
-            "Resource" : "arn:aws:ssm::${data.aws_caller_identity.current.account_id}:parameter/cdk-bootstrap/*"
+            "Resource" : "arn:aws:ssm:*:${data.aws_caller_identity.current.account_id}:parameter/cdk-bootstrap/*"
           },
         ]
       })
