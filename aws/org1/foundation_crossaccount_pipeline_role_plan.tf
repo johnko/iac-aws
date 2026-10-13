@@ -154,6 +154,7 @@ locals {
             "Effect" : "Allow",
             "Action" : [
               "ecr:CreateRepository",
+              "ecr:PutLifecyclePolicy",
             ],
             "Resource" : "arn:aws:ecr:*:${data.aws_caller_identity.current.account_id}:repository/cdk-*"
           },
