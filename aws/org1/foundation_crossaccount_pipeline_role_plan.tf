@@ -153,6 +153,13 @@ locals {
           {
             "Effect" : "Allow",
             "Action" : [
+              "ecr:CreateRepository",
+            ],
+            "Resource" : "arn:aws:ecr:*:${data.aws_caller_identity.current.account_id}:repository/cdk-*"
+          },
+          {
+            "Effect" : "Allow",
+            "Action" : [
               "iam:CreateRole",
               "iam:AttachRolePolicy",
               "iam:PutRolePolicy",
