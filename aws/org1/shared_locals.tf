@@ -42,10 +42,10 @@ locals {
 
   tfstate_primary_region = "ca-central-1"
   tfstate_replica_regions = {
-    "ca-west-1" = {
+    ca-west-1 = {
       replication_enabled = true
     }
-    "us-east-2" = {
+    us-east-2 = {
       replication_enabled = false
     }
   }
@@ -131,7 +131,7 @@ locals {
   }
 
   slack_user_roles = {
-    "viewer" = {
+    viewer = {
       inline_policy1 = jsonencode({
         "Version" : "2012-10-17",
         "Statement" : [
@@ -140,7 +140,7 @@ locals {
         ]
       })
     }
-    "approver" = {
+    approver = {
       inline_policy1 = jsonencode({
         "Version" : "2012-10-17",
         "Statement" : [
@@ -156,7 +156,7 @@ locals {
         ]
       })
     }
-    "invoker" = {}
+    invoker = {}
   }
 }
 

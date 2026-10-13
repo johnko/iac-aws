@@ -311,8 +311,9 @@ resource "aws_codepipeline" "terraform" {
       run_order        = 1
       version          = "1"
       configuration = {
-        "ProjectName" = "AWSTerraformPlan-${each.value.EnvironmentVariables["TF_VAR_aws_account_id"]}-${each.value.codebuild_suffix}"
-        "EnvironmentVariables" = jsonencode(
+        PrimarySource = "SourceOutput"
+        ProjectName = "AWSTerraformPlan-${each.value.EnvironmentVariables["TF_VAR_aws_account_id"]}-${each.value.codebuild_suffix}"
+        EnvironmentVariables = jsonencode(
           concat(
             [
               {
@@ -366,9 +367,9 @@ resource "aws_codepipeline" "terraform" {
         result = "SKIP"
         rule {
           configuration = {
-            "Operator" = "EQ"
-            "Value"    = "2"
-            "Variable" = "#{TerraformPlan.TF_PLAN_EXIT_CODE}"
+            Operator = "EQ"
+            Value    = "2"
+            Variable = "#{TerraformPlan.TF_PLAN_EXIT_CODE}"
             # 0 = Succeeded with empty diff (no changes), need to stop pipeline from going to TerraformApply
             # 2 = Succeeded with non-empty diff (changes present), need to continues pipeline to ApproveOrReject and TerraformApply
             # 1 = Error
@@ -414,8 +415,8 @@ resource "aws_codepipeline" "terraform" {
       run_order       = 3
       version         = "1"
       configuration = {
-        "ProjectName" = "AWSTerraformApply-${each.value.EnvironmentVariables["TF_VAR_aws_account_id"]}-${each.value.codebuild_suffix}"
-        "EnvironmentVariables" = jsonencode(
+        ProjectName = "AWSTerraformApply-${each.value.EnvironmentVariables["TF_VAR_aws_account_id"]}-${each.value.codebuild_suffix}"
+        EnvironmentVariables = jsonencode(
           concat(
             [
               {

@@ -14,7 +14,7 @@ data "aws_chatbot_slack_workspace" "slack" {
 
 locals {
   slack_channels_enabled = {
-    "test-awschatbot" = {
+    test-awschatbot = {
       slack_channel_id = "C04C86VPV26"
       slack_team_id    = data.aws_chatbot_slack_workspace.slack.slack_team_id
     }

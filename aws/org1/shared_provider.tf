@@ -5,7 +5,7 @@ provider "aws" {
 
   default_tags {
     tags = {
-      "iacdeployer" = "terraform"
+      iacdeployer = "terraform"
     }
   }
 
