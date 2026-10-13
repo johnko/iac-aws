@@ -61,6 +61,7 @@ fi
 
 # .envrc might have changed WORKSPACE value
 
+popd
 echo "WORKSPACE=$WORKSPACE"
 pushd "$WORKSPACE"
 
