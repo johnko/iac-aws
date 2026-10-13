@@ -137,15 +137,7 @@ locals {
         "Statement" : [
           {
             "Action" : [
-              "cloudformation:CreateChangeSet",
-              "cloudformation:CreateStack",
-              "cloudformation:DeleteChangeSet",
-              "cloudformation:DeleteStack",
-              "cloudformation:DescribeChangeSet",
-              "cloudformation:DescribeStacks",
-              "cloudformation:ExecuteChangeSet",
-              "cloudformation:GetTemplate",
-              "cloudformation:UpdateStack",
+              "cloudformation:*",
             ],
             "Resource" : "arn:aws:cloudformation:*:${data.aws_caller_identity.current.account_id}:stack/CDKToolkit/*"
             "Effect" : "Allow"
@@ -153,33 +145,28 @@ locals {
           {
             "Effect" : "Allow",
             "Action" : [
-              "ecr:CreateRepository",
-              "ecr:PutLifecyclePolicy",
+              "ecr:*",
             ],
             "Resource" : "arn:aws:ecr:*:${data.aws_caller_identity.current.account_id}:repository/cdk-*"
           },
           {
             "Effect" : "Allow",
             "Action" : [
-              "iam:CreateRole",
-              "iam:AttachRolePolicy",
-              "iam:PutRolePolicy",
+              "iam:*",
             ],
             "Resource" : "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/cdk-*"
           },
           {
             "Effect" : "Allow",
             "Action" : [
-              "s3:CreateBucket",
-              "s3:PutBucketPublicAccessBlock",
+              "s3:*",
             ],
             "Resource" : "arn:aws:s3:::cdktoolkit-stagingbucket-*"
           },
           {
             "Effect" : "Allow",
             "Action" : [
-              "ssm:DeleteParameter",
-              "ssm:PutParameter",
+              "ssm:*",
             ],
             "Resource" : "arn:aws:ssm:*:${data.aws_caller_identity.current.account_id}:parameter/cdk-bootstrap/*"
           },
