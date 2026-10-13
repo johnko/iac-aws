@@ -270,7 +270,7 @@ resource "aws_codepipeline" "cdk" {
       version          = "1"
       configuration = {
         PrimarySource = "SourceOutput"
-        ProjectName = "AWSCDKDiff-${each.value.EnvironmentVariables["TF_VAR_aws_account_id"]}-${each.value.codebuild_suffix}"
+        ProjectName   = "AWSCDKDiff-${each.value.EnvironmentVariables["TF_VAR_aws_account_id"]}-${each.value.codebuild_suffix}"
         EnvironmentVariables = jsonencode(
           concat(
             [

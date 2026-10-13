@@ -312,7 +312,7 @@ resource "aws_codepipeline" "terraform" {
       version          = "1"
       configuration = {
         PrimarySource = "SourceOutput"
-        ProjectName = "AWSTerraformPlan-${each.value.EnvironmentVariables["TF_VAR_aws_account_id"]}-${each.value.codebuild_suffix}"
+        ProjectName   = "AWSTerraformPlan-${each.value.EnvironmentVariables["TF_VAR_aws_account_id"]}-${each.value.codebuild_suffix}"
         EnvironmentVariables = jsonencode(
           concat(
             [
