@@ -146,7 +146,7 @@ locals {
               "cloudformation:GetTemplate",
               "cloudformation:DeleteStack"
             ],
-            "Resource" : "arn:aws:cloudformation:REGION:ACCOUNT-ID:stack/CDKToolkit/*"
+            "Resource" : "arn:aws:cloudformation:${data.aws_region.current.region}:${data.aws_caller_identity.current.account_id}:stack/CDKToolkit/*"
             "Effect" : "Allow"
           },
           {
@@ -162,11 +162,23 @@ locals {
               "iam:CreateRole",
               "iam:AttachRolePolicy",
               "iam:PutRolePolicy",
+            ],
+            "Resource" : "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/cdk-*"
+          },
+          {
+            "Effect" : "Allow",
+            "Action" : [
               "s3:CreateBucket",
               "s3:PutBucketPublicAccessBlock",
+            ],
+            "Resource" : "arn:aws:s3:::cdktoolkit-stagingbucket-*"
+          },
+          {
+            "Effect" : "Allow",
+            "Action" : [
               "ssm:PutParameter"
             ],
-            "Resource" : "*"
+            "Resource" : "arn:aws:ssm::${data.aws_caller_identity.current.account_id}:parameter/cdk-bootstrap/*"
           }
         ]
       })
