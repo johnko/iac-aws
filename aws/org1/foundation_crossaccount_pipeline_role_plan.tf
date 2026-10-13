@@ -137,14 +137,15 @@ locals {
         "Statement" : [
           {
             "Action" : [
-              "cloudformation:CreateStack",
-              "cloudformation:UpdateStack",
-              "cloudformation:DescribeStacks",
               "cloudformation:CreateChangeSet",
+              "cloudformation:CreateStack",
+              "cloudformation:DeleteChangeSet",
+              "cloudformation:DeleteStack"
               "cloudformation:DescribeChangeSet",
+              "cloudformation:DescribeStacks",
               "cloudformation:ExecuteChangeSet",
               "cloudformation:GetTemplate",
-              "cloudformation:DeleteStack"
+              "cloudformation:UpdateStack",
             ],
             "Resource" : "arn:aws:cloudformation:*:${data.aws_caller_identity.current.account_id}:stack/CDKToolkit/*"
             "Effect" : "Allow"
