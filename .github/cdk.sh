@@ -59,12 +59,10 @@ if [[ -e .envrc ]]; then
   source .envrc
 fi
 
-if [[ -e shared_tfstate_backend.template ]]; then
-  if [[ -z $TF_VAR_workspace ]]; then
-    TF_VAR_workspace="$WORKSPACE"
-    export TF_VAR_workspace
-  fi
-fi
+# .envrc might have changed WORKSPACE value
+
+echo "WORKSPACE=$WORKSPACE"
+pushd "$WORKSPACE"
 
 if [[ -n $CROSS_ACCOUNT_PIPELINE_IAM_ROLE ]] && [[ -n $TF_VAR_aws_account_id ]]; then
   ROLE_ARN="arn:aws:iam::$TF_VAR_aws_account_id:role/$CROSS_ACCOUNT_PIPELINE_IAM_ROLE"

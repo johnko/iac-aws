@@ -171,7 +171,7 @@ resource "aws_codepipeline" "cdk" {
           }
           file_paths {
             includes = [
-              ".github/tf.sh",
+              ".github/cdk.sh",
               ".envrc",
               "${local.workspace_path_prefix}${each.value.path}/**",
               "${local.workspace_path_prefix}buildspec_*",
