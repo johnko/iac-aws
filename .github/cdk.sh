@@ -102,7 +102,7 @@ fi
 
 set -x
 set +e
-$IAC_BIN validate
+$IAC_BIN validate --unstable=validate
 CDK_VALIDATE_EXIT_CODE=$?
 set +x
 if [[ "VALIDATE" == "$SAFE_ACTION" || "0" != "$CDK_VALIDATE_EXIT_CODE" ]]; then
