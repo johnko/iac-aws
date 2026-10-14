@@ -184,6 +184,7 @@ locals {
           {
             "Action" : [
               "cloudformation:CreateChangeSet",
+              "cloudformation:DeleteChangeSet",
             ],
             "Resource" : "*"
             "Effect" : "Allow"
