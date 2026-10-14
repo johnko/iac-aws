@@ -161,7 +161,10 @@ locals {
             "Action" : [
               "s3:*",
             ],
-            "Resource" : "arn:aws:s3:::cdktoolkit-stagingbucket-*"
+            "Resource" : [
+              "arn:aws:s3:::cdk-*",
+              "arn:aws:s3:::cdktoolkit-stagingbucket-*",
+            ]
           },
           {
             "Effect" : "Allow",
