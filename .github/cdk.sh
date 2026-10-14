@@ -34,7 +34,7 @@ fi
 # transform the action arg into uppercase
 SAFE_ACTION=$(echo "$ACTION" | tr '[:lower:]' '[:upper:]')
 case $SAFE_ACTION in
-  DEPLOY | AUTO | BOOTSTRAP | DIFF | VALIDATE)
+  DEPLOY | AUTO | BOOTSTRAP | DIFF)
     echo "ACTION=$ACTION"
     ;;
   *)
@@ -100,17 +100,7 @@ if [[ "BOOTSTRAP" == "$SAFE_ACTION" || "0" != "$CDK_BOOTSTRAP_EXIT_CODE" ]]; the
   exit $CDK_BOOTSTRAP_EXIT_CODE
 fi
 
-set -x
 set +e
-$IAC_BIN validate --unstable=validate
-CDK_VALIDATE_EXIT_CODE=$?
-set +x
-if [[ "VALIDATE" == "$SAFE_ACTION" || "0" != "$CDK_VALIDATE_EXIT_CODE" ]]; then
-  set -x
-  set -e
-  exit $CDK_VALIDATE_EXIT_CODE
-fi
-
 set +x
 if [[ "DEPLOY" == "$SAFE_ACTION" || "AUTO" == "$SAFE_ACTION" || "DIFF" == "$SAFE_ACTION" ]]; then
   if [[ -e _import.sh ]]; then
