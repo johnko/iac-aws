@@ -429,7 +429,7 @@ resource "aws_codepipeline" "cdk" {
 
     action {
       category        = "Build"
-      input_artifacts = ["CDKDiffOutput"] # use files from Diff stage CDKDiff action
+      input_artifacts  = lookup(each.value, "SecondFullRepositoryId", null) != null ? ["CDKDiffOutput", "SecondSourceOutput"] : ["CDKDiffOutput"] # use some files from Diff stage CDKDiff action
       name            = "CDKDeploy"
       namespace       = "CDKDeploy"
       owner           = "AWS"

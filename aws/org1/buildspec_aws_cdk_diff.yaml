@@ -29,15 +29,6 @@ phases:
         bash .github/cdk.sh $WORKSPACE_PATH diff 2>&1 |
           tee "$CDK_TMP_LOG"
         export CDK_DIFF_EXIT_CODE=$?
-      - |
-        cat <<EOF >>"${WORKSPACE_PATH}/.envrc"
-
-        WORKSPACE_PATH="${CODEBUILD_SRC_DIR_SecondSourceOutput}/cdk"
-        export WORKSPACE_PATH
-        WORKSPACE="$WORKSPACE_PATH"
-        export WORKSPACE
-
-        EOF
   install:
     runtime-versions:
       # See https://docs.aws.amazon.com/codebuild/latest/userguide/available-runtimes.html
