@@ -5,52 +5,70 @@ locals {
     # find aws -type f -name _import.sh | sort | xargs dirname | sed 's,aws/org1/,,' | awk '{print "\""$1"\" = {}"}'
     "deployment_builds/cachedependencies" = {
       # DetectChanges = false
-      EnvironmentVariables = {
-        TF_VAR_aws_account_id = var.aws_account_id_deployment_builds
-      }
+      EnvironmentVariables = [{
+        name  = "TF_VAR_aws_account_id"
+        value = var.aws_account_id_deployment_builds
+        type  = "PLAINTEXT"
+      }]
       RequireManualApproval = false
     }
     "deployment_builds/chatbotcommon" = {
-      EnvironmentVariables = {
-        TF_VAR_aws_account_id = var.aws_account_id_deployment_builds
-      }
+      EnvironmentVariables = [{
+        name  = "TF_VAR_aws_account_id"
+        value = var.aws_account_id_deployment_builds
+        type  = "PLAINTEXT"
+      }]
       RequireManualApproval = false
     }
     "deployment_builds/foundation" = {
-      EnvironmentVariables = {
-        TF_VAR_aws_account_id = var.aws_account_id_deployment_builds
-      }
+      EnvironmentVariables = [{
+        name  = "TF_VAR_aws_account_id"
+        value = var.aws_account_id_deployment_builds
+        type  = "PLAINTEXT"
+      }]
     }
     "deployment_builds/pipelinesawscdk" = {
-      EnvironmentVariables = {
-        TF_VAR_aws_account_id = var.aws_account_id_deployment_builds
-      }
+      EnvironmentVariables = [{
+        name  = "TF_VAR_aws_account_id"
+        value = var.aws_account_id_deployment_builds
+        type  = "PLAINTEXT"
+      }]
       RequireManualApproval = false
     }
     "deployment_builds/pipelinesawsterraform" = {
-      EnvironmentVariables = {
-        TF_VAR_aws_account_id = var.aws_account_id_deployment_builds
-      }
+      EnvironmentVariables = [{
+        name  = "TF_VAR_aws_account_id"
+        value = var.aws_account_id_deployment_builds
+        type  = "PLAINTEXT"
+      }]
     }
     "prod_management/foundation" = {
-      EnvironmentVariables = {
-        TF_VAR_aws_account_id = var.aws_account_id_management
-      }
+      EnvironmentVariables = [{
+        name  = "TF_VAR_aws_account_id"
+        value = var.aws_account_id_management
+        type  = "PLAINTEXT"
+      }]
     }
     "playground_rswea/foundation" = {
-      EnvironmentVariables = {
-        TF_VAR_aws_account_id = var.aws_account_id_playground_rswea
-      }
+      EnvironmentVariables = [{
+        name  = "TF_VAR_aws_account_id"
+        value = var.aws_account_id_playground_rswea
+        type  = "PLAINTEXT"
+      }]
     }
     "security_aggregator/foundation" = {
-      EnvironmentVariables = {
-        TF_VAR_aws_account_id = var.aws_account_id_security_aggregator
-      }
+      EnvironmentVariables = [{
+        name  = "TF_VAR_aws_account_id"
+        value = var.aws_account_id_security_aggregator
+        type  = "PLAINTEXT"
+      }]
     }
     "security_cloudtrail/foundation" = {
-      EnvironmentVariables = {
-        TF_VAR_aws_account_id = var.aws_account_id_security_cloudtrail
-      }
+      EnvironmentVariables = [{
+        name  = "TF_VAR_aws_account_id"
+        value = var.aws_account_id_security_cloudtrail
+        type  = "PLAINTEXT"
+      }]
     }
   }
 
@@ -311,7 +329,7 @@ resource "aws_codepipeline" "terraform" {
       version          = "1"
       configuration = {
         PrimarySource = "SourceOutput"
-        ProjectName   = "AWSTerraformPlan-${each.value.EnvironmentVariables["TF_VAR_aws_account_id"]}-${each.value.codebuild_suffix}"
+        ProjectName   = "AWSTerraformPlan-${each.value.EnvironmentVariables[0].value}-${each.value.codebuild_suffix}"
         EnvironmentVariables = jsonencode(
           concat(
             [
@@ -346,13 +364,8 @@ resource "aws_codepipeline" "terraform" {
                 type  = "PLAINTEXT"
               },
             ],
-            [
-              for k, v in each.value.EnvironmentVariables : {
-                name  = k,
-                value = v
-                type  = "PLAINTEXT"
-              }
-          ])
+            each.value.EnvironmentVariables
+          )
         )
       }
     }
@@ -414,7 +427,7 @@ resource "aws_codepipeline" "terraform" {
       run_order       = 3
       version         = "1"
       configuration = {
-        ProjectName = "AWSTerraformApply-${each.value.EnvironmentVariables["TF_VAR_aws_account_id"]}-${each.value.codebuild_suffix}"
+        ProjectName = "AWSTerraformApply-${each.value.EnvironmentVariables[0].value}-${each.value.codebuild_suffix}"
         EnvironmentVariables = jsonencode(
           concat(
             [
@@ -449,13 +462,8 @@ resource "aws_codepipeline" "terraform" {
                 type  = "PLAINTEXT"
               },
             ],
-            [
-              for k, v in each.value.EnvironmentVariables : {
-                name  = k,
-                value = v
-                type  = "PLAINTEXT"
-              }
-          ])
+            each.value.EnvironmentVariables
+          )
         )
       }
     }

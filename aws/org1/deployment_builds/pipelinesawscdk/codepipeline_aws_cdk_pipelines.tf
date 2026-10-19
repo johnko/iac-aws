@@ -4,9 +4,11 @@ locals {
   aws_cdk_pipelines = {
     "playground_rswea/rswea" = {
       # DetectChanges = false
-      EnvironmentVariables = {
-        TF_VAR_aws_account_id = var.aws_account_id_playground_rswea
-      }
+      EnvironmentVariables = [{
+        name  = "TF_VAR_aws_account_id"
+        value = var.aws_account_id_playground_rswea
+        type  = "PLAINTEXT"
+      }]
       SecondBranchName = "main"
       # SecondDetectChanges = false
       SecondFullRepositoryId = "johnko/remote-swe-agents"
@@ -270,7 +272,7 @@ resource "aws_codepipeline" "cdk" {
       version          = "1"
       configuration = {
         PrimarySource = "SourceOutput"
-        ProjectName   = "AWSCDKDiff-${each.value.EnvironmentVariables["TF_VAR_aws_account_id"]}-${each.value.codebuild_suffix}"
+        ProjectName   = "AWSCDKDiff-${each.value.EnvironmentVariables[0].value}-${each.value.codebuild_suffix}"
         EnvironmentVariables = jsonencode(
           concat(
             [
@@ -305,13 +307,8 @@ resource "aws_codepipeline" "cdk" {
                 type  = "PLAINTEXT"
               },
             ],
-            [
-              for k, v in each.value.EnvironmentVariables : {
-                name  = k,
-                value = v
-                type  = "PLAINTEXT"
-              }
-          ])
+            each.value.EnvironmentVariables
+          )
         )
       }
     }
@@ -372,7 +369,7 @@ resource "aws_codepipeline" "cdk" {
       run_order       = 3
       version         = "1"
       configuration = {
-        ProjectName = "AWSCDKDeploy-${each.value.EnvironmentVariables["TF_VAR_aws_account_id"]}-${each.value.codebuild_suffix}"
+        ProjectName = "AWSCDKDeploy-${each.value.EnvironmentVariables[0].value}-${each.value.codebuild_suffix}"
         EnvironmentVariables = jsonencode(
           concat(
             [
@@ -407,13 +404,8 @@ resource "aws_codepipeline" "cdk" {
                 type  = "PLAINTEXT"
               },
             ],
-            [
-              for k, v in each.value.EnvironmentVariables : {
-                name  = k,
-                value = v
-                type  = "PLAINTEXT"
-              }
-          ])
+            each.value.EnvironmentVariables
+          )
         )
       }
     }
