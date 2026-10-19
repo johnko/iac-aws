@@ -4,11 +4,79 @@ locals {
   aws_cdk_pipelines = {
     "playground_rswea/rswea" = {
       # DetectChanges = false
-      EnvironmentVariables = [{
-        name  = "TF_VAR_aws_account_id"
-        value = var.aws_account_id_playground_rswea
-        type  = "PLAINTEXT"
-      }]
+      EnvironmentVariables = [
+        {
+          name  = "TF_VAR_aws_account_id"
+          value = var.aws_account_id_playground_rswea
+          type  = "PLAINTEXT"
+        },
+        # GitHub configuration when using GitHub Apps
+        # (Optional) If not set, Personal Access Token (see README) is used instead
+        # Example: "12345678"
+        # GITHUB_APP_ID=""
+        # Example: "87654321"
+        # GITHUB_INSTALLATION_ID=""
+
+        # Restrict access to the Slack app for certain users (comma-separated)
+        # (Optional) If not set, all users in the workspace can access the app
+        # Example: "U0123456789,U0QWERTYUIO"
+        # SLACK_ADMIN_USER_ID_LIST=""
+        {
+          name  = "SLACK_ADMIN_USER_ID_LIST"
+          value = "/rswea/SLACK_ADMIN_USER_ID_LIST"
+          type  = "PARAMETER_STORE"
+        },
+
+        # Invitation email is sent on deploy to this email.
+        # (Optional) If not set, you need to manually create users in Cognito console
+        # Example: "foo@example.com"
+        # INITIAL_WEBAPP_USER_EMAIL=""
+        {
+          name  = "INITIAL_WEBAPP_USER_EMAIL"
+          value = "/rswea/INITIAL_WEBAPP_USER_EMAIL"
+          type  = "PARAMETER_STORE"
+        },
+
+        # AWS WAF config.
+        # (Optional) If not set, no IP/country restrictions are applied
+        # Example: "203.0.113.0/24,198.51.100.0/24"
+        # ALLOWED_IPV4_CIDRS=""
+        {
+          name  = "ALLOWED_IPV4_CIDRS"
+          value = "/rswea/ALLOWED_IPV4_CIDRS"
+          type  = "PARAMETER_STORE"
+        },
+        # Example: "2001:db8::/32"
+        # ALLOWED_IPV6_CIDRS=""
+        # Example: "JP,US"
+        # ALLOWED_COUNTRY_CODES=""
+
+        # Additional IAM managed policies to allow access from agents.
+        # (Optional) If not set, only minimal policies are attached
+        # Example: "AmazonS3ReadOnlyAccess,AmazonDynamoDBReadOnlyAccess"
+        # WORKER_ADDITIONAL_POLICIES=""
+
+        # Bedrock Cross-Region Inference profile. Choose from: global, us, eu, apac, jp, au
+        # (Optional) If not set, defaults to 'us'
+        # NOTE: Models are filtered based on the specified region's CRI profile support.
+        # (e.g. to use Opus 4.5, you need to set "global")
+        # BEDROCK_CRI_REGION_OVERRIDE=""
+        {
+          name  = "BEDROCK_CRI_REGION_OVERRIDE"
+          value = "global"
+          type  = "PLAINTEXT"
+        },
+
+        # Use existing VPC instead of creating a new one
+        # (Optional) If not set, a new VPC is created
+        # Example: "vpc-0123456789abcdef0"
+        # VPC_ID=""
+
+        # Stack name suffix # (Optional) If not set, defaults to 'Sandbox'
+        # Set this to deploy multiple stacks in the same AWS account or to distinguish different environments
+        # Example: "Production"
+        # TARGET_ENV=""
+      ]
       SecondBranchName = "main"
       # SecondDetectChanges = false
       SecondFullRepositoryId = "johnko/remote-swe-agents"
