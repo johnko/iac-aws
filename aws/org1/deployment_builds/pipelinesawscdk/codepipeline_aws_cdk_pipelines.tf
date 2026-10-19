@@ -437,6 +437,7 @@ resource "aws_codepipeline" "cdk" {
       run_order       = 3
       version         = "1"
       configuration = {
+        PrimarySource = "CDKDiffOutput"
         ProjectName = "AWSCDKDeploy-${each.value.EnvironmentVariables[0].value}-${each.value.codebuild_suffix}"
         EnvironmentVariables = jsonencode(
           concat(
