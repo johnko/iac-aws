@@ -59,7 +59,8 @@ locals {
           "ssm:GetParameter*",
         ],
         "Resource" : [
-          "arn:aws:ssm:*:${data.aws_caller_identity.current.account_id}:parameter/TF_VAR_*"
+          "arn:aws:ssm:*:${data.aws_caller_identity.current.account_id}:parameter//rswea/*",
+          "arn:aws:ssm:*:${data.aws_caller_identity.current.account_id}:parameter/TF_VAR_*",
         ],
         "Effect" : "Allow"
       },
