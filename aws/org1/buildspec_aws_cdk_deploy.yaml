@@ -21,6 +21,8 @@ phases:
   build:
     commands:
       - |
+        cat "${WORKSPACE_PATH}/.envrc"
+      - |
         set -uo pipefail
         set +e
         bash .github/cdk.sh $WORKSPACE_PATH auto 2>&1 |
