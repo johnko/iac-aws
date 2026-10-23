@@ -24,15 +24,17 @@ resource "aws_organizations_policy" "EC2_NoIngressVPC_POLICY" {
   })
 }
 
-import {
-  to = aws_organizations_policy_attachment.EC2_NoIngressVPC_POLICY_root
-  identity = {
-    policy_id = var.aws_EC2_NoIngressVPC_POLICY
-    target_id = aws_organizations_organization.org.roots[0].id
-  }
-}
+# remote-swea-agent requires ingress on IGW so can't attach on root
 
-resource "aws_organizations_policy_attachment" "EC2_NoIngressVPC_POLICY_root" {
-  policy_id = aws_organizations_policy.EC2_NoIngressVPC_POLICY.id
-  target_id = aws_organizations_organization.org.roots[0].id
-}
+# import {
+#   to = aws_organizations_policy_attachment.EC2_NoIngressVPC_POLICY_root
+#   identity = {
+#     policy_id = var.aws_EC2_NoIngressVPC_POLICY
+#     target_id = aws_organizations_organization.org.roots[0].id
+#   }
+# }
+
+# resource "aws_organizations_policy_attachment" "EC2_NoIngressVPC_POLICY_root" {
+#   policy_id = aws_organizations_policy.EC2_NoIngressVPC_POLICY.id
+#   target_id = aws_organizations_organization.org.roots[0].id
+# }
