@@ -14,8 +14,18 @@ locals {
         # (Optional) If not set, Personal Access Token (see README) is used instead
         # Example: "12345678"
         # GITHUB_APP_ID=""
+        {
+          name  = "GITHUB_APP_ID"
+          value = "/rswea/GITHUB_APP_ID"
+          type  = "PARAMETER_STORE"
+        },
         # Example: "87654321"
         # GITHUB_INSTALLATION_ID=""
+        {
+          name  = "GITHUB_INSTALLATION_ID"
+          value = "/rswea/GITHUB_INSTALLATION_ID"
+          type  = "PARAMETER_STORE"
+        },
 
         # Restrict access to the Slack app for certain users (comma-separated)
         # (Optional) If not set, all users in the workspace can access the app
