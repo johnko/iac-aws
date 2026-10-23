@@ -63,7 +63,7 @@ locals {
         # BEDROCK_CRI_REGION_OVERRIDE=""
         {
           name  = "BEDROCK_CRI_REGION_OVERRIDE"
-          value = "global"
+          value = "us"
           type  = "PLAINTEXT"
         },
 
