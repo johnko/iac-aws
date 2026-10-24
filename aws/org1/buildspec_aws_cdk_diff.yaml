@@ -17,9 +17,9 @@ env:
     TF_VAR_PLAN_SLACK_WEBHOOK_URL: TF_VAR_PLAN_SLACK_WEBHOOK_URL
   shell: bash
   variables:
+    CDK_TMP_LOG: /tmp/.cdk-diff.log
     # See https://docs.aws.amazon.com/codebuild/latest/userguide/build-env-ref-env-vars.html
     CI: "true"
-    CDK_TMP_LOG: /tmp/.cdk-diff.log
 phases:
   build:
     commands:
