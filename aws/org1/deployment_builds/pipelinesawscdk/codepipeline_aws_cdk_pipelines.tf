@@ -87,6 +87,7 @@ locals {
         # Example: "Production"
         # TARGET_ENV=""
       ]
+      RequireManualApproval = false
       SecondBranchName = "main"
       # SecondDetectChanges = false
       SecondFullRepositoryId = "johnko/remote-swe-agents"
