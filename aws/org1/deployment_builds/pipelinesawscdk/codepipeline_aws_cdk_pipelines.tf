@@ -88,7 +88,7 @@ locals {
         # TARGET_ENV=""
       ]
       RequireManualApproval = false
-      SecondBranchName = "main"
+      SecondBranchName      = "main"
       # SecondDetectChanges = false
       SecondFullRepositoryId = "johnko/remote-swe-agents"
     }
@@ -440,7 +440,7 @@ resource "aws_codepipeline" "cdk" {
 
     action {
       category        = "Build"
-      input_artifacts  = lookup(each.value, "SecondFullRepositoryId", null) != null ? ["CDKDiffOutput", "SecondSourceOutput"] : ["CDKDiffOutput"] # use some files from Diff stage CDKDiff action
+      input_artifacts = lookup(each.value, "SecondFullRepositoryId", null) != null ? ["CDKDiffOutput", "SecondSourceOutput"] : ["CDKDiffOutput"] # use some files from Diff stage CDKDiff action
       name            = "CDKDeploy"
       namespace       = "CDKDeploy"
       owner           = "AWS"
@@ -449,7 +449,7 @@ resource "aws_codepipeline" "cdk" {
       version         = "1"
       configuration = {
         PrimarySource = "CDKDiffOutput"
-        ProjectName = "AWSCDKDeploy-${each.value.EnvironmentVariables[0].value}-${each.value.codebuild_suffix}"
+        ProjectName   = "AWSCDKDeploy-${each.value.EnvironmentVariables[0].value}-${each.value.codebuild_suffix}"
         EnvironmentVariables = jsonencode(
           concat(
             [
