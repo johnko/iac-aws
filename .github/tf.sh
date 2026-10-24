@@ -102,7 +102,7 @@ fi
 
 set -x
 set +e
-$IAC_BIN init
+$IAC_BIN init || $IAC_BIN init -upgrade
 TF_INIT_EXIT_CODE=$?
 set +x
 if [[ "INIT" == "$SAFE_ACTION" || "0" != "$TF_INIT_EXIT_CODE" ]]; then
