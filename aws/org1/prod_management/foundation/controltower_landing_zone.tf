@@ -4,7 +4,8 @@ import {
 }
 
 resource "aws_controltower_landing_zone" "org" {
-  version = "4.0"
+  version           = "4.0"
+  remediation_types = ["INHERITANCE_DRIFT"]
   # Reference: https://docs.aws.amazon.com/controltower/latest/userguide/lz-api-launch.html
   manifest_json = jsonencode({
     "accessManagement" : {
