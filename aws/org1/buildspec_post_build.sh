@@ -45,7 +45,31 @@ else
 fi
 
 post_plan_to_slack() {
-  if [[ -e $TF_TMP_LOG ]] && [[ $TF_TMP_LOG == *plan* ]]; then
+  if [[ -e $CDK_TMP_LOG ]] && [[ $CDK_TMP_LOG == *diff* ]]; then
+    set +ux
+    if [[ $CDK_DIFF_EXIT_CODE != 0 ]]; then
+      ICON=":hourglass:"
+      # use sed to strip escape sequences like color
+      # shellcheck disable=SC2002
+      CDK_DIFF_TEXT=$(cat "$CDK_TMP_LOG" |
+        grep 'Number of stacks with differences' |
+        head -c 500)
+      SLACK_PAYLOAD=$(jq -n \
+        --arg icon "$ICON" \
+        --arg url "https://console.aws.amazon.com/codesuite/codepipeline/pipelines/$CODEPIPELINE_NAME/view?region=$AWS_REGION" \
+        --arg pipeline "$CODEPIPELINE_NAME" \
+        --arg region "$AWS_REGION" \
+        --arg commitid "$COMMIT_ID" \
+        --arg commitmessage "$COMMIT_MESSAGE" \
+        --arg msg "$CDK_DIFF_TEXT" \
+        '{"text":"\($icon) Diff for <\($url)|pipeline> `\($pipeline)` in region `\($region)`\n\n```\($commitid) \($commitmessage)\n\n\($msg)```"}')
+      echo "$SLACK_PAYLOAD"
+      curl \
+        -X POST \
+        -H 'Content-type: application/json; charset=utf-8' \
+        --data "$SLACK_PAYLOAD" \
+        "$TF_VAR_PLAN_SLACK_WEBHOOK_URL"
+  elif [[ -e $TF_TMP_LOG ]] && [[ $TF_TMP_LOG == *plan* ]]; then
     set +ux
     if [[ $TF_PLAN_EXIT_CODE != 0 ]]; then
       ICON=":hourglass:"
@@ -81,7 +105,34 @@ post_plan_to_slack() {
 post_plan_to_slack
 
 post_apply_to_slack() {
-  if [[ -e $TF_TMP_LOG ]] && [[ $TF_TMP_LOG == *apply* ]]; then
+  if [[ -e $CDK_TMP_LOG ]] && [[ $CDK_TMP_LOG == *deploy* ]]; then
+    set +ux
+    if [[ $CDK_DEPLOY_EXIT_CODE != 0 ]]; then
+      ICON=":x:"
+    else
+      ICON=":white_check_mark:"
+    fi
+    # use sed to strip escape sequences like color
+    # shellcheck disable=SC2002
+    CDK_DEPLOY_TEXT=$(cat "$CDK_TMP_LOG" |
+      grep 'Total time' |
+      head -c 500)
+    SLACK_PAYLOAD=$(jq -n \
+      --arg icon "$ICON" \
+      --arg url "https://console.aws.amazon.com/codesuite/codepipeline/pipelines/$CODEPIPELINE_NAME/view?region=$AWS_REGION" \
+      --arg pipeline "$CODEPIPELINE_NAME" \
+      --arg region "$AWS_REGION" \
+      --arg commitid "$COMMIT_ID" \
+      --arg commitmessage "$COMMIT_MESSAGE" \
+      --arg msg "$CDK_DEPLOY_TEXT" \
+      '{"text":"\($icon) Deploy for <\($url)|pipeline> `\($pipeline)` in region `\($region)`\n\n```\($commitid) \($commitmessage)\n\n\($msg)```"}')
+    echo "$SLACK_PAYLOAD"
+    curl \
+      -X POST \
+      -H 'Content-type: application/json; charset=utf-8' \
+      --data "$SLACK_PAYLOAD" \
+      "$TF_VAR_PLAN_SLACK_WEBHOOK_URL"
+  elif [[ -e $TF_TMP_LOG ]] && [[ $TF_TMP_LOG == *apply* ]]; then
     set +ux
     if [[ $TF_APPLY_EXIT_CODE != 0 ]]; then
       ICON=":x:"
