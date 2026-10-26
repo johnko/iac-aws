@@ -69,6 +69,7 @@ post_plan_to_slack() {
         -H 'Content-type: application/json; charset=utf-8' \
         --data "$SLACK_PAYLOAD" \
         "$TF_VAR_PLAN_SLACK_WEBHOOK_URL"
+    fi
   elif [[ -e $TF_TMP_LOG ]] && [[ $TF_TMP_LOG == *plan* ]]; then
     set +ux
     if [[ $TF_PLAN_EXIT_CODE != 0 ]]; then
