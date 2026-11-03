@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+#!/usr/bin/env bash
+# shellcheck disable=SC2154
 set -euxo pipefail
 
 VERSION_NUMBER="${TERRAFORM_VERSION#v}"
