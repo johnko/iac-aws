@@ -143,6 +143,7 @@ if [[ "DEPLOY" == "$SAFE_ACTION" || "AUTO" == "$SAFE_ACTION" ]]; then
   fi
   set -x
   set +e
+  # shellcheck disable=SC2086
   $IAC_BIN deploy --all $AUTO_APPROVE_ARG
   CDK_DEPLOY_EXIT_CODE=$?
   set -e
