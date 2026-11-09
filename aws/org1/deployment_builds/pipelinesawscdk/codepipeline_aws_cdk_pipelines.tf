@@ -1,3 +1,13 @@
+# -----------------------------------------------------------------------------
+# Pipeline Common Module Integration
+# -----------------------------------------------------------------------------
+# Centralizes exit code definitions that were previously hardcoded.
+# See modules/pipeline-common/README.md for full documentation.
+# -----------------------------------------------------------------------------
+module "pipeline_common" {
+  source = "../../../../modules/pipeline-common"
+}
+
 locals {
   FullRepositoryId      = "johnko/iac-aws"
   workspace_path_prefix = "aws/org1/"
@@ -5,11 +15,22 @@ locals {
   # CDK diff exit code definitions for pipeline conditional logic
   # These values are returned by CDK_DIFF_EXIT_CODE environment variable
   # and used in the Deploy stage before_entry condition
-  cdk_diff_exit_codes = {
-    NO_CHANGES     = "0" # Succeeded with empty diff - skip Deploy stage
-    CHANGES_FOUND  = "1" # Succeeded with non-empty diff - continue to Deploy
-    ERROR          = "2" # Error during diff - pipeline will fail
-  }
+  #
+  # Source of truth: modules/pipeline-common/locals.tf
+  #
+  # State Machine:
+  #   Source ──▶ Diff ──▶ [Check CDK_DIFF_EXIT_CODE] ──▶ Deploy
+  #                       ├── "0" (NO_CHANGES) ────────▶ SKIP
+  #                       ├── "1" (CHANGES_FOUND) ─────▶ PROCEED
+  #                       └── "2" (ERROR) ─────────────▶ FAIL
+  #
+  # NOTE: CDK exit codes differ from Terraform!
+  #   CDK:        0=nothing, 1=changes, 2=error
+  #   Terraform:  0=nothing, 1=error,   2=changes
+  #
+  # Use module.pipeline_common.cdk_exit_codes for authoritative values.
+
+  cdk_diff_exit_codes = module.pipeline_common.cdk_exit_codes
 
   aws_cdk_pipelines = {
     "playground_rswea/rswea" = {

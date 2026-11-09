@@ -1,9 +1,28 @@
 """
 Lambda handler for Terraform CodePipeline rejected/failed events.
 
-This handler re-enables the Plan stage transition when an approval is rejected
-or a build fails. This prevents the next queued execution from wiping the Plan
-output before it can be reviewed.
+IMPLICIT STATE MACHINE:
+This handler implements an implicit state machine:
+
+CloudWatch Event ──▶ SNS ──▶ Lambda
+                                 │
+                    ┌────────────┴────────────┐
+                    ▼                         ▼
+            Pipeline name starts         Pipeline name doesn't
+            with "TF-"?                    match
+                    │                         │
+                    ▼                         ▼
+            Re-enable "Plan"               Ignore event
+            stage transition                  │
+                    │                         │
+                    └────────────┬─────────────┘
+                                 ▼
+                          Return result
+
+Purpose:
+Re-enables the Plan stage transition when an approval is rejected or a build
+fails. This prevents the next queued execution from wiping the Plan output
+before it can be reviewed.
 
 Stage Transition Pattern:
 1. Plan stage runs and outputs Terraform plan results
@@ -11,6 +30,11 @@ Stage Transition Pattern:
    to the Plan stage (by default in V2 pipelines)
 3. If approval is rejected, the Plan stage transition must be re-enabled
    so the next execution doesn't overwrite the plan that was rejected
+
+Configuration:
+- TARGET_STAGE_NAME = "Plan" (see modules/pipeline-common/locals.tf)
+- PIPELINE_PREFIX = "TF-" (see modules/pipeline-common/locals.tf)
+- TRANSITION_TYPE_INBOUND = "Inbound"
 """
 
 import logging

@@ -1,3 +1,13 @@
+# -----------------------------------------------------------------------------
+# Pipeline Common Module Integration
+# -----------------------------------------------------------------------------
+# Centralizes exit code definitions that were previously hardcoded.
+# See modules/pipeline-common/README.md for full documentation.
+# -----------------------------------------------------------------------------
+module "pipeline_common" {
+  source = "../../../../modules/pipeline-common"
+}
+
 locals {
   FullRepositoryId      = "johnko/iac-aws"
   workspace_path_prefix = "aws/org1/"
@@ -5,11 +15,22 @@ locals {
   # Terraform plan exit code definitions for pipeline conditional logic
   # These values match terraform plan exit codes:
   # https://developer.hashicorp.com/terraform/cli/commands/plan#detailed-exit-codes
-  terraform_plan_exit_codes = {
-    NO_CHANGES    = "0" # Succeeded with empty diff - skip Apply stage
-    CHANGES_FOUND = "2" # Succeeded with non-empty diff - continue to Apply
-    ERROR         = "1" # Error during plan - pipeline will fail
-  }
+  #
+  # Source of truth: modules/pipeline-common/locals.tf
+  #
+  # State Machine:
+  #   Source ──▶ Plan ──▶ [Check TF_PLAN_EXIT_CODE] ──▶ Apply
+  #                       ├── "0" (NO_CHANGES) ─────▶ SKIP
+  #                       ├── "2" (CHANGES_FOUND) ──▶ PROCEED
+  #                       └── "1" (ERROR) ───────────▶ FAIL
+  #
+  # NOTE: Terraform exit codes differ from CDK!
+  #   Terraform:  0=nothing, 1=error,   2=changes
+  #   CDK:        0=nothing, 1=changes, 2=error
+  #
+  # Use module.pipeline_common.terraform_exit_codes for authoritative values.
+
+  terraform_plan_exit_codes = module.pipeline_common.terraform_exit_codes
 
   aws_terraform_pipelines = {
     # find aws -type f -name _import.sh | sort | xargs dirname | sed 's,aws/org1/,,' | awk '{print "\""$1"\" = {}"}'

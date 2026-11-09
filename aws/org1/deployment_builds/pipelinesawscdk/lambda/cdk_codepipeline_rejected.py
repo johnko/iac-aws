@@ -1,9 +1,28 @@
 """
 Lambda handler for CDK CodePipeline rejected/failed events.
 
-This handler re-enables the Diff stage transition when an approval is rejected
-or a build fails. This prevents the next queued execution from wiping the Diff
-output before it can be reviewed.
+IMPLICIT STATE MACHINE:
+This handler implements an implicit state machine:
+
+CloudWatch Event ──▶ SNS ──▶ Lambda
+                                 │
+                    ┌────────────┴────────────┐
+                    ▼                         ▼
+            Pipeline name starts         Pipeline name doesn't
+            with "CDK-"?                   match
+                    │                         │
+                    ▼                         ▼
+            Re-enable "Diff"              Ignore event
+            stage transition                  │
+                    │                         │
+                    └────────────┬─────────────┘
+                                 ▼
+                          Return result
+
+Purpose:
+Re-enables the Diff stage transition when an approval is rejected or a build
+fails. This prevents the next queued execution from wiping the Diff output
+before it can be reviewed.
 
 Stage Transition Pattern:
 1. Diff stage runs and outputs CDK diff results
@@ -11,6 +30,11 @@ Stage Transition Pattern:
    to the Diff stage (by default in V2 pipelines)
 3. If approval is rejected, the Diff stage transition must be re-enabled
    so the next execution doesn't overwrite the diff that was rejected
+
+Configuration:
+- TARGET_STAGE_NAME = "Diff" (see modules/pipeline-common/locals.tf)
+- PIPELINE_PREFIX = "CDK-" (see modules/pipeline-common/locals.tf)
+- TRANSITION_TYPE_INBOUND = "Inbound"
 """
 
 import logging

@@ -1,3 +1,22 @@
+# ============================================================================
+# CDK Diff Buildspec - Implicit State Machine
+# ============================================================================
+# This buildspec implements an IMPLICIT state machine:
+#
+#   Pre-Build ──▶ Build (cdk diff) ──▶ Post-Build
+#                                          │
+#                              CDK_DIFF_EXIT_CODE?
+#                              ├── "0" → NO_CHANGES → exit 0 (skip Deploy)
+#                              ├── "1" → CHANGES_FOUND → continue
+#                              └── "2" → ERROR → exit 2 (fail)
+#
+# Exit codes are DIFFERENT from Terraform:
+#   CDK:  0=empty, 1=changes, 2=error
+#   TF:   0=empty, 2=changes, 1=error
+#
+# See modules/pipeline-common/ for centralized definitions.
+# ============================================================================
+
 artifacts:
   files:
     - '**/*'
