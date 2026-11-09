@@ -433,7 +433,7 @@ resource "aws_codepipeline" "cdk" {
         rule {
           configuration = {
             Operator = "EQ"
-            Value    = local.cdk_diff_exit_codes.NO_CHANGES
+            Value    = local.cdk_diff_exit_codes.CHANGES_FOUND
             Variable = "#{CDKDiff.CDK_DIFF_EXIT_CODE}"
           }
           name   = "ChangesPresent"
