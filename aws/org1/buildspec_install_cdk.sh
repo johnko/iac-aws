@@ -13,7 +13,7 @@ set -x
 
 pushd "$WORKSPACE_PATH"
 
-npm install --global cdk@2.1144.0
+npm install --global cdk@2.1148.0
 
 cdk --version
 
