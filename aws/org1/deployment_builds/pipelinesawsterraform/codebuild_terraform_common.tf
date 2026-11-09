@@ -64,7 +64,12 @@ locals {
         "Effect" : "Allow"
       },
       {
-        # Allow to enable/disable the Plan stage transition so Plan doesn't get wiped by next queued execution
+        # Stage Transition Pattern:
+        # When a codepipeline execution fails (e.g., approval rejected), the next
+        # queued execution will start and disable the inbound transition to the
+        # Plan stage. This would wipe the Plan output before users can review it.
+        # To prevent this, we grant permissions to re-enable the transition.
+        # See lambda/terraform_codepipeline_rejected.py for the handler logic.
         "Condition" : {
           "StringEquals" : {
             "aws:ResourceAccount" : "${data.aws_caller_identity.current.account_id}"

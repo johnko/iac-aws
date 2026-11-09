@@ -1,6 +1,16 @@
 locals {
   FullRepositoryId      = "johnko/iac-aws"
   workspace_path_prefix = "aws/org1/"
+
+  # CDK diff exit code definitions for pipeline conditional logic
+  # These values are returned by CDK_DIFF_EXIT_CODE environment variable
+  # and used in the Deploy stage before_entry condition
+  cdk_diff_exit_codes = {
+    NO_CHANGES     = "0" # Succeeded with empty diff - skip Deploy stage
+    CHANGES_FOUND  = "1" # Succeeded with non-empty diff - continue to Deploy
+    ERROR          = "2" # Error during diff - pipeline will fail
+  }
+
   aws_cdk_pipelines = {
     "playground_rswea/rswea" = {
       # DetectChanges = false
@@ -402,10 +412,8 @@ resource "aws_codepipeline" "cdk" {
         rule {
           configuration = {
             Operator = "EQ"
-            Value    = "1"
+            Value    = local.cdk_diff_exit_codes.NO_CHANGES
             Variable = "#{CDKDiff.CDK_DIFF_EXIT_CODE}"
-            # 0 = Succeeded with empty diff (no changes), need to stop pipeline from going to CDKDeploy
-            # 1 = Succeeded with non-empty diff (changes present), need to continues pipeline to ApproveOrReject and CDKDeploy
           }
           name   = "ChangesPresent"
           region = each.value.region

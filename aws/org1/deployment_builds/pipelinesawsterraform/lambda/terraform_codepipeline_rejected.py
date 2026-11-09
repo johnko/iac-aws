@@ -1,3 +1,18 @@
+"""
+Lambda handler for Terraform CodePipeline rejected/failed events.
+
+This handler re-enables the Plan stage transition when an approval is rejected
+or a build fails. This prevents the next queued execution from wiping the Plan
+output before it can be reviewed.
+
+Stage Transition Pattern:
+1. Plan stage runs and outputs Terraform plan results
+2. When a new execution starts, CodePipeline disables the inbound transition
+   to the Plan stage (by default in V2 pipelines)
+3. If approval is rejected, the Plan stage transition must be re-enabled
+   so the next execution doesn't overwrite the plan that was rejected
+"""
+
 import logging
 import json
 import boto3
@@ -7,19 +22,22 @@ logger.setLevel(logging.INFO)
 
 client = boto3.client("codepipeline")
 
+# Configuration constants for the stage transition pattern
+TARGET_STAGE_NAME = "Plan"
+TRANSITION_TYPE_INBOUND = "Inbound"
+PIPELINE_PREFIX = "TF-"
+FAILED_STATE = "FAILED"
+
 
 def lambda_handler(event, context):
-    # logger.info('## EVENT\n' + json.dumps(event))
-    # logger.info('## PARSED\n')
     for i in event["Records"]:
         msg = json.loads(i["Sns"]["Message"])
         detail = msg["detail"]
         logger.info(detail)
         logger.info("")
         if (
-            detail["state"]
-            and detail["state"] == "FAILED"
-            and detail["pipeline"].startswith("TF-")
+            detail.get("state") == FAILED_STATE
+            and detail.get("pipeline", "").startswith(PIPELINE_PREFIX)
         ):
             logger.info(f"category: {detail['type']['category']}")
             logger.info(f"provider: {detail['type']['provider']}")
@@ -30,8 +48,8 @@ def lambda_handler(event, context):
             region = detail["region"]
             logger.info(f"region: {region}")
             logger.info("")
-            stage_name = "Plan"
-            transition_type = "Inbound"
+            stage_name = TARGET_STAGE_NAME
+            transition_type = TRANSITION_TYPE_INBOUND
             logger.info(
                 f"Attempting to enable '{transition_type}' transition for stage '{stage_name}' in pipeline '{pipeline_name}'..."
             )
