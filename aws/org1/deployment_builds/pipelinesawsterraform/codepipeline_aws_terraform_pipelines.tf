@@ -1,6 +1,16 @@
 locals {
   FullRepositoryId      = "johnko/iac-aws"
   workspace_path_prefix = "aws/org1/"
+
+  # Terraform plan exit code definitions for pipeline conditional logic
+  # These values match terraform plan exit codes:
+  # https://developer.hashicorp.com/terraform/cli/commands/plan#detailed-exit-codes
+  terraform_plan_exit_codes = {
+    NO_CHANGES    = "0" # Succeeded with empty diff - skip Apply stage
+    CHANGES_FOUND = "2" # Succeeded with non-empty diff - continue to Apply
+    ERROR         = "1" # Error during plan - pipeline will fail
+  }
+
   aws_terraform_pipelines = {
     # find aws -type f -name _import.sh | sort | xargs dirname | sed 's,aws/org1/,,' | awk '{print "\""$1"\" = {}"}'
     "deployment_builds/cachedependencies" = {
@@ -380,11 +390,8 @@ resource "aws_codepipeline" "terraform" {
         rule {
           configuration = {
             Operator = "EQ"
-            Value    = "2"
+            Value    = local.terraform_plan_exit_codes.NO_CHANGES
             Variable = "#{TerraformPlan.TF_PLAN_EXIT_CODE}"
-            # 0 = Succeeded with empty diff (no changes), need to stop pipeline from going to TerraformApply
-            # 2 = Succeeded with non-empty diff (changes present), need to continues pipeline to ApproveOrReject and TerraformApply
-            # 1 = Error
           }
           name   = "ChangesPresent"
           region = each.value.region
