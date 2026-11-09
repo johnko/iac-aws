@@ -411,7 +411,7 @@ resource "aws_codepipeline" "terraform" {
         rule {
           configuration = {
             Operator = "EQ"
-            Value    = local.terraform_plan_exit_codes.NO_CHANGES
+            Value    = local.terraform_plan_exit_codes.CHANGES_FOUND
             Variable = "#{TerraformPlan.TF_PLAN_EXIT_CODE}"
           }
           name   = "ChangesPresent"
