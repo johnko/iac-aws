@@ -5,7 +5,7 @@
 # See modules/pipeline-common/README.md for full documentation.
 # -----------------------------------------------------------------------------
 module "pipeline_common" {
-  source = "../../modules/pipeline-common"
+  source = "../../../../modules/pipeline-common"
 }
 
 locals {
