@@ -1,3 +1,22 @@
+# ============================================================================
+# Terraform Plan Buildspec - Implicit State Machine
+# ============================================================================
+# This buildspec implements an IMPLICIT state machine:
+#
+#   Pre-Build ──▶ Build (terraform plan) ──▶ Post-Build
+#                                                │
+#                                    TF_PLAN_EXIT_CODE?
+#                                    ├── "0" → NO_CHANGES → exit 0 (skip Apply)
+#                                    ├── "2" → CHANGES_FOUND → continue
+#                                    └── "1" → ERROR → exit 1 (fail)
+#
+# Exit codes are DIFFERENT from CDK:
+#   TF:   0=empty, 2=changes, 1=error
+#   CDK:  0=empty, 1=changes, 2=error
+#
+# See modules/pipeline-common/ for centralized definitions.
+# ============================================================================
+
 artifacts:
   files:
     - '**/*'
