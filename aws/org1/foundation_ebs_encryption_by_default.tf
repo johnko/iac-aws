@@ -1,8 +1,5 @@
-# Enable default EBS encryption by default across all governed regions
-# This ensures all new EBS volumes are automatically encrypted
-
-# Minimal provider aliases for multi-region support
-# These inherit configuration from the default provider
+# EBS Encryption by Default
+# Uses modules/ebs-encryption-by-default/ to enable encryption across all governed regions
 
 provider "aws" {
   alias  = "ca_west"
@@ -24,27 +21,14 @@ provider "aws" {
   region = "us-west-2"
 }
 
-# Default provider is ca-central-1
-resource "aws_ebs_encryption_by_default" "ca_central_1" {
-  enabled = true
-}
+module "ebs_encryption" {
+  source = "../../../../modules/ebs-encryption-by-default"
 
-resource "aws_ebs_encryption_by_default" "ca_west_1" {
-  provider = aws.ca_west
-  enabled  = true
-}
-
-resource "aws_ebs_encryption_by_default" "us_east_1" {
-  provider = aws.us_east_1
-  enabled  = true
-}
-
-resource "aws_ebs_encryption_by_default" "us_east_2" {
-  provider = aws.us_east_2
-  enabled  = true
-}
-
-resource "aws_ebs_encryption_by_default" "us_west_2" {
-  provider = aws.us_west_2
-  enabled  = true
+  providers = {
+    aws           = aws
+    aws.ca_west   = aws.ca_west
+    aws.us_east_1 = aws.us_east_1
+    aws.us_east_2 = aws.us_east_2
+    aws.us_west_2 = aws.us_west_2
+  }
 }
