@@ -381,12 +381,12 @@ resource "aws_codepipeline" "terraform" {
               },
               {
                 name  = "COMMIT_ID2"
-                value = "#{SecondSourceVariables.CommitId}"
+                value = lookup(each.value, "SecondFullRepositoryId", null) != null ? "#{SecondSourceVariables.CommitId}" : ""
                 type  = "PLAINTEXT"
               },
               {
                 name  = "COMMIT_MESSAGE2"
-                value = "#{SecondSourceVariables.CommitMessage}"
+                value = lookup(each.value, "SecondFullRepositoryId", null) != null ? "#{SecondSourceVariables.CommitMessage}" : ""
                 type  = "PLAINTEXT"
               },
               {
@@ -486,12 +486,12 @@ resource "aws_codepipeline" "terraform" {
               },
               {
                 name  = "COMMIT_ID2"
-                value = "#{SecondSourceVariables.CommitId}"
+                value = lookup(each.value, "SecondFullRepositoryId", null) != null ? "#{SecondSourceVariables.CommitId}" : ""
                 type  = "PLAINTEXT"
               },
               {
                 name  = "COMMIT_MESSAGE2"
-                value = "#{SecondSourceVariables.CommitMessage}"
+                value = lookup(each.value, "SecondFullRepositoryId", null) != null ? "#{SecondSourceVariables.CommitMessage}" : ""
                 type  = "PLAINTEXT"
               },
               {
