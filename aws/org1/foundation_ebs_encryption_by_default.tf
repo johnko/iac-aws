@@ -14,6 +14,19 @@ locals {
 }
 
 provider "aws" {
+  alias = "ca_central"
+  allowed_account_ids = [
+    var.aws_account_id
+  ]
+  default_tags {
+    tags = {
+      iacdeployer = "terraform"
+    }
+  }
+  region = "ca-central-1"
+}
+
+provider "aws" {
   alias = "ca_west"
   allowed_account_ids = [
     var.aws_account_id
@@ -66,8 +79,8 @@ provider "aws" {
 }
 
 resource "aws_ebs_encryption_by_default" "ca_central_1" {
-  # No provider specified - uses default provider (ca-central-1)
-  enabled = true
+  provider = aws.ca_central
+  enabled  = true
 }
 
 resource "aws_ebs_encryption_by_default" "ca_west_1" {
