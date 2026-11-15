@@ -1,1 +1,0 @@
-../../shared_provider.tf
