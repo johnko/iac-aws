@@ -1,1 +1,0 @@
-../../foundation_ebs_encryption_by_default.tf
