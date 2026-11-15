@@ -1,25 +1,27 @@
 # EBS Encryption by Default
-# Enables encryption across all governed regions using AWS CLI
-# to avoid Terraform provider timeout issues with multiple regions
+# Enables encryption across all governed regions
+# Uses the region argument (supported in AWS provider 6.71.0+)
 
-locals {
-  ebs_encryption_regions = [
-    "ca-central-1",
-    "ca-west-1",
-    "us-east-1",
-    "us-east-2",
-    "us-west-2",
-  ]
+resource "aws_ebs_encryption_by_default" "ca_central_1" {
+  enabled = true
 }
 
-resource "null_resource" "ebs_encryption_by_default" {
-  for_each = toset(local.ebs_encryption_regions)
+resource "aws_ebs_encryption_by_default" "ca_west_1" {
+  region  = "ca-west-1"
+  enabled = true
+}
 
-  provisioner "local-exec" {
-    command = "aws ec2 enable-ebs-encryption-by-default --region ${each.value}"
-  }
+resource "aws_ebs_encryption_by_default" "us_east_1" {
+  region  = "us-east-1"
+  enabled = true
+}
 
-  triggers = {
-    always_run = timestamp()
-  }
+resource "aws_ebs_encryption_by_default" "us_east_2" {
+  region  = "us-east-2"
+  enabled = true
+}
+
+resource "aws_ebs_encryption_by_default" "us_west_2" {
+  region  = "us-west-2"
+  enabled = true
 }
