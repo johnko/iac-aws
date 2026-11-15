@@ -12,7 +12,7 @@ import {
 # This role is required for the SSM service setting to work
 resource "aws_iam_service_linked_role" "ssm_default_host_management" {
   aws_service_name = "ssm.amazonaws.com"
-  description      = "Service-linked role for Systems Manager Default Host Management"
+  description      = "Provides access to AWS Resources managed or used by Amazon SSM."
 
   lifecycle {
     ignore_changes = [name]
