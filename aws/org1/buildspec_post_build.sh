@@ -3,6 +3,7 @@ set -euxo pipefail
 
 set +eu
 COMMIT_MESSAGE_ONE_LINE="$(echo "$COMMIT_MESSAGE" | head -n1)"
+COMMIT_MESSAGE2_ONE_LINE="$(echo "$COMMIT_MESSAGE2" | head -n1)"
 enable_stage_transition() {
   STAGE_NAME=Plan
   if [[ $CODEPIPELINE_NAME =~ ^CDK-.* ]]; then
@@ -62,8 +63,10 @@ post_plan_to_slack() {
         --arg region "$AWS_REGION" \
         --arg commitid "$COMMIT_ID" \
         --arg commitmessage "$COMMIT_MESSAGE_ONE_LINE" \
+        --arg commitid2 "$COMMIT_ID2" \
+        --arg commitmessage2 "$COMMIT_MESSAGE2_ONE_LINE" \
         --arg msg "$CDK_DIFF_TEXT" \
-        '{"text":"\($icon) Diff for <\($url)|pipeline> `\($pipeline)` in region `\($region)`\n\n```\($commitid) \($commitmessage)\n\n\($msg)```"}')
+        '{"text":"\($icon) Diff for <\($url)|pipeline> `\($pipeline)` in region `\($region)`\n\n```\($commitid) \($commitmessage)\n($commitid2) \($commitmessage2)\n\n\($msg)```"}')
       echo "$SLACK_PAYLOAD"
       curl \
         -X POST \
@@ -93,8 +96,10 @@ post_plan_to_slack() {
         --arg region "$AWS_REGION" \
         --arg commitid "$COMMIT_ID" \
         --arg commitmessage "$COMMIT_MESSAGE_ONE_LINE" \
+        --arg commitid2 "$COMMIT_ID2" \
+        --arg commitmessage2 "$COMMIT_MESSAGE2_ONE_LINE" \
         --arg msg "$TF_PLAN_TEXT" \
-        '{"text":"\($icon) Plan for <\($url)|pipeline> `\($pipeline)` in region `\($region)`\n\n```\($commitid) \($commitmessage)\n\n\($msg)```"}')
+        '{"text":"\($icon) Plan for <\($url)|pipeline> `\($pipeline)` in region `\($region)`\n\n```\($commitid) \($commitmessage)\n($commitid2) \($commitmessage2)\n\n\($msg)```"}')
       echo "$SLACK_PAYLOAD"
       curl \
         -X POST \
@@ -126,8 +131,10 @@ post_apply_to_slack() {
       --arg region "$AWS_REGION" \
       --arg commitid "$COMMIT_ID" \
       --arg commitmessage "$COMMIT_MESSAGE_ONE_LINE" \
+      --arg commitid2 "$COMMIT_ID2" \
+      --arg commitmessage2 "$COMMIT_MESSAGE2_ONE_LINE" \
       --arg msg "$CDK_DEPLOY_TEXT" \
-      '{"text":"\($icon) Deploy for <\($url)|pipeline> `\($pipeline)` in region `\($region)`\n\n```\($commitid) \($commitmessage)\n\n\($msg)```"}')
+      '{"text":"\($icon) Deploy for <\($url)|pipeline> `\($pipeline)` in region `\($region)`\n\n```\($commitid) \($commitmessage)\n($commitid2) \($commitmessage2)\n\n\($msg)```"}')
     echo "$SLACK_PAYLOAD"
     curl \
       -X POST \
@@ -159,8 +166,10 @@ post_apply_to_slack() {
       --arg region "$AWS_REGION" \
       --arg commitid "$COMMIT_ID" \
       --arg commitmessage "$COMMIT_MESSAGE_ONE_LINE" \
+      --arg commitid2 "$COMMIT_ID2" \
+      --arg commitmessage2 "$COMMIT_MESSAGE2_ONE_LINE" \
       --arg msg "$TF_APPLY_TEXT" \
-      '{"text":"\($icon) Apply for <\($url)|pipeline> `\($pipeline)` in region `\($region)`\n\n```\($commitid) \($commitmessage)\n\n\($msg)```"}')
+      '{"text":"\($icon) Apply for <\($url)|pipeline> `\($pipeline)` in region `\($region)`\n\n```\($commitid) \($commitmessage)\n($commitid2) \($commitmessage2)\n\n\($msg)```"}')
     echo "$SLACK_PAYLOAD"
     curl \
       -X POST \
