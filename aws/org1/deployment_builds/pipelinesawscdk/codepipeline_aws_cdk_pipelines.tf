@@ -402,6 +402,16 @@ resource "aws_codepipeline" "cdk" {
                 type  = "PLAINTEXT"
               },
               {
+                name  = "COMMIT_ID2"
+                value = "#{SecondSourceVariables.CommitId}"
+                type  = "PLAINTEXT"
+              },
+              {
+                name  = "COMMIT_MESSAGE2"
+                value = "#{SecondSourceVariables.CommitMessage}"
+                type  = "PLAINTEXT"
+              },
+              {
                 name  = "CROSS_ACCOUNT_PIPELINE_IAM_ROLE"
                 value = "CrossAccountPipelineRole-TerraformPlan"
                 type  = "PLAINTEXT"
@@ -495,6 +505,16 @@ resource "aws_codepipeline" "cdk" {
               {
                 name  = "COMMIT_MESSAGE"
                 value = "#{SourceVariables.CommitMessage}"
+                type  = "PLAINTEXT"
+              },
+              {
+                name  = "COMMIT_ID2"
+                value = "#{SecondSourceVariables.CommitId}"
+                type  = "PLAINTEXT"
+              },
+              {
+                name  = "COMMIT_MESSAGE2"
+                value = "#{SecondSourceVariables.CommitMessage}"
                 type  = "PLAINTEXT"
               },
               {
