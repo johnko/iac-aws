@@ -4,7 +4,8 @@
 # Uses the region argument (supported in AWS provider 6.71.0+)
 
 resource "aws_ssm_association" "ca_central_1_agent_auto_update" {
-  name = "AWS-UpdateSSMAgent"
+  name             = "AWS-UpdateSSMAgent"
+  association_name = "SystemAssociationForSsmAgentUpdate"
 
   schedule_expression = "rate(14 days)"
 
@@ -17,7 +18,8 @@ resource "aws_ssm_association" "ca_central_1_agent_auto_update" {
 resource "aws_ssm_association" "ca_west_1_agent_auto_update" {
   region = "ca-west-1"
 
-  name = "AWS-UpdateSSMAgent"
+  name             = "AWS-UpdateSSMAgent"
+  association_name = "SystemAssociationForSsmAgentUpdate"
 
   schedule_expression = "rate(14 days)"
 
@@ -30,7 +32,8 @@ resource "aws_ssm_association" "ca_west_1_agent_auto_update" {
 resource "aws_ssm_association" "us_east_1_agent_auto_update" {
   region = "us-east-1"
 
-  name = "AWS-UpdateSSMAgent"
+  name             = "AWS-UpdateSSMAgent"
+  association_name = "SystemAssociationForSsmAgentUpdate"
 
   schedule_expression = "rate(14 days)"
 
@@ -43,7 +46,8 @@ resource "aws_ssm_association" "us_east_1_agent_auto_update" {
 resource "aws_ssm_association" "us_east_2_agent_auto_update" {
   region = "us-east-2"
 
-  name = "AWS-UpdateSSMAgent"
+  name             = "AWS-UpdateSSMAgent"
+  association_name = "SystemAssociationForSsmAgentUpdate"
 
   schedule_expression = "rate(14 days)"
 
@@ -56,7 +60,8 @@ resource "aws_ssm_association" "us_east_2_agent_auto_update" {
 resource "aws_ssm_association" "us_west_2_agent_auto_update" {
   region = "us-west-2"
 
-  name = "AWS-UpdateSSMAgent"
+  name             = "AWS-UpdateSSMAgent"
+  association_name = "SystemAssociationForSsmAgentUpdate"
 
   schedule_expression = "rate(14 days)"
 
