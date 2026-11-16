@@ -1,1 +1,1 @@
-../../org1/foundation_crossaccount_agent_role.tf
+../../foundation_crossaccount_agent_role.tf
