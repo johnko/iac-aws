@@ -8,7 +8,12 @@ resource "aws_iam_role" "cdk_codepipeline_rejected" {
         "Principal" : {
           "Service" : "lambda.amazonaws.com"
         },
-        "Action" : "sts:AssumeRole"
+        "Action" : "sts:AssumeRole",
+        "Condition" : {
+          "StringEquals" : {
+            "aws:SourceAccount" : "${data.aws_caller_identity.current.account_id}"
+          }
+        }
       }
     ]
   })
