@@ -13,10 +13,6 @@ import {
 resource "aws_iam_service_linked_role" "ssm_default_host_management" {
   aws_service_name = "ssm.amazonaws.com"
   description      = "Provides access to AWS Resources managed or used by Amazon SSM."
-
-  lifecycle {
-    ignore_changes = [name]
-  }
 }
 
 resource "aws_ssm_service_setting" "ca_central_1_default_host_management" {
