@@ -8,7 +8,12 @@ resource "aws_iam_role" "crossaccount_agent" {
         "Principal" : {
           "AWS" : "arn:aws:iam::${var.aws_account_id_playground_rswea}:root"
         },
-        "Action" : "sts:AssumeRole"
+        "Action" : "sts:AssumeRole",
+        "Condition" : {
+          "StringEquals" : {
+            "aws:PrincipalOrgID" : data.aws_organizations_organization.current.id
+          }
+        }
       }
     ]
   })
