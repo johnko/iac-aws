@@ -8,7 +8,12 @@ resource "aws_iam_role" "crossaccount_terraform_plan" {
         "Principal" : {
           "AWS" : "arn:aws:iam::${var.aws_account_id_deployment_builds}:root"
         },
-        "Action" : "sts:AssumeRole"
+        "Action" : "sts:AssumeRole",
+        "Condition" : {
+          "StringEquals" : {
+            "aws:PrincipalOrgID" : data.aws_organizations_organization.current.id
+          }
+        }
       }
     ]
   })
