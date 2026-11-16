@@ -1,0 +1,1 @@
+../../foundation_ssm_enable_arex.tf
