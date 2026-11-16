@@ -35,7 +35,12 @@ resource "aws_iam_role" "channel" {
         "Principal" : {
           "Service" : "chatbot.amazonaws.com"
         },
-        "Action" : "sts:AssumeRole"
+        "Action" : "sts:AssumeRole",
+        "Condition" : {
+          "StringEquals" : {
+            "aws:SourceAccount" : "${data.aws_caller_identity.current.account_id}"
+          }
+        }
       }
     ]
   })
