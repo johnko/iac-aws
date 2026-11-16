@@ -6,7 +6,7 @@ resource "aws_iam_role" "crossaccount_agent" {
       {
         "Effect" : "Allow",
         "Principal" : {
-          "AWS" : "arn:aws:iam::${var.aws_account_id_deployment_builds}:root"
+          "AWS" : "arn:aws:iam::${var.aws_account_id_playground_rswea}:root"
         },
         "Action" : "sts:AssumeRole"
       }
