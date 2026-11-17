@@ -35,7 +35,6 @@ import {
   id = "764858776402,us-east-2,AWS-QuickSetup-SSM-LA-13yyq"
 }
 
-
 locals {
   quicksetup_configuration_id = "13yyq"
   quicksetup_home_region      = "us-east-2"
@@ -101,7 +100,6 @@ resource "aws_cloudformation_stack_set_instance" "quicksetup_ssm_useast2" {
   region         = "us-east-2"
 }
 
-
 # NOTE: The LocalDeploymentRolesStack is a separate stack (not part of the StackSet)
 # It was created by Quick Setup to provide the administration/execution roles.
 # We manage it as an individual stack since it's not part of the StackSet.
@@ -132,7 +130,6 @@ resource "aws_cloudformation_stack" "quicksetup_local_deployment_roles" {
     ]
   }
 }
-
 
 # Outputs
 output "quicksetup_stack_set_id" {
