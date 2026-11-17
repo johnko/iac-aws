@@ -1,1 +1,0 @@
-../../foundation_ssm_manage_resources.tf
