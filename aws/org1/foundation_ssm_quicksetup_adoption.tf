@@ -36,8 +36,8 @@ import {
 }
 
 locals {
-  quicksetup_configuration_id = "13yyq"
-  quicksetup_home_region      = "us-east-2"
+  quicksetup_configuration_id     = "13yyq"
+  quicksetup_home_region          = "us-east-2"
   quicksetup_delegated_account_id = "" # Set to organization delegated account ID if using organizations
 }
 
