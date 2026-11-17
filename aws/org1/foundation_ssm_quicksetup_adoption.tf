@@ -66,16 +66,16 @@ resource "aws_cloudformation_stack_set" "quicksetup_ssm" {
   permission_model = "SELF_MANAGED"
 
   parameters = {
-    QSType                      = "LA" # Local Account
+    QSType                      = "LA"
     QSConfigurationId           = "13yyq"
     DelegatedAccountId          = ""
     HomeRegion                  = "us-east-2"
     S3BucketEncryptionKeyArn    = ""
     CreateRemediationRoles      = "true"
-    QSAttachConfigurationPolicy = "false"
+    QSAttachConfigurationPolicy = "true"
     QSPrincipalOrgId            = ""
     EnableDHMCSchedule          = "rate(1 day)"
-    AgentUpdateSchedule         = "rate(14 days)"
+    AgentUpdateSchedule         = "none"
     InventoryCollectionSchedule = "rate(12 hours)"
   }
 
@@ -111,10 +111,10 @@ resource "aws_cloudformation_stack" "quicksetup_local_deployment_roles" {
   template_body = data.local_file.quicksetup_local_roles_template.content
 
   parameters = {
-    QSConfigurationType         = "LA"
-    OptInRegions                = "ca-central-1,ca-west-1,us-east-1,us-west-2,us-east-2"
-    LocalAdministrationRoleName = "AWS-QuickSetup-LocalAdministrationRole"
-    LocalExecutionRoleName      = "AWS-QuickSetup-LocalExecutionRole"
+    QSConfigurationType         = "SSM"
+    OptInRegions                = ""
+    LocalAdministrationRoleName = "AWS-QuickSetup-SSM-LocalAdministrationRole"
+    LocalExecutionRoleName      = "AWS-QuickSetup-SSM-LocalExecutionRole"
     UseAWSManagedPolicy         = "true"
   }
 
