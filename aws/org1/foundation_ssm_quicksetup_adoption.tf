@@ -35,6 +35,7 @@ import {
   id = "764858776402,us-east-2,AWS-QuickSetup-SSM-LA-13yyq"
 }
 
+
 locals {
   quicksetup_configuration_id = "13yyq"
   quicksetup_home_region      = "us-east-2"
@@ -57,8 +58,7 @@ data "local_file" "quicksetup_local_roles_template" {
 # - S3 buckets for diagnosis
 # - Remediation roles
 resource "aws_cloudformation_stack_set" "quicksetup_ssm" {
-  name = "AWS-QuickSetup-SSM-LA-13yyq"
-
+  name        = "AWS-QuickSetup-SSM-LA-13yyq"
   description = "CFN StackSet for QuickSetup b3625d04-20a3-441d-b3be-9c346952285a."
 
   template_body = data.local_file.quicksetup_lifecycle_template.content
@@ -66,25 +66,25 @@ resource "aws_cloudformation_stack_set" "quicksetup_ssm" {
   permission_model = "SELF_MANAGED"
 
   parameters = {
-    QSType                        = "LA" # Local Account
-    QSConfigurationId             = "13yyq"
-    DelegatedAccountId            = ""
-    HomeRegion                    = "us-east-2"
-    S3BucketEncryptionKeyArn      = ""
-    CreateRemediationRoles        = "true"
-    QSAttachConfigurationPolicy   = "false"
-    QSPrincipalOrgId              = ""
-    EnableDHMCSchedule            = "rate(1 day)"
-    AgentUpdateSchedule           = "rate(14 days)"
-    InventoryCollectionSchedule   = "rate(12 hours)"
+    QSType                      = "LA" # Local Account
+    QSConfigurationId           = "13yyq"
+    DelegatedAccountId          = ""
+    HomeRegion                  = "us-east-2"
+    S3BucketEncryptionKeyArn    = ""
+    CreateRemediationRoles      = "true"
+    QSAttachConfigurationPolicy = "false"
+    QSPrincipalOrgId            = ""
+    EnableDHMCSchedule          = "rate(1 day)"
+    AgentUpdateSchedule         = "rate(14 days)"
+    InventoryCollectionSchedule = "rate(12 hours)"
   }
 
   capabilities = ["CAPABILITY_IAM", "CAPABILITY_NAMED_IAM", "CAPABILITY_AUTO_EXPAND"]
 
   tags = {
-    Terraform   = "true"
-    QuickSetup  = "SSM"
-    ManagedBy   = "Terraform"
+    Terraform  = "true"
+    QuickSetup = "SSM"
+    ManagedBy  = "Terraform"
   }
 
   lifecycle {
@@ -96,10 +96,11 @@ resource "aws_cloudformation_stack_set" "quicksetup_ssm" {
 
 # StackSet Instance for us-east-2
 resource "aws_cloudformation_stack_set_instance" "quicksetup_ssm_useast2" {
-  stack_set_name = aws_cloudformation_stack_set.quicksetup_ssm.name
+  stack_set_name = aws_cloudformation_stack_set.quicksetup_ssm.id
   account_id     = var.aws_account_id
   region         = "us-east-2"
 }
+
 
 # NOTE: The LocalDeploymentRolesStack is a separate stack (not part of the StackSet)
 # It was created by Quick Setup to provide the administration/execution roles.
@@ -110,11 +111,11 @@ resource "aws_cloudformation_stack" "quicksetup_local_deployment_roles" {
   template_body = data.local_file.quicksetup_local_roles_template.content
 
   parameters = {
-    QSConfigurationType          = "LA"
-    OptInRegions                 = "ca-central-1,ca-west-1,us-east-1,us-west-2,us-east-2"
-    LocalAdministrationRoleName  = "AWS-QuickSetup-LocalAdministrationRole"
-    LocalExecutionRoleName       = "AWS-QuickSetup-LocalExecutionRole"
-    UseAWSManagedPolicy          = "true"
+    QSConfigurationType         = "LA"
+    OptInRegions                = "ca-central-1,ca-west-1,us-east-1,us-west-2,us-east-2"
+    LocalAdministrationRoleName = "AWS-QuickSetup-LocalAdministrationRole"
+    LocalExecutionRoleName      = "AWS-QuickSetup-LocalExecutionRole"
+    UseAWSManagedPolicy         = "true"
   }
 
   capabilities = ["CAPABILITY_IAM"]
@@ -131,6 +132,7 @@ resource "aws_cloudformation_stack" "quicksetup_local_deployment_roles" {
     ]
   }
 }
+
 
 # Outputs
 output "quicksetup_stack_set_id" {
