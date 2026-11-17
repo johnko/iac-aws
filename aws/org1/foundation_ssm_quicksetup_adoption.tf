@@ -23,17 +23,11 @@
 #   terraform import aws_cloudformation_stack.quicksetup_local_deployment_roles AWS-QuickSetup-SSM-LocalDeploymentRolesStack
 #   terraform import aws_cloudformation_stack.quicksetup_lifecycle StackSet-AWS-QuickSetup-SSM-LA-13yyq-e031431c-a58d-438d-9c06-a1f353961c3f
 
-# Import existing Quick Setup StackSet
-import {
-  to = aws_cloudformation_stack_set.quicksetup_ssm
-  id = "AWS-QuickSetup-SSM-LA-13yyq"
-}
-
-# Import existing StackSet Instance for us-east-2
-import {
-  to = aws_cloudformation_stack_set_instance.quicksetup_ssm_useast2
-  id = "764858776402,us-east-2,AWS-QuickSetup-SSM-LA-13yyq"
-}
+# NOTE: Import blocks have been removed because this StackSet only exists
+# in the account where Quick Setup was originally configured.
+# If you need to import existing resources, use:
+#   terraform import aws_cloudformation_stack_set.quicksetup_ssm AWS-QuickSetup-SSM-LA-13yyq
+#   terraform import 'aws_cloudformation_stack_set_instance.quicksetup_ssm_useast2' 'AWS-QuickSetup-SSM-LA-13yyq,us-east-2,<ACCOUNT_ID>'
 
 locals {
   quicksetup_configuration_id     = "13yyq"
@@ -97,7 +91,7 @@ resource "aws_cloudformation_stack_set" "quicksetup_ssm" {
 resource "aws_cloudformation_stack_set_instance" "quicksetup_ssm_useast2" {
   stack_set_name = aws_cloudformation_stack_set.quicksetup_ssm.id
   account_id     = var.aws_account_id
-  region         = "us-east-2"
+  region_name    = "us-east-2"
 }
 
 # NOTE: The LocalDeploymentRolesStack is a separate stack (not part of the StackSet)
