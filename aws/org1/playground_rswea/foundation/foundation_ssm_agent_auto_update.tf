@@ -1,1 +1,0 @@
-../../foundation_ssm_agent_auto_update.tf
