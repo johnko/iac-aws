@@ -43,6 +43,8 @@ locals {
               "cloudformation:ContinueUpdateRollback",
               "cloudformation:DescribeStackEvents",
               "cloudformation:DescribeStackResource",
+              "cloudformation:DescribeStackResources",
+              "cloudformation:GetTemplate",
               "codepipeline:ListPipelineExecutions",
               "ecr:DescribeImages",
               "ecr:DescribeRepositories",
