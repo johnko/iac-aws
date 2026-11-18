@@ -32,7 +32,7 @@ import {
 # Import existing StackSet Instance for us-east-2
 import {
   to = aws_cloudformation_stack_set_instance.quicksetup_ssm_useast2
-  id = "764858776402,us-east-2,AWS-QuickSetup-SSM-LA-13yyq"
+  id = "AWS-QuickSetup-SSM-LA-13yyq,764858776402,us-east-2"
 }
 
 locals {
@@ -95,9 +95,9 @@ resource "aws_cloudformation_stack_set" "quicksetup_ssm" {
 
 # StackSet Instance for us-east-2
 resource "aws_cloudformation_stack_set_instance" "quicksetup_ssm_useast2" {
-  stack_set_name = aws_cloudformation_stack_set.quicksetup_ssm.id
-  account_id     = var.aws_account_id
-  region         = "us-east-2"
+  stack_set_name            = aws_cloudformation_stack_set.quicksetup_ssm.id
+  account_id                = var.aws_account_id
+  stack_set_instance_region = "us-east-2"
 }
 
 # NOTE: The LocalDeploymentRolesStack is a separate stack (not part of the StackSet)
