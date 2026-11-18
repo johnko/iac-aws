@@ -31,12 +31,6 @@ resource "aws_cloudformation_stack" "quicksetup_local_deployment_roles" {
   }
 
   capabilities = ["CAPABILITY_NAMED_IAM"]
-
-  lifecycle {
-    ignore_changes = [
-      parameters,
-    ]
-  }
 }
 
 # Outputs
