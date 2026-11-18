@@ -19,9 +19,8 @@ resource "aws_ssmquicksetup_configuration_manager" "dhmc" {
     type                                     = "AWSQuickSetupType-DHMC"
 
     parameters = {
-      "TargetRegions"      = local.quicksetup_target_regions
-      "EnableDHMC"         = "true"
-      "EnableDHMCSchedule" = "rate(1 day)"
+      "UpdateSsmAgent" = "true"
+      "TargetRegions"  = local.quicksetup_target_regions
     }
   }
 
@@ -47,11 +46,14 @@ resource "aws_ssmquicksetup_configuration_manager" "ssm_host_mgmt" {
     type                                     = "AWSQuickSetupType-SSMHostMgmt"
 
     parameters = {
+      "UpdateSsmAgent"         = "true"
+      "UpdateEc2LaunchAgent"   = "true"
+      "CollectInventory"       = "true"
+      "ScanInstances"          = "true"
+      "InstallCloudWatchAgent" = "true"
+      "UpdateCloudWatchAgent"  = "true"
+      "TargetType"             = "*"
       "TargetRegions"   = local.quicksetup_target_regions
-      "UpdateSSMAgent"  = "true"
-      "UpdateTargets"   = "*"
-      "AssociationName" = "SSM-Agent-Auto-Update"
-      "AssociationRate" = "rate(7 days)"
     }
   }
 
@@ -74,13 +76,12 @@ resource "aws_ssmquicksetup_configuration_manager" "resource_explorer" {
   configuration_definition {
     local_deployment_administration_role_arn = local.quicksetup_local_admin_role_arn
     local_deployment_execution_role_name     = local.quicksetup_local_exec_role_name
-    type                                     = "AWSQuickSetupType-ResourceExplorerAccessor"
+    type                                     = "AWSQuickSetupType-ResourceExplorer"
 
     parameters = {
-      "TargetRegions"                 = local.quicksetup_target_regions
-      "EnableResourceExplorer"        = "true"
-      "AggregatorIndexRegion"         = "ca-central-1"
-      "DemoteExistingAggregatorIndex" = "true"
+      "SelectedAggregatorRegion"  = "ca-central-1"
+      "ReplaceExistingAggregator" = "true"
+      "TargetRegions"             = local.quicksetup_target_regions
     }
   }
 
