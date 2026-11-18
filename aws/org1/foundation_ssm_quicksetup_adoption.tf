@@ -16,8 +16,6 @@ data "local_file" "quicksetup_local_roles_template" {
 # It was created by Quick Setup to provide the administration/execution roles.
 # We manage it as an individual stack since it's not part of the StackSet.
 resource "aws_cloudformation_stack" "quicksetup_local_deployment_roles" {
-  region = "us-east-2"
-
   name = "AWS-QuickSetup-SSM-LocalDeploymentRolesStack"
 
   template_body = data.local_file.quicksetup_local_roles_template.content
