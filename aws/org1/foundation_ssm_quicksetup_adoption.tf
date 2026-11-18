@@ -95,9 +95,9 @@ resource "aws_cloudformation_stack_set" "quicksetup_ssm" {
 
 # StackSet Instance for us-east-2
 resource "aws_cloudformation_stack_set_instance" "quicksetup_ssm_useast2" {
-  stack_set_name = aws_cloudformation_stack_set.quicksetup_ssm.id
-  account_id     = var.aws_account_id
-  region_name    = "us-east-2"
+  stack_set_name            = aws_cloudformation_stack_set.quicksetup_ssm.id
+  account_id                = var.aws_account_id
+  stack_set_instance_region = "us-east-2"
 }
 
 # NOTE: The LocalDeploymentRolesStack is a separate stack (not part of the StackSet)
