@@ -5,14 +5,7 @@
 # This file adopts and manages the existing AWS Quick Setup CloudFormation stacks
 #
 # These stacks were originally created by AWS SSM Quick Setup and contain:
-# - IAM roles for automation
-# - Cross-account execution roles
-
-# Import block for existing CloudFormation stack
-import {
-  to = aws_cloudformation_stack.quicksetup_local_deployment_roles
-  id = "AWS-QuickSetup-SSM-LocalDeploymentRolesStack"
-}
+# - IAM roles for automation and execution roles
 
 # Load the CloudFormation template bodies
 data "local_file" "quicksetup_local_roles_template" {
