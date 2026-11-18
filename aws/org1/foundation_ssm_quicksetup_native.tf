@@ -18,7 +18,7 @@ resource "aws_ssmquicksetup_configuration_manager" "dhmc" {
     local_deployment_execution_role_name     = local.quicksetup_local_exec_role_name
     type                                     = "AWSQuickSetupType-DHMC"
 
-    type_parameters = {
+    parameters = {
       "TargetRegions"      = local.quicksetup_target_regions
       "EnableDHMC"         = "true"
       "EnableDHMCSchedule" = "rate(1 day)"
@@ -46,7 +46,7 @@ resource "aws_ssmquicksetup_configuration_manager" "ssm_host_mgmt" {
     local_deployment_execution_role_name     = local.quicksetup_local_exec_role_name
     type                                     = "AWSQuickSetupType-SSMHostMgmt"
 
-    type_parameters = {
+    parameters = {
       "TargetRegions"   = local.quicksetup_target_regions
       "UpdateSSMAgent"  = "true"
       "UpdateTargets"   = "*"
@@ -76,7 +76,7 @@ resource "aws_ssmquicksetup_configuration_manager" "resource_explorer" {
     local_deployment_execution_role_name     = local.quicksetup_local_exec_role_name
     type                                     = "AWSQuickSetupType-ResourceExplorerAccessor"
 
-    type_parameters = {
+    parameters = {
       "TargetRegions"                 = local.quicksetup_target_regions
       "EnableResourceExplorer"        = "true"
       "AggregatorIndexRegion"         = "us-east-2"
