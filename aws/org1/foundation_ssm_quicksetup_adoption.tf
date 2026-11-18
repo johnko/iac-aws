@@ -32,12 +32,6 @@ resource "aws_cloudformation_stack" "quicksetup_local_deployment_roles" {
 
   capabilities = ["CAPABILITY_NAMED_IAM"]
 
-  tags = {
-    Terraform   = "true"
-    QuickSetup  = "SSM"
-    Environment = "management"
-  }
-
   lifecycle {
     ignore_changes = [
       template_body,
