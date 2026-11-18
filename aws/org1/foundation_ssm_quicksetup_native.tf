@@ -30,6 +30,10 @@ resource "aws_ssmquicksetup_configuration_manager" "dhmc" {
     ManagedBy  = "Terraform"
     QuickSetup = "DHMC"
   }
+
+  depends_on = [
+    aws_cloudformation_stack.quicksetup_local_deployment_roles
+  ]
 }
 
 # Configuration Manager for SSM Host Management (Agent Update)
@@ -56,6 +60,10 @@ resource "aws_ssmquicksetup_configuration_manager" "ssm_host_mgmt" {
     ManagedBy  = "Terraform"
     QuickSetup = "SSMHostMgmt"
   }
+
+  depends_on = [
+    aws_cloudformation_stack.quicksetup_local_deployment_roles
+  ]
 }
 
 # Configuration Manager for Resource Explorer
@@ -81,6 +89,10 @@ resource "aws_ssmquicksetup_configuration_manager" "resource_explorer" {
     ManagedBy  = "Terraform"
     QuickSetup = "ResourceExplorer"
   }
+
+  depends_on = [
+    aws_cloudformation_stack.quicksetup_local_deployment_roles
+  ]
 }
 
 # Outputs
