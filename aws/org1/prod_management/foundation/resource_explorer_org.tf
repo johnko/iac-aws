@@ -1,4 +1,3 @@
-
 resource "aws_resourceexplorer2_view" "org_resources" {
   name = "org-resources"
 
