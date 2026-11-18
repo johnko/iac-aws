@@ -23,8 +23,8 @@ resource "aws_cloudformation_stack" "quicksetup_local_deployment_roles" {
   parameters = {
     QSConfigurationType         = "SSM"
     OptInRegions                = ""
-    LocalAdministrationRoleName = "AWS-QuickSetup-SSM-LocalAdministrationRole"
-    LocalExecutionRoleName      = "AWS-QuickSetup-SSM-LocalExecutionRole"
+    LocalAdministrationRoleName = local.quicksetup_local_admin_role_name
+    LocalExecutionRoleName      = local.quicksetup_local_exec_role_name
     UseAWSManagedPolicy         = "true"
   }
 
