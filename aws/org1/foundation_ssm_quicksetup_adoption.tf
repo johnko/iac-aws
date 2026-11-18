@@ -34,7 +34,7 @@ resource "aws_cloudformation_stack" "quicksetup_local_deployment_roles" {
 
   lifecycle {
     ignore_changes = [
-      template_body,
+      parameters,
     ]
   }
 }
