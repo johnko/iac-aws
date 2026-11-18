@@ -94,14 +94,3 @@ resource "aws_ssmquicksetup_configuration_manager" "resource_explorer" {
     aws_cloudformation_stack.quicksetup_local_deployment_roles
   ]
 }
-
-# Outputs
-output "quicksetup_configuration_manager_arn" {
-  description = "ARN of the SSM Quick Setup Configuration Manager"
-  value       = aws_ssmquicksetup_configuration_manager.ssm_automations.arn
-}
-
-output "quicksetup_configuration_manager_id" {
-  description = "ID of the SSM Quick Setup Configuration Manager"
-  value       = aws_ssmquicksetup_configuration_manager.ssm_automations.id
-}
