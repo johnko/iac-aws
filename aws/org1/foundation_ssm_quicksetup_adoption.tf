@@ -11,7 +11,7 @@
 # Import block for existing CloudFormation stack
 import {
   to = aws_cloudformation_stack.quicksetup_local_deployment_roles
-  id = "arn:aws:cloudformation:us-east-2:764858776402:stack/AWS-QuickSetup-SSM-LocalDeploymentRolesStack/a2967410-cde5-11f1-b961-020f282787ef"
+  id = "AWS-QuickSetup-SSM-LocalDeploymentRolesStack"
 }
 
 # Load the CloudFormation template bodies
