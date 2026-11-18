@@ -30,7 +30,7 @@ resource "aws_cloudformation_stack" "quicksetup_local_deployment_roles" {
     UseAWSManagedPolicy         = "true"
   }
 
-  capabilities = ["CAPABILITY_IAM"]
+  capabilities = ["CAPABILITY_NAMED_IAM"]
 
   tags = {
     Terraform   = "true"
