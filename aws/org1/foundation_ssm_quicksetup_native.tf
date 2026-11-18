@@ -3,9 +3,10 @@
 # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ssmquicksetup_configuration_manager
 
 locals {
-  quicksetup_local_admin_role_arn = "arn:aws:iam::${var.aws_account_id}:role/AWS-QuickSetup-SSM-LocalAdministrationRole"
-  quicksetup_local_exec_role_name = "AWS-QuickSetup-SSM-LocalExecutionRole"
-  quicksetup_target_regions       = "us-east-2,us-east-1,us-west-2,ca-central-1,ca-west-1"
+  quicksetup_local_admin_role_name = "AWS-QuickSetup-SSM-LocalAdministrationRole"
+  quicksetup_local_admin_role_arn  = "arn:aws:iam::${var.aws_account_id}:role/${local.quicksetup_local_admin_role_name}"
+  quicksetup_local_exec_role_name  = "AWS-QuickSetup-SSM-LocalExecutionRole"
+  quicksetup_target_regions        = "us-east-2,us-east-1,us-west-2,ca-central-1,ca-west-1"
 }
 
 # Configuration Manager for Default Host Management (DHMC)
