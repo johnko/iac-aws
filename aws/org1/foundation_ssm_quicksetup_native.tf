@@ -70,29 +70,30 @@ resource "aws_ssmquicksetup_configuration_manager" "ssm_host_mgmt" {
 }
 
 # Configuration Manager for Resource Explorer
-resource "aws_ssmquicksetup_configuration_manager" "resource_explorer" {
-  name        = "SSM-Quick-Setup-ResourceExplorer-Terraform"
-  description = "AWS Resource Explorer managed by Terraform"
-
-  configuration_definition {
-    local_deployment_administration_role_arn = local.quicksetup_local_admin_role_arn
-    local_deployment_execution_role_name     = local.quicksetup_local_exec_role_name
-    type                                     = "AWSQuickSetupType-ResourceExplorer"
-
-    parameters = {
-      "SelectedAggregatorRegion"  = "ca-central-1"
-      "ReplaceExistingAggregator" = "true"
-      "TargetRegions"             = local.quicksetup_target_regions
-    }
-  }
-
-  tags = {
-    Terraform  = "true"
-    ManagedBy  = "Terraform"
-    QuickSetup = "ResourceExplorer"
-  }
-
-  depends_on = [
-    aws_cloudformation_stack.quicksetup_local_deployment_roles
-  ]
-}
+### THIS IS MANAGED IN aws/org1/foundation_resource_explorer_account.tf
+# resource "aws_ssmquicksetup_configuration_manager" "resource_explorer" {
+#   name        = "SSM-Quick-Setup-ResourceExplorer-Terraform"
+#   description = "AWS Resource Explorer managed by Terraform"
+# 
+#   configuration_definition {
+#     local_deployment_administration_role_arn = local.quicksetup_local_admin_role_arn
+#     local_deployment_execution_role_name     = local.quicksetup_local_exec_role_name
+#     type                                     = "AWSQuickSetupType-ResourceExplorer"
+# 
+#     parameters = {
+#       "SelectedAggregatorRegion"  = "ca-central-1"
+#       "ReplaceExistingAggregator" = "true"
+#       "TargetRegions"             = local.quicksetup_target_regions
+#     }
+#   }
+# 
+#   tags = {
+#     Terraform  = "true"
+#     ManagedBy  = "Terraform"
+#     QuickSetup = "ResourceExplorer"
+#   }
+# 
+#   depends_on = [
+#     aws_cloudformation_stack.quicksetup_local_deployment_roles
+#   ]
+# }
