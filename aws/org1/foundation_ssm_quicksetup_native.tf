@@ -54,7 +54,7 @@ resource "aws_ssmquicksetup_configuration_manager" "ssm_host_mgmt" {
       "InstallCloudWatchAgent" = "true"
       "UpdateCloudWatchAgent"  = "true"
       "TargetType"             = "*"
-      "TargetRegions"   = local.quicksetup_target_regions
+      "TargetRegions"          = local.quicksetup_target_regions
     }
   }
 
