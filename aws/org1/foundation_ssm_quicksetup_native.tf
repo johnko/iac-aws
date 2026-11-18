@@ -79,7 +79,7 @@ resource "aws_ssmquicksetup_configuration_manager" "resource_explorer" {
     parameters = {
       "TargetRegions"                 = local.quicksetup_target_regions
       "EnableResourceExplorer"        = "true"
-      "AggregatorIndexRegion"         = "us-east-2"
+      "AggregatorIndexRegion"         = "ca-central-1"
       "DemoteExistingAggregatorIndex" = "true"
     }
   }
