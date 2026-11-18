@@ -195,6 +195,41 @@
                     ]
                 }
             }
+        },
+        "LocalExecutionRoleCloudformationPolicy": {
+            "Type" : "AWS::IAM::RolePolicy",
+            "Properties" : {
+                "PolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Effect": "Allow",
+                            "Action": [
+                				"cloudformation:CancelUpdateStack",
+                				"cloudformation:CreateStack",
+                				"cloudformation:CreateStackInstances",
+                				"cloudformation:CreateStackSet"
+                				"cloudformation:ContinueUpdateRollback",
+                				"cloudformation:DeleteStack",
+                				"cloudformation:DeleteStackInstances",
+                				"cloudformation:DeleteStackSet",
+                				"cloudformation:RollbackStack",
+                				"cloudformation:SetStackPolicy",
+                				"cloudformation:TagResource",
+                				"cloudformation:UntagResource",
+                				"cloudformation:UpdateStackInstances",
+                				"cloudformation:UpdateStackSet",
+                				"cloudformation:UpdateStack",
+                			],
+                            "Resource": "*"
+                        }
+                    ]
+                },
+                "PolicyName": "CloudformationWrite",
+                "RoleName": {
+                    "Ref": "LocalExecutionRoleName"
+                }
+            }
         }
     },
     "Outputs": {
