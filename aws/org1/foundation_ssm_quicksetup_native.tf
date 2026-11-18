@@ -21,6 +21,7 @@ resource "aws_ssmquicksetup_configuration_manager" "dhmc" {
 
     parameters = {
       "UpdateSsmAgent" = "true"
+      "TargetAccounts" = data.aws_caller_identity.current.account_id
       "TargetRegions"  = local.quicksetup_target_regions
     }
   }
@@ -54,6 +55,7 @@ resource "aws_ssmquicksetup_configuration_manager" "ssm_host_mgmt" {
       "InstallCloudWatchAgent" = "true"
       "UpdateCloudWatchAgent"  = "true"
       "TargetType"             = "*"
+      "TargetAccounts"         = data.aws_caller_identity.current.account_id
       "TargetRegions"          = local.quicksetup_target_regions
     }
   }
@@ -83,6 +85,7 @@ resource "aws_ssmquicksetup_configuration_manager" "ssm_host_mgmt" {
 #     parameters = {
 #       "SelectedAggregatorRegion"  = "ca-central-1"
 #       "ReplaceExistingAggregator" = "true"
+#       "TargetAccounts"            = data.aws_caller_identity.current.account_id
 #       "TargetRegions"             = local.quicksetup_target_regions
 #     }
 #   }
