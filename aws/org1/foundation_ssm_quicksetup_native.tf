@@ -6,7 +6,9 @@ locals {
   quicksetup_local_admin_role_name = "AWS-QuickSetup-SSM-LocalAdministrationRole"
   quicksetup_local_admin_role_arn  = "arn:aws:iam::${var.aws_account_id}:role/${local.quicksetup_local_admin_role_name}"
   quicksetup_local_exec_role_name  = "AWS-QuickSetup-SSM-LocalExecutionRole"
-  quicksetup_target_regions        = "us-east-2,us-east-1,us-west-2,ca-central-1,ca-west-1"
+
+  quicksetup_target_regions               = "us-east-2,us-east-1,us-west-2,ca-central-1,ca-west-1"
+  quicksetup_target_regions_ssm_host_mgmt = "us-east-2,us-east-1,us-west-2,ca-central-1"
 }
 
 # Configuration Manager for Default Host Management (DHMC)
@@ -56,7 +58,7 @@ resource "aws_ssmquicksetup_configuration_manager" "ssm_host_mgmt" {
       "UpdateCloudWatchAgent"  = "true"
       "TargetType"             = "*"
       "TargetAccounts"         = data.aws_caller_identity.current.account_id
-      "TargetRegions"          = local.quicksetup_target_regions
+      "TargetRegions"          = local.quicksetup_target_regions_ssm_host_mgmt
     }
   }
 
