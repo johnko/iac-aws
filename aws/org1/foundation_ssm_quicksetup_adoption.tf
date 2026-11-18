@@ -11,7 +11,7 @@
 # Import block for existing CloudFormation stack
 import {
   to = aws_cloudformation_stack.quicksetup_local_deployment_roles
-  id = "arn:aws:cloudformation:us-east-2:764858776402:stack/AWS-QuickSetup-SSM-LocalDeploymentRolesStack/a2967410-cde5-11f1-b961-020f282787ef"
+  id = "AWS-QuickSetup-SSM-LocalDeploymentRolesStack"
 }
 
 # Load the CloudFormation template bodies
@@ -23,6 +23,8 @@ data "local_file" "quicksetup_local_roles_template" {
 # It was created by Quick Setup to provide the administration/execution roles.
 # We manage it as an individual stack since it's not part of the StackSet.
 resource "aws_cloudformation_stack" "quicksetup_local_deployment_roles" {
+  region = "us-east-2"
+
   name = "AWS-QuickSetup-SSM-LocalDeploymentRolesStack"
 
   template_body = data.local_file.quicksetup_local_roles_template.content
