@@ -208,7 +208,7 @@
                                 "cloudformation:CancelUpdateStack",
                                 "cloudformation:CreateStack",
                                 "cloudformation:CreateStackInstances",
-                                "cloudformation:CreateStackSet"
+                                "cloudformation:CreateStackSet",
                                 "cloudformation:ContinueUpdateRollback",
                                 "cloudformation:DeleteStack",
                                 "cloudformation:DeleteStackInstances",
