@@ -2,7 +2,7 @@
 # Using public subnets with IGW (no NAT Gateway) for zero cost
 
 locals {
-  vpc_cidr            = "10.0.0.0/16"
+  vpc_cidr            = "10.69.0.0/16"
   public_subnet_cidrs = ["10.69.0.0/22", "10.69.4.0/22"]
 }
 
