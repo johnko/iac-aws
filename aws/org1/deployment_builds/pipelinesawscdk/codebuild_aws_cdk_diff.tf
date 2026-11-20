@@ -170,9 +170,9 @@ resource "aws_codebuild_project" "aws_cdk_diff" {
   }
 
   vpc_config {
-    vpc_id             = aws_vpc.codebuild.id
-    subnets            = aws_subnet.public[*].id
-    security_group_ids = [aws_security_group.codebuild.id]
+    vpc_id             = module.vpc_codebuild.vpc_id
+    subnets            = module.vpc_codebuild.public_subnet_ids
+    security_group_ids = [module.vpc_codebuild.security_group_id]
   }
 
 }
