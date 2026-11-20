@@ -94,6 +94,21 @@ resource "aws_iam_role_policy" "aws_cdk_diff-CodeBuildRolePlanPolicy" {
         ],
         "Effect" : "Allow"
       },
+      {
+        # VPC permissions required for CodeBuild to run in VPC
+        "Effect" : "Allow",
+        "Action" : [
+          "ec2:CreateNetworkInterface",
+          "ec2:DescribeNetworkInterfaces",
+          "ec2:DeleteNetworkInterface",
+          "ec2:DescribeSubnets",
+          "ec2:DescribeSecurityGroups",
+          "ec2:DescribeVpcs",
+          "ec2:DescribeDhcpOptions",
+          "ec2:DescribeVpcEndpoints"
+        ],
+        "Resource" : "*"
+      },
     ]
   })
 }
@@ -152,6 +167,12 @@ resource "aws_codebuild_project" "aws_cdk_diff" {
   source {
     buildspec = "aws/org1/buildspec_aws_cdk_diff.yaml"
     type      = "CODEPIPELINE"
+  }
+
+  vpc_config {
+    vpc_id             = aws_vpc.codebuild.id
+    subnets            = aws_subnet.public[*].id
+    security_group_ids = [aws_security_group.codebuild.id]
   }
 
 }
