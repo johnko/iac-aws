@@ -34,9 +34,31 @@ resource "aws_iam_role_policy_attachments_exclusive" "crossaccount_terraform_app
 }
 
 locals {
+  vpc_enforcement_policy = jsonencode({
+    "Version" : "2012-10-17",
+    "Statement" : [
+      {
+        # Deny all actions if request doesn't originate from VPC private IP space
+        # https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_condition-keys.html#condition-keys-vpcsourceip
+        "Effect" : "Deny",
+        "Action" : "*",
+        "Resource" : "*",
+        "Condition" : {
+          "NotIpAddress" : {
+            "aws:VpcSourceIp" : ["10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16"]
+          }
+        }
+      }
+    ]
+  })
+
   crossaccount_inline_policies_apply = merge(
     local.crossaccount_inline_policies_plan,
     {
+      VPCEnforcement = {
+        enabled_aws_account_ids = keys(local.all_aws_account_ids)
+        policy                  = local.vpc_enforcement_policy
+      }
       IAMPassRolePermissions1 = {
         enabled_aws_account_ids = keys(local.all_aws_account_ids)
         policy = jsonencode({
