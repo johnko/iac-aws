@@ -10,8 +10,13 @@ resource "aws_iam_role" "crossaccount_terraform_plan" {
         },
         "Action" : "sts:AssumeRole",
         "Condition" : {
+          # https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_condition-keys.html#condition-keys-principalorgid
           "StringEquals" : {
             "aws:PrincipalOrgID" : data.aws_organizations_organization.current.id
+          },
+          # https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_condition-keys.html#condition-keys-vpcsourceip
+          "IpAddress" : {
+            "aws:VpcSourceIp" : ["10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16"]
           }
         }
       }
