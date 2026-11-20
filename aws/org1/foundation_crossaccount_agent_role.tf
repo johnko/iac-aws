@@ -9,11 +9,20 @@ resource "aws_iam_role" "crossaccount_agent" {
           "AWS" : "arn:aws:iam::${var.aws_account_id_playground_rswea}:root"
         },
         "Action" : "sts:AssumeRole",
-        "Condition" : {
-          "StringEquals" : {
-            "aws:PrincipalOrgID" : data.aws_organizations_organization.current.id
-          }
-        }
+        "Condition" : merge(
+          {
+            "StringEquals" : {
+              "aws:PrincipalOrgID" : data.aws_organizations_organization.current.id
+            }
+          },
+          # Security: Conditionally add VPC restriction if VPC ID is available
+          # This prevents leaked session tokens from being used outside of AWS infrastructure
+          local.rswea_vpc_id != "" ? {
+            "StringEquals" : {
+              "aws:Ec2InstanceSourceVpc" : local.rswea_vpc_id
+            }
+          } : {}
+        )
       }
     ]
   })

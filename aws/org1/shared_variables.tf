@@ -83,6 +83,17 @@ variable "aws_org_root_id" {
   type        = string
   description = "Organization Root ID, eg. r-123"
 }
+variable "rswea_vpc_id" {
+  type        = string
+  default     = ""
+  description = "VPC ID in the rswea playground account where workers run. Used for CrossAccountAgentRole trust policy security. If empty, will try to lookup from SSM."
+}
+
+variable "rswea_vpc_id_ssm_parameter_name" {
+  type        = string
+  default     = "/RemoteSweStack-Sandbox/worker-vpc-id"
+  description = "SSM parameter name containing rswea VPC ID. Used for data lookup."
+}
 variable "aws_ou_id_deployment" {
   type        = string
   description = "Organizational Unit ID, eg. ou-xyz789"
