@@ -95,6 +95,21 @@ resource "aws_iam_role_policy" "aws_terraform_apply-CodeBuildRoleApplyPolicy" {
         ],
         "Effect" : "Allow"
       },
+      {
+        # VPC permissions required for CodeBuild to run in VPC
+        "Effect" : "Allow",
+        "Action" : [
+          "ec2:CreateNetworkInterface",
+          "ec2:DescribeNetworkInterfaces",
+          "ec2:DeleteNetworkInterface",
+          "ec2:DescribeSubnets",
+          "ec2:DescribeSecurityGroups",
+          "ec2:DescribeVpcs",
+          "ec2:DescribeDhcpOptions",
+          "ec2:DescribeVpcEndpoints"
+        ],
+        "Resource" : "*"
+      },
     ]
   })
 }
@@ -153,6 +168,12 @@ resource "aws_codebuild_project" "aws_terraform_apply" {
   source {
     buildspec = "aws/org1/buildspec_aws_terraform_apply.yaml"
     type      = "CODEPIPELINE"
+  }
+
+  vpc_config {
+    vpc_id             = module.vpc_codebuild.vpc_id
+    subnets            = module.vpc_codebuild.public_subnet_ids
+    security_group_ids = [module.vpc_codebuild.security_group_id]
   }
 
 }

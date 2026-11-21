@@ -34,6 +34,10 @@ locals {
   crossaccount_inline_policies_apply = merge(
     local.crossaccount_inline_policies_plan,
     {
+      VPCEnforcement = {
+        enabled_aws_account_ids = keys(local.all_aws_account_ids)
+        policy                  = local.vpc_enforcement_policy
+      }
       IAMPassRolePermissions1 = {
         enabled_aws_account_ids = keys(local.all_aws_account_ids)
         policy = jsonencode({
