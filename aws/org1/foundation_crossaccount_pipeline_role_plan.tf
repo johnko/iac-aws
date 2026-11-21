@@ -10,8 +10,13 @@ resource "aws_iam_role" "crossaccount_terraform_plan" {
         },
         "Action" : "sts:AssumeRole",
         "Condition" : {
+          # https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_condition-keys.html#condition-keys-principalorgid
           "StringEquals" : {
             "aws:PrincipalOrgID" : data.aws_organizations_organization.current.id
+          },
+          # https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_condition-keys.html#condition-keys-vpcsourceip
+          "IpAddress" : {
+            "aws:VpcSourceIp" : ["10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16"]
           }
         }
       }
@@ -28,6 +33,24 @@ resource "aws_iam_role_policy_attachments_exclusive" "crossaccount_terraform_pla
 }
 
 locals {
+  vpc_enforcement_policy = jsonencode({
+    "Version" : "2012-10-17",
+    "Statement" : [
+      {
+        # Deny all actions if request doesn't originate from VPC private IP space
+        # https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_condition-keys.html#condition-keys-vpcsourceip
+        "Effect" : "Deny",
+        "Action" : "*",
+        "Resource" : "*",
+        "Condition" : {
+          "NotIpAddress" : {
+            "aws:VpcSourceIp" : ["10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16"]
+          }
+        }
+      }
+    ]
+  })
+
   crossaccount_inline_policies_plan = {
     # Read rswea VPC ID from SSM for CrossAccountAgentRole security
     ReadRsweaVpcId = {
@@ -49,6 +72,10 @@ locals {
     }
     # This role starts with ViewOnly to avoid reading sensitive data like Secrets or S3
     # Here, be very selective what permissions are granted
+    VPCEnforcement = {
+      enabled_aws_account_ids = keys(local.all_aws_account_ids)
+      policy                  = local.vpc_enforcement_policy
+    }
     WriteTerraformStateReadSSMParam = {
       enabled_aws_account_ids = keys(local.all_aws_account_ids)
       policy = jsonencode({
