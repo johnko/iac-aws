@@ -1,7 +1,3 @@
-locals {
-  aws_kms_key_identitycenter_arns = []
-}
-
 # Data source to lookup rswea VPC ID from SSM Parameter Store
 # This is used to conditionally add aws:Ec2InstanceSourceVpc to CrossAccountAgentRole trust policy
 
