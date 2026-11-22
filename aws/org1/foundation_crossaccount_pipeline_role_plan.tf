@@ -31,24 +31,6 @@ resource "aws_iam_role_policy_attachments_exclusive" "crossaccount_terraform_pla
 
 locals {
   crossaccount_inline_policies_plan = {
-    # Read rswea VPC ID from SSM for CrossAccountAgentRole security
-    ReadRsweaVpcId = {
-      enabled_aws_account_ids = ["${var.aws_account_id_playground_rswea}"]
-      policy = jsonencode({
-        "Version" : "2012-10-17",
-        "Statement" : [
-          {
-            # Allow reading the rswea VPC ID parameter for CrossAccountAgentRole trust policy
-            "Action" : [
-              "ssm:GetParameter",
-              "ssm:GetParameterHistory",
-            ],
-            "Resource" : "arn:aws:ssm:*:${var.aws_account_id_playground_rswea}:parameter/*worker-vpc-id",
-            "Effect" : "Allow"
-          },
-        ]
-      })
-    }
     WriteTerraformStateReadSSMParam = {
       enabled_aws_account_ids = keys(local.all_aws_account_ids)
       policy = jsonencode({
