@@ -11,34 +11,6 @@ locals {
   quicksetup_target_regions_ssm_host_mgmt = "us-east-2,us-east-1,us-west-2,ca-central-1"
 }
 
-# Configuration Manager for Default Host Management (DHMC)
-resource "aws_ssmquicksetup_configuration_manager" "dhmc" {
-  name        = "SSM-Quick-Setup-DHMC-Terraform"
-  description = "Default Host Management Configuration managed by Terraform"
-
-  configuration_definition {
-    local_deployment_administration_role_arn = local.quicksetup_local_admin_role_arn
-    local_deployment_execution_role_name     = local.quicksetup_local_exec_role_name
-    type                                     = "AWSQuickSetupType-DHMC"
-
-    parameters = {
-      "UpdateSsmAgent" = "true"
-      "TargetAccounts" = data.aws_caller_identity.current.account_id
-      "TargetRegions"  = local.quicksetup_target_regions
-    }
-  }
-
-  tags = {
-    Terraform  = "true"
-    ManagedBy  = "Terraform"
-    QuickSetup = "DHMC"
-  }
-
-  depends_on = [
-    aws_cloudformation_stack.quicksetup_local_deployment_roles
-  ]
-}
-
 # Configuration Manager for SSM Host Management (Agent Update)
 resource "aws_ssmquicksetup_configuration_manager" "ssm_host_mgmt" {
   name        = "SSM-Quick-Setup-HostMgmt-Terraform"
