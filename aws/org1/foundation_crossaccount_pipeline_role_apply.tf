@@ -12,8 +12,7 @@ resource "aws_iam_role" "crossaccount_terraform_apply" {
         "Condition" : {
           # https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_condition-keys.html#condition-keys-principalorgid
           "StringEquals" : {
-            "aws:PrincipalOrgID" : data.aws_organizations_organization.current.id,
-            "aws:ViaAWSService" : "codebuild.amazonaws.com"
+            "aws:PrincipalOrgID" : data.aws_organizations_organization.current.id
           }
         }
       }
