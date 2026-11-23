@@ -84,6 +84,12 @@ locals {
             "Resource" : "*",
             "Effect" : "Allow"
           },
+          {
+            "Sid" : "InvokeStartPipelineLambda",
+            "Action" : "lambda:InvokeFunction",
+            "Resource" : "arn:aws:lambda:*:*:function:startpipeline",
+            "Effect" : "Allow"
+          },
         ]
       })
     }
