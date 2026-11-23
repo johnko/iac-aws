@@ -64,6 +64,7 @@ locals {
               "codepipeline:GetPipelineExecution",
               "codepipeline:GetPipelineState",
               "codepipeline:ListPipelineExecutions",
+              "codepipeline:StartPipelineExecution",
               "ecr:DescribeImages",
               "ecr:DescribeRepositories",
               "lambda:GetFunction",
