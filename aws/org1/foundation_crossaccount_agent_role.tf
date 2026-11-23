@@ -64,7 +64,8 @@ locals {
               "codepipeline:GetPipelineExecution",
               "codepipeline:GetPipelineState",
               "codepipeline:ListPipelineExecutions",
-              "codepipeline:StartPipelineExecution",
+              # Note: codepipeline:StartPipelineExecution is intentionally omitted
+              # Agents must use the startpipeline Lambda proxy for security
               "ecr:DescribeImages",
               "ecr:DescribeRepositories",
               "lambda:GetFunction",
