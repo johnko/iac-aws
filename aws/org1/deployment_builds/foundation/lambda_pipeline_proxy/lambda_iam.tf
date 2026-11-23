@@ -24,9 +24,7 @@ resource "aws_iam_role" "pipeline_proxy_lambda" {
           "StringEquals" : {
             # Only allow Lambda to assume this role if the request
             # comes from the same organization
-            "aws:PrincipalOrgID" = data.aws_organizations_organization.pipeline_proxy_current.id,
-            # Require TLS 1.2 or higher
-            "aws:SecureTransport" : "true"
+            "aws:PrincipalOrgID" = data.aws_organizations_organization.pipeline_proxy_current.id
           }
         }
       },
@@ -38,10 +36,6 @@ resource "aws_iam_role" "pipeline_proxy_lambda" {
         },
         "Action" : "sts:AssumeRole",
         "Condition" : {
-          "StringEquals" : {
-            # Require TLS 1.2 or higher
-            "aws:SecureTransport" : "true"
-          },
           # Only allow from this specific account
           "StringEquals" : {
             "aws:SourceAccount" = data.aws_caller_identity.pipeline_proxy_current.account_id
