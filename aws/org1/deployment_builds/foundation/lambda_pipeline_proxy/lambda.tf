@@ -64,13 +64,11 @@ resource "aws_cloudwatch_log_group" "pipeline_proxy" {
   }
 }
 
-# Allow API Gateway to invoke the Lambda function
-resource "aws_lambda_permission" "api_gateway_invoke" {
-  statement_id  = "AllowAPIGatewayInvoke"
+# Allow CrossAccountAgentRole to invoke the Lambda function directly
+# This eliminates the need for API Gateway
+resource "aws_lambda_permission" "crossaccount_agent_invoke" {
+  statement_id  = "AllowCrossAccountAgentInvoke"
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.pipeline_proxy.function_name
-  principal     = "apigateway.amazonaws.com"
-
-  # Restrict to specific API Gateway
-  source_arn = "${aws_api_gateway_rest_api.pipeline_proxy.execution_arn}/*/*"
+  principal     = "arn:aws:iam::${var.aws_account_id_playground_rswea}:role/CrossAccountAgentRole"
 }
