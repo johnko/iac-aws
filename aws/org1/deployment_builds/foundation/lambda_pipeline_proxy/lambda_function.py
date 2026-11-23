@@ -129,7 +129,7 @@ def start_pipeline_execution(
         response = codepipeline.start_pipeline_execution(name=pipeline_name)
         return response.get("pipelineExecutionId"), None
 
-    except ClientError as e):
+    except ClientError as e:
         error_code = e.response.get("Error", {}).get("Code", "Unknown")
         error_message = e.response.get("Error", {}).get("Message", str(e))
 
