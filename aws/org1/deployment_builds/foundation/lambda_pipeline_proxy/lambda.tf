@@ -36,10 +36,8 @@ resource "aws_lambda_function" "pipeline_proxy" {
   timeout = local.lambda_timeout
   memory_size = local.lambda_memory
 
-  # Enable X-Ray tracing for observability
-  tracing_config {
-    mode = "Active"
-  }
+  # X-Ray tracing disabled to save cost
+  # Re-enable if needed: tracing_config { mode = "Active" }
 
   # Environment variables for configuration
   environment {
