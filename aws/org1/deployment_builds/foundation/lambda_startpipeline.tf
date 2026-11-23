@@ -49,8 +49,6 @@ resource "aws_iam_role" "startpipeline_lambda" {
     ]
   })
 
-  force_detach_policies = false
-
   tags = {
     Description = "Lambda execution role for Start Pipeline"
   }
