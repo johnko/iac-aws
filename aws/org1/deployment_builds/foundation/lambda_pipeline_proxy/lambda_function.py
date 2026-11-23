@@ -70,33 +70,6 @@ def validate_pipeline_name(pipeline_name: str) -> Optional[str]:
     return None
 
 
-def validate_variables(variables: Any) -> Optional[str]:
-    """
-    Validate pipeline variables format.
-    Returns error message if invalid, None if valid.
-    """
-    if variables is None:
-        return None
-
-    if not isinstance(variables, list):
-        return "variables must be a list"
-
-    for i, var in enumerate(variables):
-        if not isinstance(var, dict):
-            return f"variables[{i}] must be an object with 'name' and 'value'"
-
-        if "name" not in var or "value" not in var:
-            return f"variables[{i}] must have 'name' and 'value' keys"
-
-        if not isinstance(var["name"], str) or not isinstance(var["value"], str):
-            return f"variables[{i}] name and value must be strings"
-
-        if len(var["name"]) > 128 or len(var["value"]) > 1000:
-            return f"variables[{i}] name must be <=128 chars, value <=1000 chars"
-
-    return None
-
-
 def check_pipeline_exists(pipeline_name: str) -> tuple[bool, Optional[str]]:
     """
     Check if a pipeline exists.
