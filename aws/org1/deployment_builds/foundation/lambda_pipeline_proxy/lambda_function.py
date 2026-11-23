@@ -27,7 +27,7 @@ from botocore.exceptions import ClientError, BotoCoreError
 codepipeline = boto3.client("codepipeline")
 
 # Maximum number of active executions allowed before rejecting new requests
-MAX_ACTIVE_EXECUTIONS = 5
+MAX_ACTIVE_EXECUTIONS = 2
 
 # Pipeline name validation pattern (alphanumeric, underscores, and hyphens)
 PIPELINE_NAME_PATTERN = re.compile(r"^[A-Za-z0-9._-]{1,100}$")
