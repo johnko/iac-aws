@@ -2,10 +2,6 @@
 
 # Data source for current AWS account
 data "aws_caller_identity" "pipeline_proxy_current" {}
-data "aws_organizations_organization" "pipeline_proxy_current" {}
-
-# Data source for current organization
-data "aws_organizations_organization" "pipeline_proxy_current" {}
 
 resource "aws_iam_role" "pipeline_proxy_lambda" {
   name = "PipelineProxyLambdaRole"
@@ -22,22 +18,7 @@ resource "aws_iam_role" "pipeline_proxy_lambda" {
         "Action" : "sts:AssumeRole",
         "Condition" : {
           "StringEquals" : {
-            # Only allow Lambda to assume this role if the request
-            # comes from the same organization
-            "aws:PrincipalOrgID" = data.aws_organizations_organization.pipeline_proxy_current.id
-          }
-        }
-      },
-      {
-        "Sid" : "LambdaServiceAssumeRoleWithoutOrg",
-        "Effect" : "Allow",
-        "Principal" : {
-          "Service" : "lambda.amazonaws.com"
-        },
-        "Action" : "sts:AssumeRole",
-        "Condition" : {
-          # Only allow from this specific account
-          "StringEquals" : {
+            # Only allow Lambda to assume this role from this specific account
             "aws:SourceAccount" = data.aws_caller_identity.pipeline_proxy_current.account_id
           }
         }
