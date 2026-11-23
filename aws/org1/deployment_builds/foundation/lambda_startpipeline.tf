@@ -107,10 +107,10 @@ resource "aws_lambda_function" "startpipeline" {
   filename         = data.archive_file.startpipeline_lambda.output_path
   source_code_hash = data.archive_file.startpipeline_lambda.output_base64sha256
 
-  role    = aws_iam_role.startpipeline_lambda.arn
-  handler = local.lambda_handler
-  runtime = local.lambda_runtime
-  timeout = local.lambda_timeout
+  role        = aws_iam_role.startpipeline_lambda.arn
+  handler     = local.lambda_handler
+  runtime     = local.lambda_runtime
+  timeout     = local.lambda_timeout
   memory_size = local.lambda_memory
 
   # X-Ray tracing disabled to save cost
