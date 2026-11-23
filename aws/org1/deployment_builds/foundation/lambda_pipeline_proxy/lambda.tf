@@ -1,9 +1,9 @@
 # Lambda Function for Pipeline Proxy
 
 locals {
-  lambda_name    = "pipeline-proxy"
+  lambda_name    = "start-pipeline"
   lambda_handler = "lambda_function.handler"
-  lambda_runtime = "python3.12"
+  lambda_runtime = "python3.13"
   lambda_timeout = 30
   lambda_memory  = 256
 
