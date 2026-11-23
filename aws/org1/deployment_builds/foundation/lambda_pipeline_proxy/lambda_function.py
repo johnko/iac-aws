@@ -145,7 +145,6 @@ def get_active_executions(pipeline_name: str) -> tuple[int, Optional[str]]:
 
 def start_pipeline_execution(
     pipeline_name: str,
-    variables: Optional[List[Dict[str, str]]] = None,
 ) -> tuple[Optional[str], Optional[str]]:
     """
     Start a pipeline execution.
@@ -153,16 +152,11 @@ def start_pipeline_execution(
     """
     try:
         # Build the request parameters
-        # NOTE: We explicitly DO NOT include sourceRevisionOverride for security
-        params = {"name": pipeline_name}
-
-        if variables:
-            params["variables"] = variables
-
-        response = codepipeline.start_pipeline_execution(**params)
+        # NOTE: We explicitly DO NOT include sourceRevisionOverride or variables for security
+        response = codepipeline.start_pipeline_execution(name=pipeline_name)
         return response.get("pipelineExecutionId"), None
 
-    except ClientError as e:
+    except ClientError as e):
         error_code = e.response.get("Error", {}).get("Code", "Unknown")
         error_message = e.response.get("Error", {}).get("Message", str(e))
 
@@ -193,10 +187,7 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
 
     Expected body format:
     {
-        "pipelineName": "string",  // Required
-        "variables": [             // Optional
-            {"name": "string", "value": "string"}
-        ]
+        "pipelineName": "string"  // Required
     }
 
     Response format:
@@ -235,16 +226,20 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
             },
         )
 
+    # Security: Reject if variables parameter is present
+    if "variables" in body:
+        print(f"[{request_id}] REJECTED: variables parameter detected")
+        return create_response(
+            403,
+            {
+                "error": "variables parameter is not allowed for security reasons",
+                "code": "FORBIDDEN_PARAMETER",
+            },
+        )
+
     # Extract and validate pipeline name
     pipeline_name = body.get("pipelineName")
     error = validate_pipeline_name(pipeline_name)
-    if error:
-        print(f"[{request_id}] Validation error: {error}")
-        return create_response(400, {"error": error, "code": "VALIDATION_ERROR"})
-
-    # Validate variables if provided
-    variables = body.get("variables")
-    error = validate_variables(variables)
     if error:
         print(f"[{request_id}] Validation error: {error}")
         return create_response(400, {"error": error, "code": "VALIDATION_ERROR"})
@@ -274,7 +269,7 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
 
     # Start the pipeline execution
     print(f"[{request_id}] Starting pipeline execution for: {pipeline_name}")
-    execution_id, error = start_pipeline_execution(pipeline_name, variables)
+    execution_id, error = start_pipeline_execution(pipeline_name)
 
     if error:
         print(f"[{request_id}] Error starting execution: {error}")
