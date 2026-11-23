@@ -198,6 +198,7 @@
         },
         "LocalExecutionRoleCloudformationPolicy": {
             "Type": "AWS::IAM::RolePolicy",
+            "DependsOn": "LocalExecutionRole",
             "Properties": {
                 "PolicyDocument": {
                     "Version": "2012-10-17",
