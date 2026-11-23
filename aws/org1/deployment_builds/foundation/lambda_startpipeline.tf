@@ -5,7 +5,7 @@
 data "aws_caller_identity" "pipeline_proxy_current" {}
 
 locals {
-  lambda_name    = "start-pipeline"
+  lambda_name    = "startpipeline"
   lambda_handler = "lambda_function.handler"
   lambda_runtime = "python3.13"
   lambda_timeout = 30
