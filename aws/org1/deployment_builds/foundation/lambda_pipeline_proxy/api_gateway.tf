@@ -234,14 +234,28 @@ resource "aws_iam_role" "api_gateway_cloudwatch" {
     "Version" : "2012-10-17",
     "Statement" : [
       {
+        "Sid" : "APIGatewayAssumeRole",
         "Effect" : "Allow",
         "Principal" : {
           "Service" : "apigateway.amazonaws.com"
         },
-        "Action" : "sts:AssumeRole"
+        "Action" : "sts:AssumeRole",
+        "Condition" : {
+          "StringEquals" : {
+            # Require TLS 1.2 or higher
+            "aws:SecureTransport" : "true",
+            # Only allow from this specific account
+            "aws:SourceAccount" = data.aws_caller_identity.pipeline_proxy_current.account_id
+          }
+        }
       }
     ]
   })
+
+  tags = {
+    Description = "Security-hardened CloudWatch logging role for API Gateway"
+    Security    = "hardened"
+  }
 }
 
 resource "aws_iam_role_policy" "api_gateway_cloudwatch" {
