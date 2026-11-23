@@ -4,7 +4,7 @@
 data "aws_caller_identity" "pipeline_proxy_current" {}
 
 resource "aws_iam_role" "pipeline_proxy_lambda" {
-  name = "PipelineProxyLambdaRole"
+  name = "StartPipelineProxyLambdaRole"
 
   assume_role_policy = jsonencode({
     "Version" : "2012-10-17",
