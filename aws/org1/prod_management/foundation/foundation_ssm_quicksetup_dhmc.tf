@@ -8,7 +8,7 @@ locals {
   quicksetup_target_regions = "us-east-2,us-east-1,us-west-2,ca-central-1,ca-west-1"
 
   # All organization account IDs except management for TargetAccounts
-  # Management account is excluded because it already has DHMC enabled by default
+  # Management account is excluded because it can't enable LOCAL
   quicksetup_target_accounts = join(",", [
     for account_id in keys(local.all_aws_account_ids) : account_id if account_id != var.aws_account_id_management
   ])
