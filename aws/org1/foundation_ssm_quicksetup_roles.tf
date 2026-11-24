@@ -1,5 +1,9 @@
 # SSM Quick Setup CloudFormation Adoption
 # This file adopts the existing AWS Quick Setup CloudFormation stacks into Terraform
+locals {
+  quicksetup_local_admin_role_name = "AWS-QuickSetup-SSM-LocalAdministrationRole"
+  quicksetup_local_exec_role_name  = "AWS-QuickSetup-SSM-LocalExecutionRole"
+}
 
 # SSM Quick Setup CloudFormation Stacks - Terraform Management
 # This file adopts and manages the existing AWS Quick Setup CloudFormation stacks
