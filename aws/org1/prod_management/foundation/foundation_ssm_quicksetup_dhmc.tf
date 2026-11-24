@@ -3,12 +3,15 @@
 # Default Host Management across all organization accounts.
 
 locals {
-  quicksetup_local_admin_role_arn  = "arn:aws:iam::${var.aws_account_id}:role/${local.quicksetup_local_admin_role_name}"
+  quicksetup_local_admin_role_arn = "arn:aws:iam::${var.aws_account_id}:role/${local.quicksetup_local_admin_role_name}"
 
   quicksetup_target_regions = "us-east-2,us-east-1,us-west-2,ca-central-1,ca-west-1"
 
-  # All organization account IDs for TargetAccounts
-  quicksetup_target_accounts = join(",", keys(local.all_aws_account_ids))
+  # All organization account IDs except management for TargetAccounts
+  # Management account is excluded because it already has DHMC enabled by default
+  quicksetup_target_accounts = join(",", [
+    for account_id in keys(local.all_aws_account_ids) : account_id if account_id != var.aws_account_id_management
+  ])
 }
 
 # Configuration Manager for Default Host Management (DHMC)
